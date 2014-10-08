@@ -12,7 +12,8 @@
     word-wrap: break-word;
 }
 #imgbox {
-
+    width:20%;
+    left:80%;
 }
 .lines {
     max-width:100%;
