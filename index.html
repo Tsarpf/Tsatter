@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <script src="jquery-1.11.1.js"></script>
+        <script src="js/test.js"></script>
+        <link type="text/css" rel="stylesheet" href="style.css" />
+    </head>
+    <title> oh hi </title>
+    <body onload="start()">
+
+        <div id="chatbox"></div>
+
+        <div id="imgbox"></div>
+
+        
+
+        <input type="text" id="inputfield">
+
+        <script>
+            var start = function() {
+                initConnect();
+            }
+
+            $("#inputfield").keydown(function(e) { 
+                if(e.keyCode == 13) {
+                    var value = $(this).val();
+                    sendMsg(value);
+                    $(this).val("");
+                    $('#chatbox').scrollTop = $('#chatbox').scrollHeight;
+                }
+            });
+
+            $(document).keydown(function(e) {
+                
+            });
+        </script>
+    </body>
+</html>
