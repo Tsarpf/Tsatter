@@ -1,11 +1,12 @@
 #chatbox {
+    float:left;
     text-align:left;
     /*margin:0 auto;*/
     margin-bottom:25px;
     padding:10px;
     background:#fff;
     height:90%;
-    width:80%;
+    width:75%;
     border:2px solid #ACD8F0;
     overflow-y: auto;
     /*overflow-x: hidden;*/
@@ -13,7 +14,15 @@
 }
 #imgbox {
     width:20%;
-    left:80%;
+    background:#fff;
+    height:98%;
+    right:1%;
+    left: 80%;
+    border: 2px solid #ACD8F0;
+    top: 1%;
+    bottom: 2%;
+    float:right;
+    overflow-y: auto;
 }
 .lines {
     max-width:100%;
@@ -27,11 +36,12 @@
 }
 
 #inputfield {
-   position:fixed;
+   /*position:fixed;*/
+   float:left;
    bottom:1%;
    height:50px;
    font-size:30px;
-   width:80%;
+   width:75%;
 }
 
 

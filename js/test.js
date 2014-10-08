@@ -16,9 +16,8 @@ var sendMsg = function(msg) {
     ws.send(msg);
 }
 
-var count = 0;
+var imgCount = 0;
 var receiveMsg = function(msg) {
-    count++;
     console.log(msg);
     var line = document.createElement("div");
 
@@ -27,10 +26,9 @@ var receiveMsg = function(msg) {
 
     //line.innerHTML = msg;
     line.setAttribute("class", "lines");
-    var lineName = "line" + count.toString();
+    //var lineName = "line" + count.toString();
     //line.setAttribute("id", lineName);
-    
-    line.id =  lineName;
+    //line.id =  lineName;
 
     var images = getImages(msg);
     var imgdiv = getImageDiv(images);
@@ -42,11 +40,16 @@ var receiveMsg = function(msg) {
 
     line.appendChild(linetext);
     if(imgdiv !== null)
-        line.appendChild(imgdiv);
+    {
+        $('#imgbox').append(imgdiv);
+        //line.appendChild(imgdiv);
+    }
 
     var chatbox = document.getElementById("chatbox");
     chatbox.appendChild(line);
     chatbox.scrollTop = chatbox.scrollHeight;
+    $('#imgbox').scrollTop = $('#imgbox').scrollHeight;
+    if(images !== null) imgCount += images.length;
 }
 
 var replaceLinks = function(msg) {
@@ -56,7 +59,7 @@ var replaceImageURLs = function(msg, images) {
     if(images === null) return msg;
     for(var i = 0; i < images.length; i++)
     {
-        msg = msg.replace(images[i], "["+i+"]");
+        msg = msg.replace(images[i], "["+(i+imgCount)+"]");
         //return msg.replace(new RegExp(images[i], 'g'), "["+i+"]");
     }
     return msg;
@@ -65,13 +68,13 @@ var replaceImageURLs = function(msg, images) {
 //Oh god please refactor this function
 var getImageDiv = function(images) {
     if(images === null) return null;
-
+    
     var div = document.createElement("div");
     for(var i = 0; i < images.length; i++) {
         var img = document.createElement("img");
         img.setAttribute("src", images[i]);
         img.setAttribute("class", "chatimages");
-        div.appendChild(document.createTextNode("["+i+"]"));
+        div.appendChild(document.createTextNode("["+(i+imgCount)+"]"));
         div.appendChild(img);
     }
     return div;
