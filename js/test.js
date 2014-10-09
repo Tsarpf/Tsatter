@@ -48,7 +48,8 @@ var receiveMsg = function(msg) {
     var chatbox = document.getElementById("chatbox");
     chatbox.appendChild(line);
     chatbox.scrollTop = chatbox.scrollHeight;
-    $('#imgbox').scrollTop = $('#imgbox').scrollHeight;
+    var imgbox = document.getElementById("imgbox");
+    imgbox.scrollTop = imgbox.scrollHeight;
     if(images !== null) imgCount += images.length;
 }
 

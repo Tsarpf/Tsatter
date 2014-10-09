@@ -7,6 +7,7 @@ var server = ws.createServer(function (conn) {
     var user = "anon" + count;
     console.log("new connection");
     broadcast(user + " joined chat");
+    conn.sendText(server.connections.length + " total user(s) on this channel");
 
     conn.on("text", function(str) {
         console.log("received: (" + str + ")");
