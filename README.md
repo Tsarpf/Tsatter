@@ -1,11 +1,11 @@
 Tsatter
 =======
 
-#### - a lightweight multiple chat room stream thingy with filtters and combinators?
-
-
 
 ######Stuff:
-Creating a new version probably using the mean stack and this time including testing and maybe CI, CD etc, too.
+- Uses custom MEAN.
+- CI using Travis-CI
+- Custom CD, live here: http://datisbox.net:7247/ (7247 == tsat in leet)
 
-Old implementation in the old branch.
+
+##Old implementation in the old branch.
