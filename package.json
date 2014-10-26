@@ -1,0 +1,14 @@
+{
+  "name": "Tsatter",
+  "description": "Chat thingy",
+  "dependencies": {
+    "mocha": "*",
+    "should": "*"
+  },
+
+  "scripts": {
+    "start": "node server.js",
+    "test": "./node_modules/.bin/mocha"
+  }
+
+}
