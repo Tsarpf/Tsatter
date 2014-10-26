@@ -4,7 +4,8 @@
   "dependencies": {
     "mocha": "*",
     "should": "*",
-    "express": "*"
+    "express": "*",
+    "mongoose": "*"
   },
 
   "scripts": {
