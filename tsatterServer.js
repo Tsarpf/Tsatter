@@ -1,5 +1,7 @@
-var express = require('express');
-var app = express();
+var express = require('express'),
+    bodyParser = require('body-parser'),
+    mongoose = require('mongoose'),
+    app = express();
 
 //routes
 app.get('/', function (req, res) {
@@ -21,7 +23,7 @@ mongoose.connection.on('connected', function(){
 
 var pub = __dirname + '/public';
 app.use(express.static(pub));
-app.use(express.bodyParser());
+app.use(bodyParser.urlencoded({extended:true}));
 
 var server = app.listen(7247, function() {
     console.log("server running..");

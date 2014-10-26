@@ -5,7 +5,8 @@
     "mocha": "*",
     "should": "*",
     "express": "*",
-    "mongoose": "*"
+    "mongoose": "*",
+    "body-parser": "*"
   },
 
   "scripts": {
