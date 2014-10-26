@@ -1,5 +1,5 @@
 #!/bin/bash
 git pull origin master
-bash ./killscript
+./killserver
 npm install
 npm start
