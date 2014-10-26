@@ -1,0 +1,5 @@
+for x in `ps x | grep "node tsatterServer.js" | awk '{print $1}'`
+do
+    kill $x
+done
+

@@ -3,11 +3,12 @@
   "description": "Chat thingy",
   "dependencies": {
     "mocha": "*",
-    "should": "*"
+    "should": "*",
+    "express": "*"
   },
 
   "scripts": {
-    "start": "node server.js",
+    "start": "node tsatterServer.js",
     "test": "./node_modules/.bin/mocha"
   }
 
