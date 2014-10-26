@@ -6,7 +6,9 @@
     "should": "*",
     "express": "*",
     "mongoose": "*",
-    "body-parser": "*"
+    "body-parser": "*",
+    "supertest": "*",
+    "jade": "*"
   },
 
   "scripts": {

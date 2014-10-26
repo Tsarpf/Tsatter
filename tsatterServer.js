@@ -3,10 +3,6 @@ var express = require('express'),
     mongoose = require('mongoose'),
     app = express();
 
-//routes
-app.get('/', function (req, res) {
-    res.send("Hello world! modified billion yay lsdfgsdfg");
-});
 
 //mongoose
 var connect = function() {
@@ -25,8 +21,19 @@ var pub = __dirname + '/public';
 app.use(express.static(pub));
 app.use(bodyParser.urlencoded({extended:true}));
 
+//Use jade
+app.set('view engine', 'jade');
+app.set('views', __dirname + '/app/views');
+
 var server = app.listen(7247, function() {
     console.log("server running..");
 });
+
+
+//routes
+app.get('/', function (req, res) {
+    res.render('index');
+});
+
 
 module.exports = app;
