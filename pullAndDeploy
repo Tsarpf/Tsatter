@@ -1,4 +1,4 @@
 git pull origin master
-./killscript
+killscript
 npm install
 npm start
