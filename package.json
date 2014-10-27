@@ -8,7 +8,8 @@
     "mongoose": "*",
     "body-parser": "*",
     "supertest": "*",
-    "jade": "*"
+    "jade": "*",
+    "socket.io": "*"
   },
 
   "scripts": {

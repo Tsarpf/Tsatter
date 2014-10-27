@@ -1,16 +1,26 @@
 doctype html
-html(ng-app)
+html
     head
         title Tsattr
-        script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js")
+        script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.js")
         script(src="/js/app.js")
-    body
+        link(href='/stylesheets/stylesheet.css', rel='stylesheet')
+
+    body(ng-app="tsatter" ng-controller="ChatController as chatCtrl")
+
         h1 Testink yay
 
-        p some text
+        p some text {{chatCtrl.test}}
         p some more text
 
-        tsChat
+        - var width = '500px'
+        - var height = '500px'
+        
+        div 
+            span(style="width:#{width};height:#{height};border:5px solid green;")
+                ts-chat
+            span(style="width:#{width};height:#{height};border:5px solid green;")
+                ts-chat
 
 
 

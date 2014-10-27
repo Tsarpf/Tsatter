@@ -1,8 +1,7 @@
 var express = require('express'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
-    app = express(),
-    io = require('socket.io')(app);
+    app = express();
 
 
 //mongoose
@@ -30,18 +29,20 @@ var server = app.listen(7547, function() {
     console.log("server running..");
 });
 
+var io = require('socket.io')(server);
+
 
 //routes
 app.get('/', function (req, res) {
     res.render('index');
 });
 
-app.get('partials/:name', functon(req, reqs){
+app.get('/partials/:name', function(req, res){
     var name = req.params.name;
     res.render('partials/' + name);
 });
 
-io.on('connection', function(socket) .{
+io.on('connection', function(socket) {
     socket.emit('hello', {property: 'value'});
     socket.on('some event', function(data) {
         console.log(data);
