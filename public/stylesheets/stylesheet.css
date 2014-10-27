@@ -1,1 +1,44 @@
- 
+.users {
+    float: left;
+    height: 80%;
+    top: 5px;
+    width: 20%;
+}
+
+
+/*message entry line */
+.newMessage {
+    position: absolute;
+    bottom: 5px;
+    left: 30%;
+    width: 50%;
+}
+
+.sendButton {
+    position: absolute;
+    bottom: 5px;
+    left: 85%;
+    width: 10%;
+}
+
+
+/*Messagebox */
+.messageBox {
+    float: right;
+    width: 70%;
+    height: 80%;
+    top: 5px;
+}
+
+/*And it's insides*/
+.messages {
+    float: left;
+    width: 70%
+    height: 100%;
+}
+
+.media {
+    float: right;
+    width: 20%;
+    height: 100%;
+}
