@@ -1,18 +1,21 @@
-.container
-    .users.bordered
-        ul ses
-            li sys
-            li sys 
-            li sys
-    .messageBox.bordered
-        .messages.bordered
-            p oh hi messa
-            p ges des dses
+- var width = '500px'
+- var height = '500px'
+span(ng-controller="ChatController as chatCtrl" style="width:#{width};height:#{height};border:5px solid green;")
+    .container
+        .users.bordered
+            ul ses
+                li sys
+                li sys 
+                li sys
+        .messageBox.bordered
+            .messages.bordered
+                p oh hi {{roomName}}
+                p(ng-click="test = test + 1") ges des {{test}}
 
-        .media.bordered
-            p moi oon mediaa :D
-            p moi oon mediaa :D
-            p moi oon mediaa :D
+            .media.bordered
+                p moi oon mediaa :D
+                p moi oon mediaa :D
+                p moi oon mediaa :D
 
-    input(type="text", class="newMessage bordered" value="test msg")
+        input(type="text", class="newMessage bordered" value="test msg")
 

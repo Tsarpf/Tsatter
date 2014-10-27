@@ -6,22 +6,13 @@ html
         script(src="/js/app.js")
         link(href='/stylesheets/stylesheet.css', rel='stylesheet')
 
-    body(ng-app="tsatter" ng-controller="ChatController as chatCtrl")
+    body(ng-app="tsatter")
 
         h1 Testink yay
 
-        p some text {{chatCtrl.test}}
         p some more text
 
-        - var width = '500px'
-        - var height = '500px'
-        
+
         div 
-            span(style="width:#{width};height:#{height};border:5px solid green;")
-                ts-chat
-            span(style="width:#{width};height:#{height};border:5px solid green;")
-                ts-chat
-
-
-
+            ts-chat(room-name="{{thing}}" ng-repeat="thing in [0,1,2]")
 
