@@ -9,8 +9,9 @@ span(ng-controller="ChatController as chatCtrl" style="width:#{width};height:#{h
                 li sys
         .messageBox.bordered
             .messages.bordered
-                p oh hi {{roomName}}
-                p(ng-click="test = test + 1") ges des {{test}}
+                ul
+                    li(ng-repeat="message in chatCtrl.messages")
+                    | {{message.user}}: {{message.message}}
 
             .media.bordered
                 p moi oon mediaa :D
