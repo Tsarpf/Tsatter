@@ -1,15 +1,27 @@
 var app = angular.module('tsatter', []);
 app.controller('ChatController', ['$scope', 'socket', function($scope, socket) {
     this.messages = [];
+    $scope.msg = "Enter message";
     socket.on($scope.roomName, function(data) {
         this.messages.push(data);
+    });
+    socket.on('hello', function(data) {
+        console.log(data);
     });
     this.addOne = function() {
         this.test++;
     };
-    this.sendMsg = function (msg) {
-        socket.emit($scope.roomName, msg);
+    this.sendMsg = function () {
+        socket.emit($scope.roomName, $scope.msg);
+        $scope.msg = "";
     };
+    this.first = true;
+    this.clicked=function() {
+        if(this.first) {
+            $scope.msg = "";
+            this.first = false;
+        }
+    }
 }]);
 
 app.directive('tsChat', function() {
@@ -36,7 +48,7 @@ app.factory('socket', function($rootScope) {
             });
         },
         emit: function(channel, data, callback) {
-            socket.emit(channel, dta, function() {
+            socket.emit(channel, data, function() {
                 var args = arguments; 
                 $rootScope.$apply(function() {
                     if(callback) {

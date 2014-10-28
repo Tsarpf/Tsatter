@@ -42,12 +42,51 @@ app.get('/partials/:name', function(req, res){
     res.render('partials/' + name);
 });
 
+var channels = {
+    
+}
+
+var isOnChannel = function(user, channel) {
+
+}
+var joinChannel = function(user, channel) {
+    //if(
+}
+var leaveChannel = function(user, channel) {
+}
+
+var count = 0;
 io.on('connection', function(socket) {
+    count++;
+    var user = 'anon' + count;
     socket.emit('hello', {property: 'value'});
-    socket.on('some event', function(data) {
-        console.log(data);
+    socket.on('join', function(data) {
+        if(data.room) {
+            try {
+                joinChannel(user, data.room);
+            }
+            catch(err){
+                console.log(err);
+            }
+        }
     });
+    socket.on('leave', function(data) {
+        if(data.room) {
+            try {
+                socket.leave(data.room);
+            }
+            catch(err){
+                console.log(err);
+            }
+        }
+    });
+    socket.on('message', function(data) {
+        //TODO: implement checking if allowed
+
+    });
+    
 });
+
 
 
 module.exports = app;
