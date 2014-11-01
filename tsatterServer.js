@@ -49,8 +49,13 @@ var channels = {
 var isOnChannel = function(user, channel) {
 
 }
-var joinChannel = function(user, channel) {
-    //if(
+var joinChannel = function(user, channel, socket) {
+    if(!channels[channel]){
+        channels[channel] = {};
+
+    }
+    channels[channel][user] = "ses";
+    socket.join(channel);
 }
 var leaveChannel = function(user, channel) {
 }
@@ -61,9 +66,10 @@ io.on('connection', function(socket) {
     var user = 'anon' + count;
     socket.emit('hello', {property: 'value'});
     socket.on('join', function(data) {
+        console.log(data);
         if(data.room) {
             try {
-                joinChannel(user, data.room);
+                joinChannel(user, data.room, socket);
             }
             catch(err){
                 console.log(err);
@@ -81,7 +87,16 @@ io.on('connection', function(socket) {
         }
     });
     socket.on('message', function(data) {
-        //TODO: implement checking if allowed
+        console.log(data);
+        if(channels[data.room] && channels[data.room][user]){
+            io.to(data.room).emit('message', {user: user, message: data.message});
+        }
+        else
+        {
+            console.log("error:");
+            console.log(data);
+        }
+        
 
     });
     
