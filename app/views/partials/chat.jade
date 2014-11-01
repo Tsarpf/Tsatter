@@ -10,7 +10,7 @@ span(ng-controller="ChatController as chatCtrl" style="width:#{width};height:#{h
         .messageBox.bordered
             .messages.bordered
                 ul
-                    li(ng-repeat="message in chatCtrl.messages") {{message.user}}: {{message.message}}
+                    li(ng-repeat="message in messages") {{message.user}}: {{message.message}}
 
             .media.bordered
                 p moi oon mediaa :D
