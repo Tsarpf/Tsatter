@@ -92,7 +92,8 @@ io.on('connection', function(socket) {
     socket.on('message', function(data) {
         console.log(data);
         if(channels[data.room] && channels[data.room][user]){
-            io.to(data.room).emit('message', {user: user, message: data.message});
+            console.log("moi");
+            io.to(data.room).emit(data.room, {user: user, message: data.message});
         }
         else
         {

@@ -2,19 +2,18 @@ var app = angular.module('tsatter', ['ngAnimate']);
 app.controller('ChatController', ['$anchorScroll', '$location', '$scope', 'socket', function($anchorScroll, $location, $scope, socket) {
     $scope.messages = [];
     $scope.msg = "Enter message";
-    /*
-    socket.on($scope.roomName, function(data) {
-        this.messages.push(data);
-    });
-    */
     socket.on('message', function(data) {
-        console.log("got message");
+        console.log("why was I called");
         console.log(data);
-        $scope.messages.push(data); 
     });
     socket.on('hello', function(data) {
         var joinObj = {room: $scope.roomName};
         socket.emit('join', joinObj);
+        socket.on($scope.roomName, function(data) {
+            console.log("une message");
+            console.log(data);
+            $scope.messages.push(data); 
+        });
     });
     this.addOne = function() {
         this.test++;
