@@ -1,19 +1,9 @@
-doctype html
-html
-    head
-        title Tsattr
-        script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.js")
-        script(src="/js/app.js")
-        script(src="https://cdn.socket.io/socket.io-1.2.0.js")
-        link(href='/stylesheets/stylesheet.css', rel='stylesheet')
+extends layout
 
-    body(ng-app="tsatter")
+block content
 
-        h1 Testink yay
+    h1 Testink yay
 
-        p some more text
-
-
-        div 
-            ts-chat(room-name="{{thing}}" ng-repeat="thing in [0,1,2]")
+    div 
+        ts-chat(room-name="{{thing}}" ng-repeat="thing in [0,1,2]")
 
