@@ -55,7 +55,7 @@ var isOnChannel = function(user, channel) {
 var joinChannel = function(user, channel, socket) {
     if(!channels[channel]){
         channels[channel] = {};
-
+        io.sockets.emit('hello', {channels: channels});
     }
     channels[channel][user] = "ses";
     socket.join(channel);
@@ -65,11 +65,14 @@ var leaveChannel = function(user, channel) {
 
 var count = 0;
 io.on('connection', function(socket) {
+    console.log(channels);
     count++;
     var user = 'anon' + count;
-    socket.emit('hello', {property: 'value'});
-    socket.on('join', function(data) {
+    socket.emit('hello', {channels: channels});
+    socket.on('join', function(data, fn) {
         console.log(data);
+        console.log('joining: ' + data.room);
+        console.log(channels);
         if(data.room) {
             try {
                 joinChannel(user, data.room, socket);
@@ -78,6 +81,7 @@ io.on('connection', function(socket) {
                 console.log(err);
             }
         }
+        fn('joined');
     });
     socket.on('leave', function(data) {
         if(data.room) {
@@ -91,17 +95,18 @@ io.on('connection', function(socket) {
     });
     socket.on('message', function(data) {
         console.log(data);
+        console.log('user: ' + user);
+        console.log('channels');
+        console.log(channels);
+        
         if(channels[data.room] && channels[data.room][user]){
             console.log("moi");
             io.to(data.room).emit(data.room, {user: user, message: data.message});
         }
-        else
-        {
+        else {
             console.log("error:");
             console.log(data);
         }
-        
-
     });
     
 });

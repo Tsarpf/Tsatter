@@ -6,9 +6,10 @@ app.controller('ChatController', ['$anchorScroll', '$location', '$scope', 'socke
         console.log("why was I called");
         console.log(data);
     });
-    socket.on('hello', function(data) {
-        var joinObj = {room: $scope.roomName};
-        socket.emit('join', joinObj);
+    var joinObj = {};
+    socket.emit('join', joinObj, function() {
+        console.log('join ' + $scope.roomName);
+        socket.emit('join', {room: $scope.roomName})
         socket.on($scope.roomName, function(data) {
             console.log("une message");
             console.log(data);
@@ -36,8 +37,31 @@ app.controller('ChatController', ['$anchorScroll', '$location', '$scope', 'socke
     $scope.$on('msgRepeatFinished', function(event) {
         if(bottomScroll) {
             var idx = $scope.messages.length - 1;
-            $location.hash($scope.roomName + 'msg' + idx);
-            $anchorScroll();
+            var div = document.getElementById($scope.roomName + 'msg' + idx);
+            div.scrollTop = div.scrollHeight;
+        }
+    });
+}]);
+
+app.controller('AllChatController', ['$scope', 'socket', function($scope, socket) {
+    $scope.roomNames = [];    
+    $scope.joinThisChannel = "Enter channel you want to join here";
+    this.clicked=function() {
+        $scope.joinThisChannel = "";
+    }
+    this.join=function() {
+        console.log('jointhischannel: ' + $scope.joinThisChannel);
+        socket.emit('join', {room: $scope.joinThisChannel});
+        $scope.joinThisChannel = "";
+    }
+    socket.on('hello', function(obj) {
+        console.log(obj);
+        $scope.roomNames = [];    
+        for(var room in obj.channels) {
+            if(obj.channels.hasOwnProperty(room)){
+                console.log(String(room));
+                $scope.roomNames.push(String(room));
+            }
         }
     });
 }]);
@@ -47,6 +71,8 @@ app.directive('tsChat', function() {
         restrict: "E",
         templateUrl: '/partials/chat',
         link: function(scope, element, attrs) {
+            console.log("le attribute:");
+            console.log(attrs.roomName);
             scope.roomName = attrs.roomName;
         }
     };

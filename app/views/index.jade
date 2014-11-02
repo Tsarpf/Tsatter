@@ -4,6 +4,10 @@ block content
 
     h1 Testink yay
 
-    div
-        ts-chat(room-name="{{thing}}" ng-repeat="thing in [0,1,2]")
+    div(ng-controller="AllChatController as allCtrl")
+
+        input(ng-click="allCtrl.clicked()", ng-keyup="$event.keyCode == 13 && allCtrl.join()", ng-model="joinThisChannel", type="text")
+
+        div
+            ts-chat(room-name="{{room}}" ng-repeat="room in roomNames")
 
