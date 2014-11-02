@@ -1,5 +1,5 @@
-var app = angular.module('tsatter', []);
-app.controller('ChatController', ['$scope', 'socket', function($scope, socket) {
+var app = angular.module('tsatter', ['ngAnimate']);
+app.controller('ChatController', ['$anchorScroll', '$location', '$scope', 'socket', function($anchorScroll, $location, $scope, socket) {
     $scope.messages = [];
     $scope.msg = "Enter message";
     /*
@@ -32,6 +32,15 @@ app.controller('ChatController', ['$scope', 'socket', function($scope, socket) {
             this.first = false;
         }
     }
+
+    var bottomScroll = true;
+    $scope.$on('msgRepeatFinished', function(event) {
+        if(bottomScroll) {
+            var idx = $scope.messages.length - 1;
+            $location.hash($scope.roomName + 'msg' + idx);
+            $anchorScroll();
+        }
+    });
 }]);
 
 app.directive('tsChat', function() {
@@ -39,7 +48,21 @@ app.directive('tsChat', function() {
         restrict: "E",
         templateUrl: '/partials/chat',
         link: function(scope, element, attrs) {
-            scope.roomName='room' + attrs.roomName;
+            scope.roomName = attrs.roomName;
+        }
+    };
+});
+
+app.directive('tsChatMessage', function($timeout) {
+    return {
+        restrict: "E",
+        templateUrl: '/partials/chatmessage',
+        link: function(scope, element, attrs) {
+            if(scope.$last === true){
+                $timeout(function() {
+                    scope.$emit('msgRepeatFinished');
+                });
+            }
         }
     };
 });

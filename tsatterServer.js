@@ -25,6 +25,9 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/app/views');
 
+//Always use pretty html.
+app.locals.pretty = true;
+
 var server = app.listen(7547, function() {
     console.log("server running..");
 });

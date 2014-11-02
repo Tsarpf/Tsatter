@@ -1,17 +1,8 @@
-.bordered {
-    /*
-    border-style: solid;
-    border-color: #0000ff;
-    */
-    border: 1px solid gray;
-    /*
-    padding: 5px;
-    margin: 2px;
-    */
+.chat {
+    height:500px;
+    border:5px solid green;
 }
-
-.container {
-    position:relative;
+.tscontainer {
     top: 0px;
     right: 0px;
     left: 0px;
@@ -19,24 +10,43 @@
     height: 100%;
     min-height: 100%;
     width: 100%;
-    border: 5px solid blue;
+    min-width: 100%;
+    */
+    /*outline: 5px solid blue;*/
 }
 
 .users {
-    float: left;
     height: 90%;
-    top: 5px;
-    width: 20%;
+    min-height: 90%;
+    outline: 1px solid orange;
+}
+
+.messages {
+    height: 90%;
+    min-height: 90%;
+    overflow: auto;
+    outline: 1px solid orange;
+}
+
+.tsmedia {
+    height: 90%;
+    min-height: 90%;
+    outline: 1px solid orange;
+}
+
+.single-message {
+    word-break: break-all;
 }
 
 
 /*message entry line */
 .newMessage {
-    position: absolute;
-    bottom: 1px;
-    height: 5%;
-    left: 21%;
-    width: 50%;
+    /*
+    height: 20%;
+    min-height: 20%;
+    */
+    height: 50px;
+    outline: 1px solid orange;
 }
 
 .sendButton {
@@ -45,26 +55,41 @@
     width: 10%;
 }
 
-
-/*Messagebox */
-.messageBox {
-    float: right;
-    width: 79%;
-    height: 90%;
-    top: 5px;
+.animate-enter { 
+    -webkit-animation: enter 250ms cubic-bezier(0.445, 0.050, 0.550, 0.950);
+    animation: enter 250ms cubic-bezier(0.445, 0.050, 0.550, 0.950);
+    display: block;
+    position: relative;
+} 
+@-webkit-keyframes enter {
+    from {
+        opacity: 0;
+        height: 0px;
+        left: -70px;
+    }
+    75% {
+        left: 10px;
+    }
+    to {
+        opacity: 1;
+        height: 30px;
+        left: 0px;
+    }
 }
-
-/*And it's insides*/
-.messages {
-    float: left;
-    width: 70%;
-    height: 100%;
-}
-
-.media {
-    float: right;
-    width: 28%;
-    height: 100%;
+@keyframes enter {
+    from {
+        opacity: 0;
+        height: 0px;
+        left: -70px;
+    }
+    75% {
+        left: 10px;
+    }
+    to {
+        opacity: 1;
+        height: 30px;
+        left: 0px;
+    }
 }
 
 span {
@@ -74,3 +99,4 @@ span {
 h1 {
     color: orange;
 }
+

@@ -1,21 +1,15 @@
-- var width = '500px'
-- var height = '500px'
-span(ng-controller="ChatController as chatCtrl" style="width:#{width};height:#{height};border:5px solid green;")
-    .container
-        .users.bordered
-            ul ses
-                li sys
-                li sys 
-                li sys
-        .messageBox.bordered
-            .messages.bordered
-                ul
-                    li(ng-repeat="message in messages") {{message.user}}: {{message.message}}
+span(ng-controller="ChatController as chatCtrl", class="chat col-xs-4")
 
-            .media.bordered
-                p moi oon mediaa :D
-                p moi oon mediaa :D
-                p moi oon mediaa :D
+    .row.tscontainer
 
-        input(ng-click="chatCtrl.clicked()" ng-keyup="$event.keyCode == 13 && chatCtrl.sendMsg()" ng-model="msg" type="text" class="newMessage bordered")
+        .users.col-xs-2
+
+        .messages.col-xs-8
+
+            ts-chat-message(ng-repeat="message in messages" ng-attr-id="{{roomName}}msg{{$index}}")
+                
+            
+        .tsmedia.col-xs-2
+
+        input(ng-click="chatCtrl.clicked()", ng-keyup="$event.keyCode == 13 && chatCtrl.sendMsg()", ng-model="msg", type="text", class="newMessage col-xs-offset-2 col-xs-8")
 
