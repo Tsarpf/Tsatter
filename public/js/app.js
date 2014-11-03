@@ -73,30 +73,42 @@ app.controller('AllChatController', ['$scope', 'socket', function($scope, socket
 
 app.controller("UserHeaderController", ['$scope', 'socket', function($scope, socket) {
     $scope.loggedIn = false;
-    //$rootScope.global = {loggedIn: false, username: 'anon'};
-    //console.log("ses " + global.loggedIn);
-    $scope.logIn = function() {
+    $scope.loginState = "";
+    $scope.login = function() {
+       console.log('login');
         var obj = {};
         obj.username = $scope.username;
         obj.password = $scope.password;
 
-        //$rootScope.global.username = $scope.username;
         socket.emit('login', obj);
     }
+    $scope.register = function() {
+       console.log('register');
+       var obj = {
+           username: $scope.username,
+           password: $scope.password
+       }
+       socket.emit('register', obj);
+    }
     $scope.logout = function() {
-        //$rootScope.global.loggedIn = false;
-        //$rootScope.global.username = "anon";
     };
 
     socket.on('loginSuccess', function(data) {
-        console.log(data);
-        $scopeloggedIn = true;
+        $scope.loginState = "Logged in!";
+        $scope.loggedIn = true;
     });
 
-
     socket.on('loginFail', function(data) {
-        console.log("login fail: " +  data);
-        //$rootScope.global.username = "anon";
+        $scope.loginState = "Login failed!";
+        $scope.loggedIn = false;
+    });
+
+    socket.on('registerSuccess', function(data) {
+        $scope.loginState = "Registered!";
+    });
+
+    socket.on('registerFail', function(data) {
+        $scope.loginState = "Register failed!";
     });
 }]);
 

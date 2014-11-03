@@ -54,10 +54,6 @@ app.set('views', __dirname + '/app/views');
 app.locals.pretty = true;
 
 
-
-
-
-
 var server = app.listen(7547, function() {
     console.log("server running..");
 });
@@ -86,19 +82,6 @@ io.use(function(socket, next){
         });
     });
 });
-
-function onAuthorizeSuccess(data, accept){
-  console.log('successful connection to socket.io');
-  accept(null, true);
-}
-
-function onAuthorizeFail(data, message, error, accept){
-  if(error)
-    throw new Error(message);
-  console.log('failed connection to socket.io:', message);
-  accept(null, false);
-}
-
 
 //routes
 require('./routes')(app);

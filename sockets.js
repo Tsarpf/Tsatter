@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Channel = require('./app/models/channel');
+var User = require('./app/models/user');
 
 var channels = {}
 
@@ -79,16 +80,26 @@ var initializeConnections = function(socketio, passportjs) {
         });
 
         socket.on('register', function(data) {
-            //NYI
+            User.register(new User({ username : data.username }), data.password, function(err, user) {
+                if (err) {
+                    socket.emit('registerFail', err);
+                    return;
+                }
+
+                socket.emit('registerSuccess', err);
+            });
         });
 
         socket.on('login', function(data) {
             console.log(data);
-            auth(data.username, data.password, function(user, err, info) {
-                console.log("tried logging in:");
-                console.log(user);
-                console.log(err);
-                console.log(info);
+            auth(data.username, data.password, function(user, err) {
+
+                if(!err){
+                    socket.emit('loginSuccess', {});
+                    return;
+                }
+
+                socket.emit('loginFail', 'No such username or password');
             });
         });
     });

@@ -1,11 +1,11 @@
 div(ng-controller="UserHeaderController as userCtrl" ng-model="loggedIn")
     div(ng-show="loggedIn")
-        p(class="loginfield") logged in!
+        p Logged in as {{username}}
         button(type="submit" class="loginfield" ng-submit="logout()") log out
         
     div(ng-show="!loggedIn")
 
-        form(name="logInForm", ng-submit="logIn()")
+        form(name="logInForm", ng-submit="login()", class="loginfield")
 
             p(class="loginfield") Username
             input(type="text", ng-model="username", class="loginfield")
@@ -15,6 +15,10 @@ div(ng-controller="UserHeaderController as userCtrl" ng-model="loggedIn")
 
             button(type="submit", class="loginfield") Log in
 
+        form(ng-submit="register()", class="loginfield" ng-show="!registered")
+            button(type="submit", class="loginfield") Register
+
+        p(class="loginfield") {{loginState}} 
 
 
 
