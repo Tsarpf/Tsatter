@@ -9,6 +9,9 @@
     "body-parser": "*",
     "supertest": "*",
     "jade": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "passport-local-mongoose": "*",
     "socket.io": "*"
   },
 

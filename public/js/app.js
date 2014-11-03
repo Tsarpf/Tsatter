@@ -13,6 +13,7 @@ app.controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$sc
         joinRoom($scope.roomName);
     });
     var joinRoom=function(roomName) {
+        $scope.messages.push({user: 'server', message: "Welcome to room '" + roomName + "'"});
         console.log('joining: ' + roomName);
         socket.emit('join', {room: roomName});
         socket.on($scope.roomName, function(data) {
@@ -93,7 +94,6 @@ app.directive('tsChatMessage', function($timeout) {
             if(scope.$last === true){
                 $timeout(function() {
                     scope.$emit('msgRepeatFinished');
-                    console.log(attrs);
                     scope.lastElementScroll(attrs.id);
                 });
             }

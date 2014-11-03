@@ -16,6 +16,11 @@ mongoose.connection.on('connected', function(){
     console.log("(re)connected to database.");
 });
 
+var User = require('./app/models/user');
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 
 var pub = __dirname + '/public';
 app.use(express.static(pub));
@@ -36,14 +41,7 @@ var io = require('socket.io')(server);
 
 
 //routes
-app.get('/', function (req, res) {
-    res.render('index');
-});
-
-app.get('/partials/:name', function(req, res){
-    var name = req.params.name;
-    res.render('partials/' + name);
-});
+require('./routes')(app);
 
 var channels = {}
 
