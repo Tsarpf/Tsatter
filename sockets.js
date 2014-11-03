@@ -73,6 +73,7 @@ var initializeConnections = function(socketio, passportjs) {
                 console.log(user);
                 console.log(err);
                 console.log(info);
+            });
         });
     }
     

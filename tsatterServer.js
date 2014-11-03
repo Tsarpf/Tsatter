@@ -37,7 +37,7 @@ var io = require('socket.io')(server);
 
 var key = 'express.sid';
 var secret = 'use only for testing you know';
-app.use(express.session({
+app.use(session({
     cookieParser: cookieParser,
     key: key,
     secret: secret,
@@ -67,7 +67,7 @@ var server = app.listen(7547, function() {
 //routes
 require('./routes')(app);
 
-var initCons = require('./sockets').initCons(io);
+var initCons = require('./sockets').initCons(io, passport);
 
 io.on('connection', initCons);
 

@@ -6,7 +6,7 @@ span(ng-controller="ChatController as chatCtrl", class="chat")
 
         div(class="messages col-xs-8", ng-attr-id="{{room}}")
 
-            ts-chat-message(ng-repeat="message in messages", ng-attr-id="{{roomName}}msg{{$index}}")
+            ts-chat-message(ng-repeat="message in messages")
                 
             
         .tsmedia.col-xs-2

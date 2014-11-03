@@ -1,0 +1,21 @@
+div(ng-controller="UserHeaderController as userCtrl" ng-model="loggedIn")
+    div(ng-show="loggedIn")
+        p(class="loginfield") logged in!
+        button(type="submit" class="loginfield" ng-submit="logout()") log out
+        
+    div(ng-show="!loggedIn")
+
+        form(name="logInForm", ng-submit="logIn()")
+
+            p(class="loginfield") Username
+            input(type="text", ng-model="username", class="loginfield")
+
+            p(class="loginfield") Password
+            input(type="password", ng-model="password", class="loginfield")
+
+            button(type="submit", class="loginfield") Log in
+
+
+
+
+

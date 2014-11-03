@@ -1,20 +1,20 @@
 var mongoose = require('mongoose'),
-    User = require('./user),
+    User = require('./user'),
     Schema = mongoose.Schema;
 
 var Channel = new Schema({
-    inviteOnly {
+    inviteOnly: {
         type: Boolean,
         default: false
-    }
-    requiresLogin {
+    },
+    requiresLogin: {
         type: Boolean,
         default: false
-    }
+    },
     users: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }],
     messages: [{
         message: String,
         username: String

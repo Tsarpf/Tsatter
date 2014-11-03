@@ -71,6 +71,45 @@ app.controller('AllChatController', ['$scope', 'socket', function($scope, socket
     });
 }]);
 
+app.controller("UserHeaderController", ['$rootScope', '$scope', 'socket', function($rootScope, $scope, socket) {
+    $scope.loggedIn = false;
+    //$rootScope.global = {loggedIn: false, username: 'anon'};
+    //console.log("ses " + global.loggedIn);
+    $scope.logIn = function() {
+        var obj = {};
+        obj.username = $scope.username;
+        obj.password = $scope.password;
+
+        //$rootScope.global.username = $scope.username;
+        socket.emit('login', obj);
+    }
+    $scope.logout = function() {
+        //$rootScope.global.loggedIn = false;
+        //$rootScope.global.username = "anon";
+    };
+
+    socket.on('loginSuccess', function(data) {
+        console.log(data);
+        $scopeloggedIn = true;
+    });
+
+
+    socket.on('loginFail', function(data) {
+        console.log("login fail: " +  data);
+        //$rootScope.global.username = "anon";
+    });
+}]);
+
+app.directive('tsUserHeader', function() {
+    return {
+        restrict: "E",
+        templateUrl: '/partials/userheader',
+        link: function(scope, element, attrs) {
+
+        }
+    };
+});
+
 app.directive('tsChat', function($timeout) {
     return {
         restrict: "E",
