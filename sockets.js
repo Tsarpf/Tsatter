@@ -18,40 +18,45 @@ var leaveChannel = function(user, channel) {
 
 var count = 0;
 
-var initializeConnections = function(socket) {
-    count++;
-    var user = 'anon' + count;
-    socket.emit('hello', {channels: channels});
-    socket.on('join', function(data, fn) {
-        if(data.room) {
-            try {
-                joinChannel(user, data.room, socket);
+var io = {};
+var initializeConnections = function(socketio) {
+    io = socketio;
+
+    return function(socket) {
+        count++;
+        var user = 'anon' + count;
+        socket.emit('hello', {channels: channels});
+        socket.on('join', function(data, fn) {
+            if(data.room) {
+                try {
+                    joinChannel(user, data.room, socket);
+                }
+                catch(err){
+                    console.log(err);
+                }
             }
-            catch(err){
-                console.log(err);
+            fn('joined');
+        });
+        socket.on('leave', function(data) {
+            if(data.room) {
+                try {
+                    socket.leave(data.room);
+                }
+                catch(err){
+                    console.log(err);
+                }
             }
-        }
-        fn('joined');
-    });
-    socket.on('leave', function(data) {
-        if(data.room) {
-            try {
-                socket.leave(data.room);
+        });
+        socket.on('message', function(data) {
+            if(channels[data.room] && channels[data.room][user]){
+                io.to(data.room).emit(data.room, {user: user, message: data.message});
             }
-            catch(err){
-                console.log(err);
+            else {
+                console.log("error:");
+                console.log(data);
             }
-        }
-    });
-    socket.on('message', function(data) {
-        if(channels[data.room] && channels[data.room][user]){
-            io.to(data.room).emit(data.room, {user: user, message: data.message});
-        }
-        else {
-            console.log("error:");
-            console.log(data);
-        }
-    });
+        });
+    }
     
 }
 

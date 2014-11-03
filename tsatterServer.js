@@ -44,7 +44,7 @@ var io = require('socket.io')(server);
 //routes
 require('./routes')(app);
 
-var initCons = require('./sockets').initCons;
+var initCons = require('./sockets').initCons(io);
 
 io.on('connection', initCons);
 
