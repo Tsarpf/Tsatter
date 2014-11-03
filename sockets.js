@@ -46,12 +46,12 @@ var initializeConnections = function(socketio, passportjs) {
     io.on('connection', function(socket) {
         console.log('new connection');
         count++;
-        var user = 'anon' + count;
+        var username = 'anon' + count;
         socket.emit('hello', {channels: channels});
         socket.on('join', function(data, fn) {
             if(data.room) {
                 try {
-                    joinChannel(user, data.room, socket);
+                    joinChannel(username, data.room, socket);
                 }
                 catch(err){
                     console.log(err);
@@ -70,8 +70,8 @@ var initializeConnections = function(socketio, passportjs) {
             }
         });
         socket.on('message', function(data) {
-            if(channels[data.room] && channels[data.room][user]){
-                io.to(data.room).emit(data.room, {user: user, message: data.message});
+            if(channels[data.room] && channels[data.room][username]){
+                io.to(data.room).emit(data.room, {user: username, message: data.message});
             }
             else {
                 console.log("error:");
@@ -82,7 +82,7 @@ var initializeConnections = function(socketio, passportjs) {
         socket.on('register', function(data) {
             User.register(new User({ username : data.username }), data.password, function(err, user) {
                 if (err) {
-                    socket.emit('registerFail', err);
+                    socket.emit('registerFail', {reason: err});
                     return;
                 }
 
@@ -91,15 +91,15 @@ var initializeConnections = function(socketio, passportjs) {
         });
 
         socket.on('login', function(data) {
-            console.log(data);
             auth(data.username, data.password, function(user, err) {
-
                 if(!err){
                     socket.emit('loginSuccess', {});
+                    console.log(user);
+                    username = user.username;
                     return;
                 }
 
-                socket.emit('loginFail', 'No such username or password');
+                socket.emit('loginFail', {reason: 'No such username or password'});
             });
         });
     });

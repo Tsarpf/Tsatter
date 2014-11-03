@@ -79,6 +79,7 @@ app.controller("UserHeaderController", ['$scope', 'socket', function($scope, soc
         var obj = {};
         obj.username = $scope.username;
         obj.password = $scope.password;
+        $scope.loginState = "Logging in... please wait";
 
         socket.emit('login', obj);
     }
@@ -88,9 +89,12 @@ app.controller("UserHeaderController", ['$scope', 'socket', function($scope, soc
            username: $scope.username,
            password: $scope.password
        }
+       $scope.loginState = "Registering... please wait";
        socket.emit('register', obj);
     }
     $scope.logout = function() {
+        $scope.loginState = "";
+        $scope.loggedIn = false;
     };
 
     socket.on('loginSuccess', function(data) {
@@ -99,7 +103,7 @@ app.controller("UserHeaderController", ['$scope', 'socket', function($scope, soc
     });
 
     socket.on('loginFail', function(data) {
-        $scope.loginState = "Login failed!";
+        $scope.loginState = "Login failed: " + data.reason.toString();
         $scope.loggedIn = false;
     });
 
@@ -108,7 +112,7 @@ app.controller("UserHeaderController", ['$scope', 'socket', function($scope, soc
     });
 
     socket.on('registerFail', function(data) {
-        $scope.loginState = "Register failed!";
+        $scope.loginState = "Register failed: " + data.reason.toString();
     });
 }]);
 
