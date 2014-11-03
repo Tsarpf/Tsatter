@@ -1,26 +1,30 @@
 var app = angular.module('tsatter', ['ngAnimate']);
-app.controller('ChatController', ['$anchorScroll', '$location', '$scope', 'socket', function($anchorScroll, $location, $scope, socket) {
+app.controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$scope', 'socket', function($timeout, $anchorScroll, $location, $scope, socket) {
+    //$scope.msgDiv = {};
     $scope.messages = [];
     $scope.msg = "Enter message";
     socket.on('message', function(data) {
         console.log("why was I called");
         console.log(data);
     });
-    var joinObj = {};
-    socket.emit('join', joinObj, function() {
-        console.log('join ' + $scope.roomName);
-        socket.emit('join', {room: $scope.roomName})
-        socket.on($scope.roomName, function(data) {
-            console.log("une message");
-            console.log(data);
-            $scope.messages.push(data); 
-        });
+
+    //we have to do this in a timeout so that the directive is initialized 
+    $timeout(function(){
+        joinRoom($scope.roomName);
     });
+    var joinRoom=function(roomName) {
+        console.log('joining: ' + roomName);
+        socket.emit('join', {room: roomName});
+        socket.on($scope.roomName, function(data) {
+            $scope.messages.push(data);
+        });
+    }
+
+
     this.addOne = function() {
         this.test++;
     };
     this.sendMsg = function () {
-        //socket.emit($scope.roomName, $scope.msg);
         var msgObj = {room: $scope.roomName, message: $scope.msg};
         socket.emit('message', msgObj);
         $scope.msg = "";
@@ -34,12 +38,13 @@ app.controller('ChatController', ['$anchorScroll', '$location', '$scope', 'socke
     }
 
     var bottomScroll = true;
-    $scope.$on('msgRepeatFinished', function(event) {
+    $scope.lastElementScroll=function(elementId) {
         if(bottomScroll) {
-            var idx = $scope.messages.length - 1;
-            var div = document.getElementById($scope.roomName + 'msg' + idx);
-            div.scrollTop = div.scrollHeight;
+            $scope.msgDiv.scrollTop = $scope.msgDiv.scrollHeight;
         }
+    };
+
+    $scope.$on('msgRepeatFinished', function(event) {
     });
 }]);
 
@@ -59,14 +64,13 @@ app.controller('AllChatController', ['$scope', 'socket', function($scope, socket
         $scope.roomNames = [];    
         for(var room in obj.channels) {
             if(obj.channels.hasOwnProperty(room)){
-                console.log(String(room));
                 $scope.roomNames.push(String(room));
             }
         }
     });
 }]);
 
-app.directive('tsChat', function() {
+app.directive('tsChat', function($timeout) {
     return {
         restrict: "E",
         templateUrl: '/partials/chat',
@@ -74,6 +78,9 @@ app.directive('tsChat', function() {
             console.log("le attribute:");
             console.log(attrs.roomName);
             scope.roomName = attrs.roomName;
+            $timeout(function() {
+                scope.msgDiv = document.getElementById(attrs.roomName);
+            });
         }
     };
 });
@@ -86,6 +93,8 @@ app.directive('tsChatMessage', function($timeout) {
             if(scope.$last === true){
                 $timeout(function() {
                     scope.$emit('msgRepeatFinished');
+                    console.log(attrs);
+                    scope.lastElementScroll(attrs.id);
                 });
             }
         }

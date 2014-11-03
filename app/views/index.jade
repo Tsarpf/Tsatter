@@ -6,8 +6,8 @@ block content
 
     div(ng-controller="AllChatController as allCtrl")
 
-        input(ng-click="allCtrl.clicked()", ng-keyup="$event.keyCode == 13 && allCtrl.join()", ng-model="joinThisChannel", type="text")
+        input(ng-click="allCtrl.clicked()", ng-keyup="$event.keyCode == 13 && allCtrl.join()", ng-model="joinThisChannel", type="text", class="new-room")
 
         div
-            ts-chat(room-name="{{room}}" ng-repeat="room in roomNames")
+            ts-chat(room-name="{{room}}", ng-repeat="room in roomNames")
 
