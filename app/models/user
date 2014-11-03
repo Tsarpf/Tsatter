@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
     passportLocalMongoose = require('passport-local-mongoose');
 
 var User = new Schema({
-    channels: [$
+    channels: [{
         type: String
     }]
 });
