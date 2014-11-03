@@ -70,7 +70,8 @@ var initializeConnections = function(socketio, passportjs) {
             }
         });
         socket.on('message', function(data) {
-            if(channels[data.room] && channels[data.room][username]){
+            //Todo better checking for who gets to say stuff to channels
+            if(channels[data.room]){
                 io.to(data.room).emit(data.room, {user: username, message: data.message});
             }
             else {
