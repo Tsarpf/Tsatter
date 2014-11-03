@@ -51,7 +51,7 @@ app.controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$sc
 
 app.controller('AllChatController', ['$scope', 'socket', function($scope, socket) {
     $scope.roomNames = [];    
-    $scope.joinThisChannel = "Enter channel you want to join here";
+    $scope.joinThisChannel = "Create a new channel";
     this.clicked=function() {
         $scope.joinThisChannel = "";
     }
