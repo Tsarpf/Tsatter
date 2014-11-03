@@ -2,6 +2,11 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     passport = require('passport'),
+    passportSocketIo = require('passport.socketio'),
+    session = require('express-session'),
+    cookieParser = require('cookie-parser'),
+    MongooseSession = require('mongoose-session-store'),
+    mongooseSessionStore = new MongooseSession({interval: 60000});
     app = express();
 
 
@@ -26,6 +31,25 @@ passport.deserializeUser(User.deserializeUser());
 var pub = __dirname + '/public';
 app.use(express.static(pub));
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(cookieParser());
+
+var io = require('socket.io')(server);
+
+var key = 'express.sid';
+var secret = 'use only for testing you know';
+app.use(express.session({
+    cookieParser: cookieParser,
+    key: key,
+    secret: secret,
+    store: mongooseSessionStore
+}));
+io.use(passportSocketIo.authorize({
+    cookieParser: cookieParser,
+    key: key,
+    secret: secret,
+    store: mongooseSessionStore
+}));
+
 
 //Use jade
 app.set('view engine', 'jade');
@@ -38,7 +62,6 @@ var server = app.listen(7547, function() {
     console.log("server running..");
 });
 
-var io = require('socket.io')(server);
 
 
 //routes

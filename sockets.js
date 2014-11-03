@@ -1,3 +1,5 @@
+var mongoose = require('mongoose');
+var Channel = require('./app/models/channel');
 
 
 var channels = {}
@@ -19,8 +21,12 @@ var leaveChannel = function(user, channel) {
 var count = 0;
 
 var io = {};
-var initializeConnections = function(socketio) {
+var users = [];
+var passport = {};
+
+var initializeConnections = function(socketio, passportjs) {
     io = socketio;
+    passport = passportjs;
 
     return function(socket) {
         count++;
@@ -56,10 +62,36 @@ var initializeConnections = function(socketio) {
                 console.log(data);
             }
         });
+
+        socket.on('register', function(data) {
+            //NYI
+        });
+
+        socket.on('login', function(data) {
+            auth(data.username, data.password, function(user, err, info) {
+                console.log("tried logging in:");
+                console.log(user);
+                console.log(err);
+                console.log(info);
+        });
     }
     
 }
 
 module.exports = {
-    initCons: initializeConnections
+    initCons: initializeConnections 
+}
+
+var auth = function(username, password, callback) {
+    var req = {body: {username: username, password: password}};
+    passport.authenticate('local', function(err, user, info) {
+        if(!user) {
+            var err = "Login failed: " + err;
+            callback(null, err);
+            return;
+        }
+
+        callback(user, null, info);
+
+    })(req, null, null);
 }

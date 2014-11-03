@@ -10,8 +10,7 @@
     "supertest": "*",
     "jade": "*",
     "passport": "*",
-    "passport-local": "*",
-    "passport-local-mongoose": "*",
+    "passport.socketio": "*",
     "socket.io": "*"
   },
 
