@@ -71,7 +71,7 @@ app.controller('AllChatController', ['$scope', 'socket', function($scope, socket
     });
 }]);
 
-app.controller("UserHeaderController", ['$rootScope', '$scope', 'socket', function($rootScope, $scope, socket) {
+app.controller("UserHeaderController", ['$scope', 'socket', function($scope, socket) {
     $scope.loggedIn = false;
     //$rootScope.global = {loggedIn: false, username: 'anon'};
     //console.log("ses " + global.loggedIn);

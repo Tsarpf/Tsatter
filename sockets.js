@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var Channel = require('./app/models/channel');
 
-
 var channels = {}
 
 var isOnChannel = function(user, channel) {
@@ -18,17 +17,33 @@ var joinChannel = function(user, channel, socket) {
 var leaveChannel = function(user, channel) {
 }
 
+var auth = function(username, password, callback) {
+    var req = {body: {username: username, password: password}};
+    passport.authenticate('local', function(err, user, info) {
+        if(!user) {
+            var err = "Login failed: " + err;
+            callback(null, err);
+            return;
+        }
+
+        callback(user, null, info);
+
+    })(req, null, null);
+}
+
 var count = 0;
 
-var io = {};
+var io;
 var users = [];
 var passport = {};
 
 var initializeConnections = function(socketio, passportjs) {
+    console.log('initd');
     io = socketio;
     passport = passportjs;
 
-    return function(socket) {
+    io.on('connection', function(socket) {
+        console.log('new connection');
         count++;
         var user = 'anon' + count;
         socket.emit('hello', {channels: channels});
@@ -68,6 +83,7 @@ var initializeConnections = function(socketio, passportjs) {
         });
 
         socket.on('login', function(data) {
+            console.log(data);
             auth(data.username, data.password, function(user, err, info) {
                 console.log("tried logging in:");
                 console.log(user);
@@ -75,24 +91,9 @@ var initializeConnections = function(socketio, passportjs) {
                 console.log(info);
             });
         });
-    }
-    
+    });
 }
 
 module.exports = {
     initCons: initializeConnections 
-}
-
-var auth = function(username, password, callback) {
-    var req = {body: {username: username, password: password}};
-    passport.authenticate('local', function(err, user, info) {
-        if(!user) {
-            var err = "Login failed: " + err;
-            callback(null, err);
-            return;
-        }
-
-        callback(user, null, info);
-
-    })(req, null, null);
 }
