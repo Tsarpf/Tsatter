@@ -8,13 +8,15 @@ app.controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$sc
         console.log(data);
     });
 
+    var first = true;
     socket.on('joinSuccess', function(obj) {
         //console.log('join success');
         //console.log(obj);
-        if(obj.room === $scope.roomName) {
+        if(obj.room === $scope.roomName && first) {
             //console.log('moi');
             $scope.messages = $scope.messages.concat(obj.messages);
             //console.log($scope.messages);
+            first = false;
         }
         else {
             //console.log(obj.room + ' isnt ' + $scope.roomName);

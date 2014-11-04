@@ -28,10 +28,18 @@ var changeUsername = function(old, newn){
     var user = users[old];
     delete users[old];
     users[newn] = user;
+
+    console.log('changing nick');
+    console.log(users[newn].channels);
+
+    for(var channel in users[newn].rooms) {
+        console.log(channel);
+        channels[channel].usernameChanged(old, newn);
+        channels[channel].join(newn);                         
+    }
 }
 
 var initializeConnections = function(socketio, passportjs) {
-    console.log('initd');
     io = socketio;
     passport = passportjs;
 
@@ -39,8 +47,10 @@ var initializeConnections = function(socketio, passportjs) {
         console.log('new connection');
         count++;
         var username = 'anon' + count;
-        users[username] = {socket: socket, loggedIn: false};
-        //socket.emit('hello', {channels: channels});
+        users[username] = {
+            socket: socket,
+            loggedIn: false,
+            rooms: {}};
         socket.on('join', function(data, fn) {
             if(!channels[data.room]){
                 channels[data.room] = roomHandler(io, data.room, users);
@@ -58,8 +68,6 @@ var initializeConnections = function(socketio, passportjs) {
             }
         });
         socket.on('message', function(data) {
-            console.log('got message');
-            console.log(data);
             if(channels[data.room]){
                 channels[data.room].send({username: username, message: data.message});
             }
@@ -86,10 +94,9 @@ var initializeConnections = function(socketio, passportjs) {
             auth(data.username, data.password, function(user, err) {
                 if(!err){
                     socket.emit('loginSuccess', {});
-                    console.log(user);
+                    users[username].loggedIn = true;
                     changeUsername(username, user.username);
                     username = user.username;
-                    users[username].loggedIn = true;
                     return;
                 }
 
@@ -98,10 +105,10 @@ var initializeConnections = function(socketio, passportjs) {
         });
 
         socket.on('logout', function(data) {
-            userinfo.username = 'anon' + count;
-            userinfo.loggedIn = false;
+            users[username].loggedIn = false;
+            username = 'anon' + count;
+            changeUsername(username, 'anon' + count);
             socket.emit('logoutSuccess', {});
-            //TODO: leave register only channels
         });
 
     });

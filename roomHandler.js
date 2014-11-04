@@ -1,12 +1,18 @@
-//create new channel object for every channel?
-//keep a list of channel names in sockets.js which reference the channel objects?
-//get handler object by channels[data.room].join/send/leave/etc
-//if list of channels doesn't have channel, instantiate a new one... in it's constructor it can handle creating it to the db if it doesn't exist
 var mongoose = require('mongoose'),
     Room = require('./app/models/room'),
     User = require('./app/models/user');
 
+var isAnon = function(username) {
+    if(username.indexOf('anon') !== 0) {
+        return false;
+    }
 
+    if(!IsNumeric(username.substring(4))) {
+        return false;
+    }
+
+    return true;
+}
 
 var roomHandler = function(io, roomName, users) {
     var pub = {};
@@ -20,16 +26,32 @@ var roomHandler = function(io, roomName, users) {
 
     pub.join = function(username) {
         if(!mRoomUsers.hasOwnProperty(username) && mInviteOnly){ //If the room doesn't already have the user in it's user list
-            console.log('join fail'); 
             mAllUsers[username].socket.emit('joinFail', {reason: 'Invite only channel'});
-            return;
+            return false;
         }
-        
+
+        //Overwrite if exists
         mRoomUsers[username] = mAllUsers[username];
         console.log('room name: ' + mRoomName);
         mRoomUsers[username].socket.join(mRoomName);
 
-        //TODO: add user to room db 
+        mRoomUsers[username].rooms[mRoomName] = pub;
+
+        User.findOne({name: username}).exec(function(err, doc) {
+            if(doc===null){
+                return;
+            }
+           Room.findOneAndUpdate(
+           {name: mRoomName},
+           {$push: {users: {_id: doc._id}}}
+           ).exec(function(err, doc) {
+               if(err){
+                   console.log(err);
+               }
+               console.log('saved user to channel');
+               console.log(doc);
+           });
+        });
 
         mRoomUsers[username].socket.on('logout', mOnLogout(username)); 
 
@@ -42,9 +64,18 @@ var roomHandler = function(io, roomName, users) {
             mRoomUsers[username].socket.emit('joinSuccess', {messages: doc.messages, room: mRoomName}); 
         });
 
-        
+        return true;        
     }
 
+    pub.usernameChanged = function(old, newname) {
+        delete mRoomUsers[old]
+        mRoomUsers[newname] = mAllUsers[newname];
+        var msg = {
+            username: 'server',
+            message: old + ' is now known as ' + newname
+        };
+        mio.to(mRoomName).emit(mRoomName, msg);
+    }
 
     pub.send = function(message) {
         var user = mRoomUsers[message.username];
