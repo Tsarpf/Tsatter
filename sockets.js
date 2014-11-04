@@ -1,22 +1,7 @@
 var mongoose = require('mongoose');
-var Channel = require('./app/models/channel');
 var User = require('./app/models/user');
+var roomHandler = require('./roomHandler.js');
 
-var channels = {}
-
-var isOnChannel = function(user, channel) {
-
-}
-var joinChannel = function(user, channel, socket) {
-    if(!channels[channel]){
-        channels[channel] = {};
-        io.sockets.emit('hello', {channels: channels});
-    }
-    channels[channel][user] = "ses";
-    socket.join(channel);
-}
-var leaveChannel = function(user, channel) {
-}
 
 var auth = function(username, password, callback) {
     var req = {body: {username: username, password: password}};
@@ -35,8 +20,15 @@ var auth = function(username, password, callback) {
 var count = 0;
 
 var io;
-var users = [];
-var passport = {};
+var channels = {}
+var users = {};
+var passport;
+
+var changeUsername = function(old, newn){
+    var user = users[old];
+    delete users[old];
+    users[newn] = user;
+}
 
 var initializeConnections = function(socketio, passportjs) {
     console.log('initd');
@@ -47,17 +39,13 @@ var initializeConnections = function(socketio, passportjs) {
         console.log('new connection');
         count++;
         var username = 'anon' + count;
-        socket.emit('hello', {channels: channels});
+        users[username] = {socket: socket, loggedIn: false};
+        //socket.emit('hello', {channels: channels});
         socket.on('join', function(data, fn) {
-            if(data.room) {
-                try {
-                    joinChannel(username, data.room, socket);
-                }
-                catch(err){
-                    console.log(err);
-                }
+            if(!channels[data.room]){
+                channels[data.room] = roomHandler(io, data.room, users);
             }
-            fn('joined');
+            channels[data.room].join(username);
         });
         socket.on('leave', function(data) {
             if(data.room) {
@@ -70,24 +58,27 @@ var initializeConnections = function(socketio, passportjs) {
             }
         });
         socket.on('message', function(data) {
-            //Todo better checking for who gets to say stuff to channels
+            console.log('got message');
+            console.log(data);
             if(channels[data.room]){
-                io.to(data.room).emit(data.room, {user: username, message: data.message});
+                channels[data.room].send({username: username, message: data.message});
             }
             else {
                 console.log("error:");
+                console.log(username);
                 console.log(data);
             }
         });
 
         socket.on('register', function(data) {
+            //TODO: don't allow registering as anon<number>
             User.register(new User({ username : data.username }), data.password, function(err, user) {
                 if (err) {
                     socket.emit('registerFail', {reason: err});
                     return;
                 }
 
-                socket.emit('registerSuccess', err);
+                socket.emit('registerSuccess', {});
             });
         });
 
@@ -96,13 +87,23 @@ var initializeConnections = function(socketio, passportjs) {
                 if(!err){
                     socket.emit('loginSuccess', {});
                     console.log(user);
+                    changeUsername(username, user.username);
                     username = user.username;
+                    users[username].loggedIn = true;
                     return;
                 }
 
                 socket.emit('loginFail', {reason: 'No such username or password'});
             });
         });
+
+        socket.on('logout', function(data) {
+            userinfo.username = 'anon' + count;
+            userinfo.loggedIn = false;
+            socket.emit('logoutSuccess', {});
+            //TODO: leave register only channels
+        });
+
     });
 }
 

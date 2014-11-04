@@ -8,6 +8,19 @@ app.controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$sc
         console.log(data);
     });
 
+    socket.on('joinSuccess', function(obj) {
+        //console.log('join success');
+        //console.log(obj);
+        if(obj.room === $scope.roomName) {
+            //console.log('moi');
+            $scope.messages = $scope.messages.concat(obj.messages);
+            //console.log($scope.messages);
+        }
+        else {
+            //console.log(obj.room + ' isnt ' + $scope.roomName);
+        }
+    });
+
     //we have to do this in a timeout so that the directive is initialized 
     $timeout(function(){
         joinRoom($scope.roomName);
@@ -17,6 +30,7 @@ app.controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$sc
         console.log('joining: ' + roomName);
         socket.emit('join', {room: roomName});
         socket.on($scope.roomName, function(data) {
+            //console.log(data);
             $scope.messages.push(data);
         });
     }
@@ -27,6 +41,7 @@ app.controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$sc
     };
     this.sendMsg = function () {
         var msgObj = {room: $scope.roomName, message: $scope.msg};
+        //console.log(msgObj);
         socket.emit('message', msgObj);
         $scope.msg = "";
     };
@@ -50,39 +65,33 @@ app.controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$sc
 }]);
 
 app.controller('AllChatController', ['$scope', 'socket', function($scope, socket) {
-    $scope.roomNames = [];    
+    $scope.roomNames = ['test'];    
     $scope.joinThisChannel = "Create a new channel";
     this.clicked=function() {
         $scope.joinThisChannel = "";
     }
     this.join=function() {
-        console.log('jointhischannel: ' + $scope.joinThisChannel);
-        socket.emit('join', {room: $scope.joinThisChannel});
+        //console.log('jointhischannel: ' + $scope.joinThisChannel);
+        //socket.emit('join', {room: $scope.joinThisChannel});
+        $scope.roomNames.push(String($scope.joinThisChannel));
         $scope.joinThisChannel = "";
     }
-    socket.on('hello', function(obj) {
-        console.log(obj);
-        $scope.roomNames = [];    
-        for(var room in obj.channels) {
-            if(obj.channels.hasOwnProperty(room)){
-                $scope.roomNames.push(String(room));
-            }
-        }
-    });
+
+
 }]);
 
 app.controller("UserHeaderController", ['$scope', 'socket', function($scope, socket) {
     $scope.loggedIn = false;
     $scope.loginState = "";
     $scope.login = function() {
-       console.log('login');
+       //console.log('login');
         var obj = {};
         obj.username = $scope.username;
         obj.password = $scope.password;
         $scope.loginState = "Logging in... please wait";
 
         socket.emit('login', obj);
-    }
+    };
     $scope.register = function() {
        console.log('register');
        var obj = {
@@ -91,12 +100,12 @@ app.controller("UserHeaderController", ['$scope', 'socket', function($scope, soc
        }
        $scope.loginState = "Registering... please wait";
        socket.emit('register', obj);
-    }
+    };
     $scope.logout = function() {
         $scope.loginState = "";
         $scope.loggedIn = false;
+        socket.emit('logout', {});
     };
-
     socket.on('loginSuccess', function(data) {
         $scope.loginState = "Logged in!";
         $scope.loggedIn = true;

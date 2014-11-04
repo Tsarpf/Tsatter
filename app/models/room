@@ -2,7 +2,10 @@ var mongoose = require('mongoose'),
     User = require('./user'),
     Schema = mongoose.Schema;
 
-var Channel = new Schema({
+var Room = new Schema({
+    name: {
+        type: String
+    },
     inviteOnly: {
         type: Boolean,
         default: false
@@ -21,4 +24,4 @@ var Channel = new Schema({
     }]
 });
 
-module.exports = mongoose.model('Channel', Channel);
+module.exports = mongoose.model('Room', Room);
