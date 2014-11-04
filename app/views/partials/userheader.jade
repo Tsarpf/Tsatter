@@ -1,5 +1,5 @@
 div(ng-controller="UserHeaderController as userCtrl", ng-model="loggedIn")
-    div(ng-show="loggedIn")
+    div(ng-show="loggedIn", class="loginfield")
 
         form(ng-submit="logout()", class="form-inline", role="form")
             div(class="form-group")
