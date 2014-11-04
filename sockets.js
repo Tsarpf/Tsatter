@@ -25,12 +25,14 @@ var users = {};
 var passport;
 
 var changeUsername = function(old, newn){
+    console.log(old + ' ' + newn);
     var user = users[old];
     delete users[old];
     users[newn] = user;
+    console.log(users);
+    console.log(users[newn]);
 
     console.log('changing nick');
-    console.log(users[newn].channels);
 
     for(var channel in users[newn].rooms) {
         console.log(channel);
@@ -106,8 +108,8 @@ var initializeConnections = function(socketio, passportjs) {
 
         socket.on('logout', function(data) {
             users[username].loggedIn = false;
-            username = 'anon' + count;
             changeUsername(username, 'anon' + count);
+            username = 'anon' + count;
             socket.emit('logoutSuccess', {});
         });
 
