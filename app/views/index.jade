@@ -2,11 +2,11 @@ extends layout
 
 block content
 
-    h1 Testink yay
+    h1 Tsatter Pre-Alpha
 
     div(ng-controller="AllChatController as allCtrl")
 
-        input(ng-click="allCtrl.clicked()", ng-keyup="$event.keyCode == 13 && allCtrl.join()", ng-model="joinThisChannel", type="text", class="new-room")
+        input(ng-click="allCtrl.clicked()", ng-keyup="$event.keyCode == 13 && allCtrl.join()", ng-model="joinThisChannel", type="text", class="form-control", placeholder="Join channel")
 
         div
             ts-chat(room-name="{{room}}", ng-repeat="room in roomNames")
