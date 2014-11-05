@@ -9,5 +9,11 @@ block content
         input(ng-click="allCtrl.clicked()", ng-keyup="$event.keyCode == 13 && allCtrl.join()", ng-model="joinThisChannel", type="text", class="form-control", placeholder="Join channel")
 
         div
-            ts-chat(room-name="{{room}}", ng-repeat="room in roomNames")
+            //- ts-chat(room-name="{{room}}", ng-repeat="room in roomNames")
+
+            tabset(type="pills")
+                tab(heading="Home", active="true")
+                    p Home tab
+                tab(ng-repeat="room in roomNames", heading="{{room}}")
+                    ts-chat(room-name="{{room}}")
 
