@@ -86,6 +86,10 @@ app.controller('AllChatController', ['$rootScope', '$scope', 'socket', function(
         alert('Disconnected!');
     });
 
+    socket.on('loginSuccess', function(data) {
+        $scope.userRooms = data.rooms;
+    });
+
 
 }]);
 

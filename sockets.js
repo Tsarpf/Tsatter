@@ -34,6 +34,11 @@ var changeUsername = function(old, newn){
     console.log(old + ' ' + newn);
     var user = users[old];
     delete users[old];
+
+    if(users[newn] && users[newn].socket) {
+        users[newn].socket.disconnect();
+    }
+
     users[newn] = user;
     //console.log(users);
     //console.log(users[newn]);
@@ -70,9 +75,6 @@ var login = function(userinfo, username) {
 
 
         userinfo.socket.emit('loginSuccess', {username: userinfo.username, rooms: doc.rooms});
-        if(users[username] && users[username].socket) {
-            users[username].socket.disconnect();
-        }
         users[username] = userinfo;
     });
 }
