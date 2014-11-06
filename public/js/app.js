@@ -64,6 +64,9 @@ app.controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$sc
 }]);
 
 app.controller('AllChatController', ['$rootScope', '$scope', 'socket', function($rootScope, $scope, socket) {
+    $rootScope.vars = {
+        loggedIn: false
+    };
     $scope.roomNames = ['test'];    
     $scope.joinThisChannel = "Create a new channel";
     $scope.userRooms = [];
@@ -94,9 +97,6 @@ app.controller('AllChatController', ['$rootScope', '$scope', 'socket', function(
 }]);
 
 app.controller("UserHeaderController", ['$rootScope', '$scope', 'socket', function($rootScope, $scope, socket) {
-    $rootScope.vars = {
-        loggedIn: false
-    }
     $scope.loginState = "";
     $scope.login = function() {
         var obj = {};
@@ -186,7 +186,7 @@ app.directive('tsChatMessage', function($timeout) {
 });
 
 app.factory('socket', function($rootScope) {
-    var socket = io('datisbox.net:7547');
+    var socket = io('128.199.52.104');
     return {
         on: function(channel, callback) {
             socket.on(channel, function () {

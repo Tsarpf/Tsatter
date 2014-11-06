@@ -12,13 +12,6 @@ app.post('/', function(request, response){
     console.log("got new commit or rebooted");
     response.send("terveterveterve");
     exec("./pullAndDeploy", null);
-    //fs.writeFile("./test.log", request.body, function(err) {
-    //    if(err){
-    //        console.log(err);
-    //    } else {
-    //        console.log("Save'd");
-    //    }
-    //});
 });
 
 app.listen(7248);

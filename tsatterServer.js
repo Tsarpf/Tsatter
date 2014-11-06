@@ -10,7 +10,10 @@ var express = require('express'),
 
 
 var runServer = function(options) {
-    var port = options.port || 7547;
+    if(!options.port) {
+        throw "Error, no port";
+    }
+    var port = options.port;
     console.log('port from options: ' + port);
 
     //mongoose
@@ -69,7 +72,6 @@ var runServer = function(options) {
         console.log("server running..");
     });
 
-    console.log('port?: ' + server.address().port);
     var io = require('socket.io')(server);
 
     var cookieParserF = cookieParser(secret);
@@ -85,8 +87,10 @@ var runServer = function(options) {
                 return next(new Error("no secureCookies found"));
             }
             mongooseSessionStore.get(socket.handshake.signedCookies[key], function(err, session){
-                socket.session = session;
-                socket.session.sid = socket.handshake.signedCookies[key];
+                if(session) {
+                    socket.session = session;
+                    socket.session.sid = socket.handshake.signedCookies[key];
+                }
                 if (!err && !session) err = new Error('session not found');
                 if (err) {
                      console.log('failed connection to socket.io:', err);
@@ -107,7 +111,7 @@ var runServer = function(options) {
     //everything sockets related
     require('./sockets').initCons(io, passport, mongooseSessionStore);
 
-    return app;
+    return {app: app, server: server};
 
 }
 

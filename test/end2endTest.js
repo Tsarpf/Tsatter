@@ -1,14 +1,15 @@
+var port = 4000;
 var should = require('should'),
-    server = require('../tsatterServer'),
+    server = require('../tsatterServer')({port: port}),
     client = require('socket.io-client');
 
+
 describe('End to end messaging should work', function() {
-    var port = server.address().port;
     var fstSock, sndSock;
+    var testRoom = "TESTROOM";
     beforeEach(function(){
         fstSock = client('http://localhost:' + port);
         sndSock = client('http://localhost:' + port);
-
     })
     afterEach(function(){
         fstSock.disconnect();
@@ -16,8 +17,9 @@ describe('End to end messaging should work', function() {
       // runs after each test in this block
     })
 
-    it('should do something', function(done) {
-        fstSock.emit('moi');
+    it('', function(done) {
+        fstSock.emit 
+        done();
     });
 });
 

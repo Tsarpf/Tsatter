@@ -2,4 +2,4 @@
 git pull origin master
 ./killserver
 npm install
-./loop.sh
+npm start

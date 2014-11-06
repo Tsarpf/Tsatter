@@ -26,6 +26,18 @@ var passport;
 var sessionStore = {};
 
 
+var isAnon = function(username) {
+    if(username.indexOf('anon') !== 0) {
+        return false;
+    }
+
+    console.log('typeof stuff' + typeof username.substring(4));
+    if(typeof username.substring(4) === "number") {
+        return false;
+    }
+
+    return true;
+}
 var nextAnon = function() {
     return 'anon' + (++count);
 }
@@ -140,9 +152,10 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
 
         socket.on('register', function(data) {
             //TODO: move anon checking to document validator
-            if(data.username.indexOf('anon') == 0 && IsNumeric(data.username.substring(4)))
+            //if(data.username.indexOf('anon') == 0 && IsNumeric(data.username.substring(4)))
+            if(isAnon(data.username))
             {
-                socket.emit('registerFail', {reason: err});
+                socket.emit('registerFail', {reason: 'Cannot register as anon'});
                 return;
             }
             User.register(new User({ username : data.username }), data.password, function(err, user) {

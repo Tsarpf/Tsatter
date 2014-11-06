@@ -15,11 +15,6 @@ describe('hooks', function() {
   })
   // test cases
 
-/*
-    it('should fail?', function() {
-        [1,2,3][0].should.equal(-1);
-    });
-*/
     it('should pass', function() {
         [1,2,3][0].should.equal(1);
     });

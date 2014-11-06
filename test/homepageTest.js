@@ -1,10 +1,13 @@
+var port = 4000;
 var should = require('should'),
     mongoose = require('mongoose'),
     test_model = require('../app/models/testModel'),
     TestModel = mongoose.model('Test'),
-    server = require('../tsatterServer'), //require server so mongoose etc server stuff is initialzied
+    serverObj = require('../tsatterServer')({port: port}), //require server so mongoose etc server stuff is initialzied
+    server = serverObj.server;
+    app = serverObj.app;
     request = require('supertest'),
-    agent = request.agent(server);
+    agent = request.agent(app);
     
 
 var testAuthor = "tester";
@@ -32,6 +35,9 @@ describe('File serving', function() {
         .expect(/Tsattr/)
         .expect(200)
         .end(done)
+    });
+
+    after(function() {
     });
 });
 

@@ -20,7 +20,7 @@
   },
 
   "scripts": {
-    "start": "node tsatterServer.js",
+    "start": "node run.js",
     "test": "./node_modules/.bin/mocha"
   }
 
