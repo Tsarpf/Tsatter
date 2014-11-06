@@ -15,7 +15,8 @@
     "passport": "*",
     "passport.socketio": "*",
     "passport-local-mongoose": "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "socket.io-client": "*"
   },
 
   "scripts": {

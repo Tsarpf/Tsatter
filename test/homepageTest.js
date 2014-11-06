@@ -33,37 +33,6 @@ describe('File serving', function() {
         .expect(200)
         .end(done)
     });
-/*
-    it('should have a working connection', function() {
-        mongoose.connection.readyState.should.above(0);
-    });
-
-    it('should instantiate TestModel objects', function() {
-       var test = getTestModel();
-       test.should.be.ok
-       test.should.have.property('author', testAuthor);
-       test.should.have.property('line', testLine);
-    });
-
-    it('should be able to save documents', function(done) {
-        var test = getTestModel();
-        test.save(function (err, docs) {
-            (err === null).should.be.true;
-            done();
-        });
-    });
-
-    it('... and then find those saved documents', function(done) {
-        TestModel.find({line: testLine}).exec(function(err, docs) {
-            if(err)
-            {
-                console.log("Error!: " + err);
-            }
-            docs.length.should.above(0);
-            done();
-        });
-    });
-*/
 });
 
 
