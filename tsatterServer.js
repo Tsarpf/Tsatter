@@ -11,15 +11,17 @@ var express = require('express'),
 
 var runServer = function(options) {
     if(!options.port) {
-        throw "Error, no port";
+        //throw "Error, no port";
     }
     var port = options.port;
     console.log('port from options: ' + port);
 
     //mongoose
+    var mongooseConn;
     var connect = function() {
         var options = {server: {socketOptions: {keepAlive: 1}}};
-        mongoose.connect("mongodb://localhost/", options);
+        //mongooseConn = mongoose.createConnection("mongodb://localhost/", options);
+        mongooseConn = mongoose.connect("mongodb://localhost/", options);
     };
     connect();
     mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
@@ -41,7 +43,7 @@ var runServer = function(options) {
     app.use(bodyParser.urlencoded({extended:true}));
     app.use(cookieParser());
     var key = 'express.sid';
-    var secret = 'use only for testing you know';
+    var secret = 'new key';
     var maxAge = new Date(Date.now() + 3600000);
     app.use(session({
         cookieParser: cookieParser,
@@ -69,14 +71,18 @@ var runServer = function(options) {
 
 
     var server = app.listen(port, function() {
+        console.log('port: ' + server.address().port);
+        console.log(server.address().address);
         console.log("server running..");
     });
+
 
     var io = require('socket.io')(server);
 
     var cookieParserF = cookieParser(secret);
     //cookieParser = cookieParser(secret);
     io.use(function(socket, next){
+        console.log('ses' + socket.handshake);
         cookieParserF(socket.handshake, {}, function(err){
             if (err) {
                 console.log("error in parsing cookie");
@@ -94,6 +100,7 @@ var runServer = function(options) {
                 if (!err && !session) err = new Error('session not found');
                 if (err) {
                      console.log('failed connection to socket.io:', err);
+                     err=null;
                 } else {
                     console.log(session);
                      console.log('successful connection to socket.io');
@@ -111,7 +118,8 @@ var runServer = function(options) {
     //everything sockets related
     require('./sockets').initCons(io, passport, mongooseSessionStore);
 
-    return {app: app, server: server};
+    return {app: app, server: server, mongConn: mongooseConn};
+    //return app;
 
 }
 

@@ -33,10 +33,10 @@ var roomHandler = function(io, roomName, users) {
 
         //Overwrite if exists
         mRoomUsers[username] = mAllUsers[username];
-        console.log('room name: ' + mRoomName);
-        console.log('username: ' + username);
-        console.log('username: ' + mAllUsers[username]);
         mRoomUsers[username].socket.join(mRoomName);
+        mAllUsers[username].socket.join(mRoomName);
+        console.log('pls join');
+        mio.to(mRoomName).emit('testi','moi');
 
 
         User.findOne({name: username}).exec(function(err, doc) {
@@ -55,8 +55,6 @@ var roomHandler = function(io, roomName, users) {
            });
         });
 
-        console.log('derp');
-        console.log(mRoomUsers[username].rooms);
         if(!(mRoomName in mRoomUsers[username].rooms) && !isAnon(username)) {
             console.log('pushing new channel');
             User.findOneAndUpdate({username: username}, {$push: {rooms: mRoomName}}, {upsert: true}).exec(function(err, doc) {
@@ -71,7 +69,8 @@ var roomHandler = function(io, roomName, users) {
 
         Room.findOne({name: mRoomName}, {messages: {$slice: -50}}).exec(function(err, doc) {
             if(err || !doc){
-                return
+                mRoomUsers[username].socket.emit('joinSuccess', {messages: [], room: mRoomName});
+                return;
             }
             mRoomUsers[username].socket.emit('joinSuccess', {messages: doc.messages, room: mRoomName}); 
         });
@@ -108,10 +107,11 @@ var roomHandler = function(io, roomName, users) {
 
         //TODO: find out if more checking is needed?
 
-        //console.log('room name: ' + mRoomName);
-        //console.log('message: ');
-        //console.log(message);
+        console.log('sending to ' + mRoomName);
+        console.log(message);
+        //console.log(mRoomUsers);
         mio.to(mRoomName).emit(mRoomName, message);
+        mio.to(mRoomName).emit('testi', 'moi');
          
         Room.findOneAndUpdate(
             {name: mRoomName},

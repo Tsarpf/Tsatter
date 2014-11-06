@@ -3,6 +3,7 @@ var fs = require('fs');
 var express = require('express'),
     app = express();
 
+console.log('listening');
 
 app.post('/', function(request, response){
     console.log("request");
