@@ -3,20 +3,17 @@ app.controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$sc
     //$scope.msgDiv = {};
     $scope.messages = [];
     $scope.msg = "Enter message";
-    socket.on('message', function(data) {
-        console.log("why was I called");
-        console.log(data);
-    });
-
-    var first = true;
+    var firstJoin = true;
     socket.on('joinSuccess', function(obj) {
-        //console.log('join success');
-        //console.log(obj);
-        if(obj.room === $scope.roomName && first) {
-            //console.log('moi');
+        if(obj.room === $scope.roomName && firstJoin) {
+            firstJoin = false;
             $scope.messages = $scope.messages.concat(obj.messages);
-            //console.log($scope.messages);
-            first = false;
+            $timeout(function(){
+                if(bottomScroll) {
+                    $scope.msgDiv.scrollTop = $scope.msgDiv.scrollHeight;
+                    console.log('scroll pls');
+                }
+            }, 500); //Ugly?
         }
         else {
             //console.log(obj.room + ' isnt ' + $scope.roomName);
@@ -66,9 +63,10 @@ app.controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$sc
     });
 }]);
 
-app.controller('AllChatController', ['$scope', 'socket', function($scope, socket) {
+app.controller('AllChatController', ['$rootScope', '$scope', 'socket', function($rootScope, $scope, socket) {
     $scope.roomNames = ['test'];    
     $scope.joinThisChannel = "Create a new channel";
+    $scope.userRooms = [];
     this.clicked=function() {
         $scope.joinThisChannel = "";
     }
@@ -78,22 +76,53 @@ app.controller('AllChatController', ['$scope', 'socket', function($scope, socket
         $scope.roomNames.push(String($scope.joinThisChannel));
         $scope.joinThisChannel = "";
     }
+    socket.emit('hello', {}, function(data) {
+        console.log(data);
+        $scope.userRooms = data.rooms;
+        $rootScope.vars.loggedIn = data.loggedIn;
+        $rootScope.vars.username = data.username;
+    });
+    socket.on('disconnect', function() {
+        alert('Disconnected!');
+    });
 
 
 }]);
 
-app.controller("UserHeaderController", ['$scope', 'socket', function($scope, socket) {
-    $scope.loggedIn = false;
+app.controller("UserHeaderController", ['$rootScope', '$scope', 'socket', function($rootScope, $scope, socket) {
+    $rootScope.vars = {
+        loggedIn: false
+    }
     $scope.loginState = "";
     $scope.login = function() {
-       //console.log('login');
         var obj = {};
         obj.username = $scope.username;
         obj.password = $scope.password;
         $scope.loginState = "Logging in... please wait";
 
-        socket.emit('login', obj);
+        socket.emit('login', obj, logStateChange);
     };
+    $scope.logout = function() {
+        socket.emit('logout', {}, logStateChange);
+    };
+    var logStateChange = function(data) {
+        $scope.username = data.username;
+        $rootScope.vars.username = data.username;
+        $rootScope.vars.loggedIn = data.loggedIn;
+        if(data.loggedIn){
+            $scope.loginState = "Logged in!";
+        }
+        else{
+            $scope.loginState = "Logged out!";
+        }
+    }
+
+    socket.on('loginFail', function(data) {
+        $scope.loginState = "Login failed: " + data.reason.toString();
+        //$scope.loggedIn = false;
+        $rootScope.vars.loggedIn = false;
+    });
+
     $scope.register = function() {
        console.log('register');
        var obj = {
@@ -103,21 +132,6 @@ app.controller("UserHeaderController", ['$scope', 'socket', function($scope, soc
        $scope.loginState = "Registering... please wait";
        socket.emit('register', obj);
     };
-    $scope.logout = function() {
-        $scope.loginState = "";
-        $scope.loggedIn = false;
-        socket.emit('logout', {});
-    };
-    socket.on('loginSuccess', function(data) {
-        $scope.loginState = "Logged in!";
-        $scope.loggedIn = true;
-    });
-
-    socket.on('loginFail', function(data) {
-        $scope.loginState = "Login failed: " + data.reason.toString();
-        $scope.loggedIn = false;
-    });
-
     socket.on('registerSuccess', function(data) {
         $scope.loginState = "Registered!";
     });

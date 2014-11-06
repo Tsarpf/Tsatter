@@ -7,7 +7,8 @@ var isAnon = function(username) {
         return false;
     }
 
-    if(!IsNumeric(username.substring(4))) {
+    console.log('typeof stuff' + typeof username.substring(4));
+    if(typeof username.substring(4) === "number") {
         return false;
     }
 
@@ -33,9 +34,10 @@ var roomHandler = function(io, roomName, users) {
         //Overwrite if exists
         mRoomUsers[username] = mAllUsers[username];
         console.log('room name: ' + mRoomName);
+        console.log('username: ' + username);
+        console.log('username: ' + mAllUsers[username]);
         mRoomUsers[username].socket.join(mRoomName);
 
-        mRoomUsers[username].rooms[mRoomName] = pub;
 
         User.findOne({name: username}).exec(function(err, doc) {
             if(doc===null){
@@ -48,10 +50,22 @@ var roomHandler = function(io, roomName, users) {
                if(err){
                    console.log(err);
                }
-               console.log('saved user to channel');
-               console.log(doc);
+               //console.log('saved user to channel');
+               //console.log(doc);
            });
         });
+
+        console.log('derp');
+        console.log(mRoomUsers[username].rooms);
+        if(!(mRoomName in mRoomUsers[username].rooms) && !isAnon(username)) {
+            console.log('pushing new channel');
+            User.findOneAndUpdate({username: username}, {$push: {rooms: mRoomName}}, {upsert: true}).exec(function(err, doc) {
+                console.log(doc);
+                if(err)
+                    console.log(err);
+            });
+        }
+        mRoomUsers[username].rooms[mRoomName] = pub;
 
         mRoomUsers[username].socket.on('logout', mOnLogout(username)); 
 
@@ -59,8 +73,6 @@ var roomHandler = function(io, roomName, users) {
             if(err || !doc){
                 return
             }
-            console.log('messages');
-            console.log(doc);
             mRoomUsers[username].socket.emit('joinSuccess', {messages: doc.messages, room: mRoomName}); 
         });
 
@@ -80,8 +92,8 @@ var roomHandler = function(io, roomName, users) {
     pub.send = function(message) {
         var user = mRoomUsers[message.username];
 
-        console.log('send');
-        console.log(mRoomUsers);
+        //console.log('send');
+        //console.log(mRoomUsers);
         if(!user)
         {
             console.log('!user');
@@ -96,18 +108,19 @@ var roomHandler = function(io, roomName, users) {
 
         //TODO: find out if more checking is needed?
 
-        console.log('room name: ' + mRoomName);
-        console.log('message: ');
-        console.log(message);
+        //console.log('room name: ' + mRoomName);
+        //console.log('message: ');
+        //console.log(message);
         mio.to(mRoomName).emit(mRoomName, message);
          
         Room.findOneAndUpdate(
             {name: mRoomName},
             {$push: {messages: message}}
         ).exec(function(err, doc) {
-            console.log('saved message?');      
-            console.log(doc);      
-            console.log(err);      
+            //console.log('saved message?');      
+            //console.log(doc);      
+            if(err)
+                console.log(err);      
         });
     }
 
@@ -119,7 +132,7 @@ var roomHandler = function(io, roomName, users) {
         return function(){
             if(mInviteOnly) { 
                 mRoomUsers[username].socket.leave(mRoomName);
-                mRoomUsers[username] = {};
+                //mRoomUsers[username] = {};
             }
         }
     }
@@ -143,10 +156,14 @@ var roomHandler = function(io, roomName, users) {
                 mInviteOnly = doc.inviteOnly;
                 mRequiresLogin = doc.requiresLogin;
                 doc.populate('users', function(err, users) {
-                    console.log('users in existing room:');
-                    console.log(users);
-                    for(var i = 0; i < users.length; i++){
-                        mRoomUsers[users[i].username] = {};
+                    //console.log('users in existing room:');
+                    //console.log(users);
+                    if(err)
+                        console.log(err);
+                    else {
+                        for(var i = 0; i < users.length; i++){
+                            mRoomUsers[users[i].username] = {};
+                        }
                     }
                 });
             }

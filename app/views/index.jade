@@ -11,3 +11,6 @@ block content
         div
             ts-chat(room-name="{{room}}", ng-repeat="room in roomNames")
 
+        div
+            p(ng-show="vars.loggedIn", ng-repeat="room in userRooms") {{room}}
+

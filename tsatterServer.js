@@ -2,7 +2,6 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     passport = require('passport'),
-    passportSocketIo = require('passport.socketio'),
     session = require('express-session'),
     cookieParser = require('cookie-parser'),
     MongooseSession = require('./custom-mongoose-session-store'),
@@ -24,6 +23,8 @@ mongoose.connection.on('connected', function(){
 
 var User = require('./app/models/user');
 passport.use(User.createStrategy());
+
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
@@ -34,10 +35,16 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(cookieParser());
 var key = 'express.sid';
 var secret = 'use only for testing you know';
+var maxAge = new Date(Date.now() + 3600000);
 app.use(session({
     cookieParser: cookieParser,
     key: key,
     secret: secret,
+    maxAge: maxAge,
+    cookie: {
+        path: '/',
+        maxAge: maxAge
+    },
     store: mongooseSessionStore,
     resave: true,
     saveUninitialized: true
@@ -59,9 +66,10 @@ var server = app.listen(7547, function() {
 });
 var io = require('socket.io')(server);
 
-cookieParser = cookieParser(secret);
+var cookieParserF = cookieParser(secret);
+//cookieParser = cookieParser(secret);
 io.use(function(socket, next){
-    cookieParser(socket.handshake, {}, function(err){
+    cookieParserF(socket.handshake, {}, function(err){
         if (err) {
             console.log("error in parsing cookie");
             return next(err);
@@ -72,10 +80,12 @@ io.use(function(socket, next){
         }
         mongooseSessionStore.get(socket.handshake.signedCookies[key], function(err, session){
             socket.session = session;
+            socket.session.sid = socket.handshake.signedCookies[key];
             if (!err && !session) err = new Error('session not found');
             if (err) {
                  console.log('failed connection to socket.io:', err);
             } else {
+                console.log(session);
                  console.log('successful connection to socket.io');
             }
             next(err);
@@ -83,12 +93,13 @@ io.use(function(socket, next){
     });
 });
 
+
 //routes
 require('./routes')(app);
 
 
 //everything sockets related
-require('./sockets').initCons(io, passport);
+require('./sockets').initCons(io, passport, mongooseSessionStore);
 
 
 module.exports = app;

@@ -1,13 +1,13 @@
-div(ng-controller="UserHeaderController as userCtrl", ng-model="loggedIn")
-    div(ng-show="loggedIn", class="loginfield")
+div(ng-controller="UserHeaderController as userCtrl", ng-model="vars.loggedIn")
+    div(ng-show="vars.loggedIn", class="loginfield")
 
         form(ng-submit="logout()", class="form-inline", role="form")
             div(class="form-group")
                 p(class="loginfield") Logged in as 
-                    strong {{username}}
+                    strong {{vars.username}}
                 button(type="submit", class="btn btn-default") Log out
         
-    div(ng-show="!loggedIn", class="loginfield")
+    div(ng-show="!vars.loggedIn", class="loginfield")
 
         form(name="logInForm", ng-submit="login()", class="loginfield form-inline", role="form")
 
