@@ -48,6 +48,7 @@ describe('mongoose', function() {
             {
                 console.log("Error!: " + err);
             }
+            console.log('docs length should be > 0: ' + docs.length)
             docs.length.should.above(0);
             done();
         });
