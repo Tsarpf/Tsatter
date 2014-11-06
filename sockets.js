@@ -43,8 +43,10 @@ var changeUsername = function(old, newn){
     console.log(users[newn].rooms);
     for(var channel in users[newn].rooms) {
         //console.log(channel);
-        channels[channel].usernameChanged(old, newn);
-        channels[channel].join(newn);                         
+        if(channels.hasOwnProperty(channel)) {
+            channels[channel].usernameChanged(old, newn);
+            channels[channel].join(newn);                         
+        }
     }
 }
 
@@ -68,7 +70,7 @@ var login = function(userinfo, username) {
 
 
         userinfo.socket.emit('loginSuccess', {username: userinfo.username, rooms: doc.rooms});
-        if(users[username].socket) {
+        if(users[username] && users[username].socket) {
             users[username].socket.disconnect();
         }
         users[username] = userinfo;
