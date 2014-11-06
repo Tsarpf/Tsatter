@@ -2,4 +2,4 @@
 git pull origin master
 ./killserver
 npm install
-npm start
+screen ./loop.sh
