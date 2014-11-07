@@ -9,11 +9,7 @@ module.exports = function(app) {
 
     app.post('/login', function(req, res, next) {
         passport.authenticate('local', function(err, user, info) {
-            console.log('wat is dis');
-            console.log(err);
-            console.log(user);
-            console.log(info);
-            res.render('index');
+            res.redirect('/');
         })(req,res,next);
     });
 

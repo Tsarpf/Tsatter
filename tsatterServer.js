@@ -83,7 +83,7 @@ var runServer = function(options) {
 
     //TODO: move this somewhere nicer?
     io.use(function(socket, next){
-        console.log('ses' + socket.handshake);
+        //console.log('ses' + socket.handshake);
         cookieParserF(socket.handshake, {}, function(err){
             if (err) {
                 console.log("error in parsing cookie");
@@ -98,9 +98,12 @@ var runServer = function(options) {
 
             var sid;
             if(urlCookie)  {
-                //TODO: find out if this is slow
+                //TODO: find out just how slow this is
                 try {
+                    //console.log(url);
                     sid = url.substring(url.indexOf('=') + 1, url.indexOf('&')); 
+                    sid = sid.substring(sid.indexOf('%3A') + 3, sid.indexOf('.'));
+                    //console.log(sid);
                 }
                 catch(err) {
                     console.log(err);
@@ -114,7 +117,7 @@ var runServer = function(options) {
 
                 if(session) {
                     socket.session = session;
-                    socket.session.sid = socket.handshake.signedCookies[key];
+                    socket.session.sid = sid;
                 }
 
                 if (!err && !session) 
@@ -125,6 +128,7 @@ var runServer = function(options) {
 
                 }
                 else {
+                    console.log('session:');
                     console.log(session);
                     console.log('successful connection to socket.io');
                 }

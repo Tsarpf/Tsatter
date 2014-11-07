@@ -26,7 +26,6 @@ describe('Server end to end messaging ', function() {
             form: {username: 'teitsi', password: 'meitsi'}
         }, function(){
             var cookieVal = cookies.cookies[0].value;
-            console.log('COOKIE VAL::!!!!: ' + cookieVal);
             fstSock = client(url + '/?cookie=' + cookieVal, options);
             sndSock = client(url + '/?cookie=' + cookieVal, options);
             fstSock.on('connect', function() {
@@ -40,7 +39,7 @@ describe('Server end to end messaging ', function() {
       // runs after each test in this block
     });
 
-    it('should have it\'s tests beforeEach fixed if /login returns more than 1 cookie', function() {
+    it('should have it\'s tests beforeEach fixed if /login starts returning more than 1 cookie', function() {
         cookies.cookies.length.should.equal(1);
     });
 
