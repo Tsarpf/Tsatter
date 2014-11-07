@@ -35,6 +35,14 @@ var roomHandler = function(io, roomName, users) {
         mRoomUsers[username] = mAllUsers[username];
         mRoomUsers[username].socket.join(mRoomName);
         console.log('pls join');
+
+        //console.log(mRoomUsers[username].socket);
+
+        console.log('pls join socket');
+        //console.log(io);
+
+        //console.log(mRoomUsers[username].socket);
+
         mio.to(mRoomName).emit('testi','moi');
     /*
     console.log(mio.of("/"));
@@ -114,6 +122,7 @@ var roomHandler = function(io, roomName, users) {
         console.log('sending to ' + mRoomName);
         console.log(message);
         //console.log(mRoomUsers);
+        //console.log(mio);
         mio.to(mRoomName).emit(mRoomName, message);
         mio.to(mRoomName).emit('testi', 'moi');
          

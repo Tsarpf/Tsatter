@@ -2,6 +2,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     passport = require('passport'),
+    passportSocketIo = require('passport.socketio'),
     session = require('express-session'),
     cookieParser = require('cookie-parser'),
     MongooseSession = require('./custom-mongoose-session-store'),
@@ -79,6 +80,32 @@ var runServer = function(options) {
 
     var io = require('socket.io')(server);
 
+/*
+io.use(passportSocketIo.authorize({
+    cookieParser: cookieParser,
+    key: key,
+    secret: secret,
+    store: mongooseSessionStore,
+    success: onAuthorizeSuccess,
+    fail: onAuthorizeFail,
+}));
+
+
+function onAuthorizeSuccess(data, accept) {
+console.log('authorize success');
+console.log(data);
+accept();
+};
+
+function onAuthorizeFail(data, message, error, accept){
+  if(error)  throw new Error(message);
+    console.log('authorize fail');
+    console.log(data);
+  return accept();
+}
+*/
+
+
     var cookieParserF = cookieParser(secret);
 
     //TODO: move this somewhere nicer?
@@ -100,10 +127,8 @@ var runServer = function(options) {
             if(urlCookie)  {
                 //TODO: find out just how slow this is
                 try {
-                    //console.log(url);
                     sid = url.substring(url.indexOf('=') + 1, url.indexOf('&')); 
                     sid = sid.substring(sid.indexOf('%3A') + 3, sid.indexOf('.'));
-                    //console.log(sid);
                 }
                 catch(err) {
                     console.log(err);
@@ -134,7 +159,6 @@ var runServer = function(options) {
             });
         });
     });
-
 
     //routes
     require('./routes')(app);

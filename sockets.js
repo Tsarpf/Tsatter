@@ -99,6 +99,8 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
     sessionStore = mongooseSessionStore;
 
     io.on('connection', function(socket) {
+        //console.log('SOCKETTISDGFJDSKLFJ');
+        //console.log(socket);
         count++;
         var userinfo = {
             socket: socket,
@@ -108,8 +110,22 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             roomsArray: []
         };
 
+        console.log('------------ on connection -------- ');
+        //console.log(io);
+
+/*
+        console.log('before');
+        console.log(socket);
+        socket.join('TESTROOM');
+        console.log('after');
+        console.log(socket);
+*/
+        //io.to('TESTROOM').emit('TESTROOM', {message: 'moi'});
+        //io.to('TESTROOM').emit('testi', {});
+        //socket.emit('testi', {hi: 'derp'});
+
         console.log('new connection');
-        console.log(socket.session);
+        //console.log(socket.session);
 
         if(socket.session && socket.session.username) { //username from  cookie
             var username = socket.session.username;    
@@ -121,12 +137,13 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
 
         
         socket.on('hello', function(data, fn) {
-            //console.log('hi');
+            console.log('got hello at server');
             fn({username: userinfo.username, loggedIn: userinfo.loggedIn, rooms: userinfo.roomsArray});
         });
 
         socket.on('join', function(data, fn) {
             //console.log('room: ' + data.room);
+            console.log('got join at server');
             if(!channels[data.room]){
                 channels[data.room] = roomHandler(io, data.room, users);
             }
@@ -146,6 +163,8 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             }
         });
         socket.on('message', function(data) {
+            console.log('got message at server');
+            console.log(data);
             if(channels[data.room]){
                 channels[data.room].send({username: userinfo.username, message: data.message});
             }

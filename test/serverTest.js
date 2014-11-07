@@ -6,9 +6,9 @@ var should = require('should'),
     setCookie = require('../setSocketHandshakeCookies');
 
 
-describe('Server end to end messaging ', function() {
+describe('Server', function() {
     var fstSock, sndSock;
-    var testRoom = "room test 9001";
+    var testRoom = "TESTROOM";
     var testMsg = "yeah testing yay";
     var cookies;
     var url = 'http://127.0.0.1:' + port;
@@ -31,12 +31,50 @@ describe('Server end to end messaging ', function() {
             fstSock.on('connect', function() {
                 done();
             });
+            fstSock.on('error', function(obj) {
+                console.log('error');
+                console.log(obj);
+            });
+            fstSock.on('disconnect', function(obj) {
+                console.log('disconnect');
+                console.log(obj);
+            });
         });
     });
     afterEach(function(){
         fstSock.disconnect();
         sndSock.disconnect();
       // runs after each test in this block
+    });
+
+    it('shoulddawouldda', function(done) {
+        this.timeout(3000);
+        fstSock.on(testRoom, function(data) {
+            console.log('got message');
+            console.log(data);
+            data.message.should.equal(testMsg);
+            done();
+        });
+        fstSock.on('testi', function(data) {
+            console.log('testattu ja toimii');
+            console.log(data);
+            done();
+        });
+        sndSock.on('joinSuccess', function(data) {
+            console.log('second join success');
+            sndSock.emit('message', {message: testMsg, room: testRoom});
+        });
+        fstSock.on('joinSuccess', function(data) {
+            sndSock.emit('join', {room: testRoom});
+        });
+        fstSock.emit('join', {room: testRoom}, function(data) {
+            console.log('client join data');
+            console.log(data);
+        });
+        /*
+        fstSock.emit('login', {username: 'teitsi', password: 'meitsi'}, function() {
+        });
+        */
     });
 
     it('should have it\'s tests beforeEach fixed if /login starts returning more than 1 cookie', function() {
@@ -52,30 +90,5 @@ describe('Server end to end messaging ', function() {
 
 
 
-    it('shoulddawouldda', function(done) {
-        this.timeout(3000);
-        fstSock.on(testRoom, function(data) {
-            console.log('got message');
-            data.message.should.equal(testMsg);
-        });
-        fstSock.on('testi', function(data) {
-            console.log('testattu ja toimii');
-            done();
-        });
-        sndSock.on('joinSuccess', function(data) {
-            console.log('second join success');
-            sndSock.emit('message', {message: testMsg, room: testRoom});
-        });
-        fstSock.on('joinSuccess', function(data) {
-            sndSock.emit('join', {room: testRoom});
-        });
-        fstSock.emit('join', {room: testRoom}, function(data) {
-            console.log(data);
-        });
-        /*
-        fstSock.emit('login', {username: 'teitsi', password: 'meitsi'}, function() {
-        });
-        */
-    });
 });
 
