@@ -128,8 +128,6 @@ var runServer = function(options) {
 
                 }
                 else {
-                    console.log('session:');
-                    console.log(session);
                     console.log('successful connection to socket.io');
                 }
                 next(err);

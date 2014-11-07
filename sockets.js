@@ -47,9 +47,10 @@ var changeUsername = function(old, newn){
     var user = users[old];
     delete users[old];
 
-    if(users[newn] && users[newn].socket) {
-        users[newn].socket.disconnect();
-    }
+    //TODO: find out what's up with this
+    //if(users[newn] && users[newn].socket) {
+        //users[newn].socket.disconnect();
+    //}
 
     users[newn] = user;
     //console.log(users);
@@ -108,7 +109,7 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         };
 
         console.log('new connection');
-        //console.log(socket.session);
+        console.log(socket.session);
 
         if(socket.session && socket.session.username) { //username from  cookie
             var username = socket.session.username;    
@@ -120,7 +121,7 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
 
         
         socket.on('hello', function(data, fn) {
-            console.log('hi');
+            //console.log('hi');
             fn({username: userinfo.username, loggedIn: userinfo.loggedIn, rooms: userinfo.roomsArray});
         });
 

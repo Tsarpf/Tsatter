@@ -7,7 +7,7 @@ var isAnon = function(username) {
         return false;
     }
 
-    console.log('typeof stuff' + typeof username.substring(4));
+    //console.log('typeof stuff' + typeof username.substring(4));
     if(typeof username.substring(4) === "number") {
         return false;
     }
@@ -15,32 +15,7 @@ var isAnon = function(username) {
     return true;
 }
 
-function findClientsSocket(roomId, namespace) {
-    var res = []
-    , ns = dio.of(namespace ||"/");    // the default namespace is "/"
-
-    console.log(dio.of("/").connectd);
-    console.log(dio.of("/").sockets);
-    if (ns) {
-        for (var id in ns.connected) {
-            if(roomId) {
-                var index = ns.connected[id].rooms.indexOf(roomId) ;
-                if(index !== -1) {
-                    res.push(ns.connected[id]);
-                }
-            } else {
-                console.log(ns.connected[id]);
-                res.push(ns.connected[id]);
-            }
-        }
-    }
-    return res;
-}
-var dio;
-
 var roomHandler = function(io, roomName, users) {
-    dio = io; 
-
     var pub = {};
 
     var mRoomName = roomName;
@@ -59,11 +34,13 @@ var roomHandler = function(io, roomName, users) {
         //Overwrite if exists
         mRoomUsers[username] = mAllUsers[username];
         mRoomUsers[username].socket.join(mRoomName);
-        mAllUsers[username].socket.join(mRoomName);
         console.log('pls join');
         mio.to(mRoomName).emit('testi','moi');
-        mio.emit('testi', 'vittu ku ei voi toimia');
-        console.log(findClientsSocket());
+    /*
+    console.log(mio.of("/"));
+    console.log(mio.of("/").connected);
+    console.log(mio.of("/").sockets);
+    */
 
 
         User.findOne({name: username}).exec(function(err, doc) {

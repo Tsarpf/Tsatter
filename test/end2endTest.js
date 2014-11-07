@@ -69,7 +69,9 @@ describe('Server end to end messaging ', function() {
         fstSock.on('joinSuccess', function(data) {
             sndSock.emit('join', {room: testRoom});
         });
-        fstSock.emit('join', {room: testRoom});
+        fstSock.emit('join', {room: testRoom}, function(data) {
+            console.log(data);
+        });
         /*
         fstSock.emit('login', {username: 'teitsi', password: 'meitsi'}, function() {
         });
