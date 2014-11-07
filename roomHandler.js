@@ -15,7 +15,32 @@ var isAnon = function(username) {
     return true;
 }
 
+function findClientsSocket(roomId, namespace) {
+    var res = []
+    , ns = dio.of(namespace ||"/");    // the default namespace is "/"
+
+    console.log(dio.of("/").connectd);
+    console.log(dio.of("/").sockets);
+    if (ns) {
+        for (var id in ns.connected) {
+            if(roomId) {
+                var index = ns.connected[id].rooms.indexOf(roomId) ;
+                if(index !== -1) {
+                    res.push(ns.connected[id]);
+                }
+            } else {
+                console.log(ns.connected[id]);
+                res.push(ns.connected[id]);
+            }
+        }
+    }
+    return res;
+}
+var dio;
+
 var roomHandler = function(io, roomName, users) {
+    dio = io; 
+
     var pub = {};
 
     var mRoomName = roomName;
@@ -37,6 +62,8 @@ var roomHandler = function(io, roomName, users) {
         mAllUsers[username].socket.join(mRoomName);
         console.log('pls join');
         mio.to(mRoomName).emit('testi','moi');
+        mio.emit('testi', 'vittu ku ei voi toimia');
+        console.log(findClientsSocket());
 
 
         User.findOne({name: username}).exec(function(err, doc) {

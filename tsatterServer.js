@@ -80,7 +80,8 @@ var runServer = function(options) {
     var io = require('socket.io')(server);
 
     var cookieParserF = cookieParser(secret);
-    //cookieParser = cookieParser(secret);
+
+    //TODO: move this somewhere nicer?
     io.use(function(socket, next){
         console.log('ses' + socket.handshake);
         cookieParserF(socket.handshake, {}, function(err){
@@ -88,22 +89,44 @@ var runServer = function(options) {
                 console.log("error in parsing cookie");
                 return next(err);
             }
-            if (!socket.handshake.signedCookies) {
+            var url = socket.request.url;
+            var urlCookie = url.indexOf('cookie') >= 0;
+            if (!socket.handshake.signedCookies && !urlCookie) {
                 console.log("no secureCookies|signedCookies found");
                 return next(new Error("no secureCookies found"));
             }
-            mongooseSessionStore.get(socket.handshake.signedCookies[key], function(err, session){
+
+            var sid;
+            if(urlCookie)  {
+                //TODO: find out if this is slow
+                try {
+                    sid = url.substring(url.indexOf('=') + 1, url.indexOf('&')); 
+                }
+                catch(err) {
+                    console.log(err);
+                }
+            }
+            else if(socket.handshake.signedCookies){
+                sid = socket.handshake.signedCookies[key];
+            }
+
+            mongooseSessionStore.get(sid, function(err, session){
+
                 if(session) {
                     socket.session = session;
                     socket.session.sid = socket.handshake.signedCookies[key];
                 }
-                if (!err && !session) err = new Error('session not found');
+
+                if (!err && !session) 
+                    err = new Error('session not found');
+
                 if (err) {
                      console.log('failed connection to socket.io:', err);
-                     err=null;
-                } else {
+
+                }
+                else {
                     console.log(session);
-                     console.log('successful connection to socket.io');
+                    console.log('successful connection to socket.io');
                 }
                 next(err);
             });

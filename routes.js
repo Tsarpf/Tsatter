@@ -6,6 +6,17 @@ module.exports = function(app) {
         res.render('index');
     });
 
+
+    app.post('/login', function(req, res, next) {
+        passport.authenticate('local', function(err, user, info) {
+            console.log('wat is dis');
+            console.log(err);
+            console.log(user);
+            console.log(info);
+            res.render('index');
+        })(req,res,next);
+    });
+
     app.get('/partials/:name', function(req, res){
         var name = req.params.name;
         res.render('partials/' + name);
