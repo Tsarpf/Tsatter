@@ -18,6 +18,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             //console.log(obj.room + ' isnt ' + $scope.roomName);
         }
     });
+    socket.emit('join', {room: $scope.joinThisChannel});
 
     //we have to do this in a timeout so that the directive is initialized 
     $timeout(function(){
@@ -26,7 +27,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     var joinRoom=function(roomName) {
         $scope.messages.push({user: 'server', message: "Welcome to room '" + roomName + "'"});
         console.log('joining: ' + roomName);
-        socket.emit('join', {room: roomName});
+        //socket.emit('join', {room: roomName});
         socket.on($scope.roomName, function(data) {
             //console.log(data);
             $scope.messages.push(data);

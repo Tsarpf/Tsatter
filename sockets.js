@@ -20,6 +20,8 @@ var auth = function(username, password, callback) {
 var count = 0;
 
 var io;
+var recentlyActiveRooms = [];
+//TODO: rename channels to rooms...
 var channels = {}
 var users = {};
 var passport;
@@ -68,6 +70,33 @@ var changeUsername = function(old, newn){
     }
 }
 
+var sendRoomLists = function(userinfo) {
+    console.log('roomsarray in sendroomlist');
+    console.log(userinfo.roomsArray);
+    var obj = {
+        userRooms: userinfo.roomsArray,
+        allRooms: recentlyActiveRooms 
+    }
+    userinfo.socket.emit('roomLists', obj);
+}
+
+var maxRecentRooms = 50;
+var currentPos = 0;
+var updateRecentRooms = function(newRoom) {
+    //TODO: remove indexOf usage and use hashmap for checking instead so the function is O(1)
+    if(recentlyActiveRooms.indexOf(newRoom) >= 0)
+        return false;
+    if(recentlyActiveRooms.length < maxRecentRooms) {
+        recentlyActiveRooms.push(newRoom);
+        return true;
+    }
+
+    recentlyActiveRooms[currentPos] = newRoom;
+    currentPos++;
+    if(currentPos >= maxRecentRooms) currentPos = 0;
+    return true;
+}
+
 var login = function(userinfo, username) {
     console.log('logging in');
     User.findOne({username: username}).exec(function (err, doc){
@@ -107,10 +136,10 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             loggedIn: false,
             rooms: {},
             username: nextAnon(),
-            roomsArray: []
+            roomsArray: ['test']
         };
 
-        console.log('------------ on connection -------- ');
+        console.log('------------------------ on connection ----------------------------- ');
         //console.log(io);
 
 /*
@@ -138,9 +167,10 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         
         socket.on('hello', function(data, fn) {
             console.log('got hello at server');
+            sendRoomLists(userinfo);
+
             fn({username: userinfo.username, loggedIn: userinfo.loggedIn, rooms: userinfo.roomsArray});
         });
-
         socket.on('join', function(data, fn) {
             //console.log('room: ' + data.room);
             console.log('got join at server');
@@ -148,6 +178,7 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
                 channels[data.room] = roomHandler(io, data.room, users);
             }
             channels[data.room].join(userinfo.username);
+            sendRoomLists(userinfo);
             if(fn) {
                 fn('test');
             }
@@ -166,7 +197,16 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             console.log('got message at server');
             console.log(data);
             if(channels[data.room]){
-                channels[data.room].send({username: userinfo.username, message: data.message});
+                var wasAllowed = channels[data.room].send({username: userinfo.username, message: data.message});
+
+                if(wasAllowed) {
+                    var updated = updateRecentRooms(data.room);
+                    if(!updated) return;
+
+                    Object.keys(users).map(function(value, index){
+                        sendRoomLists(users[value]);
+                    });
+                }
             }
             else {
                 console.log("error:");

@@ -9,9 +9,20 @@ block content
         input(ng-click="allCtrl.clicked()", ng-keyup="$event.keyCode == 13 && allCtrl.join()", ng-model="joinThisChannel", type="text", class="form-control", placeholder="Join channel")
 
         div(class="row")
-            div(class="col-xs-3", ng-show="vars.loggedIn")
+
+            div(class="col-xs-3")
+
+
                 strong {{vars.username}}'s channels
                 ul
                     li(ng-repeat="room in userRooms") {{room}}
+
+
+                strong Recently active channels
+                ul
+                    li(ng-repeat="room in allRooms") {{room}}
+
+
+
             .col-xs-9
-                ts-chat(room-name="{{room}}", ng-repeat="room in roomNames")
+                ts-chat(room-name="{{room}}", ng-repeat="room in userRooms")

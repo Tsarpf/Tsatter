@@ -34,21 +34,34 @@ var roomHandler = function(io, roomName, users) {
         //Overwrite if exists
         mRoomUsers[username] = mAllUsers[username];
         mRoomUsers[username].socket.join(mRoomName);
-        console.log('pls join');
+        console.log('joined room ' + mRoomName);
 
         //console.log(mRoomUsers[username].socket);
 
-        console.log('pls join socket');
+        //console.log('pls join socket');
         //console.log(io);
 
         //console.log(mRoomUsers[username].socket);
 
-        mio.to(mRoomName).emit('testi','moi');
+        //mio.to(mRoomName).emit('testi','moi');
     /*
     console.log(mio.of("/"));
     console.log(mio.of("/").connected);
     console.log(mio.of("/").sockets);
     */
+        if(!(mRoomName in mRoomUsers[username].rooms) && !isAnon(username)) {
+            console.log('pushing new channel');
+            mRoomUsers[username].roomsArray.push(mRoomName);
+            User.findOneAndUpdate({username: username}, {$push: {rooms: mRoomName}}, {upsert: true}).exec(function(err, doc) {
+                console.log(doc);
+                if(err)
+                    console.log(err);
+            });
+        }
+
+        mRoomUsers[username].rooms[mRoomName] = pub;
+
+        mRoomUsers[username].socket.on('logout', mOnLogout(username)); 
 
 
         User.findOne({name: username}).exec(function(err, doc) {
@@ -66,18 +79,6 @@ var roomHandler = function(io, roomName, users) {
                //console.log(doc);
            });
         });
-
-        if(!(mRoomName in mRoomUsers[username].rooms) && !isAnon(username)) {
-            console.log('pushing new channel');
-            User.findOneAndUpdate({username: username}, {$push: {rooms: mRoomName}}, {upsert: true}).exec(function(err, doc) {
-                console.log(doc);
-                if(err)
-                    console.log(err);
-            });
-        }
-        mRoomUsers[username].rooms[mRoomName] = pub;
-
-        mRoomUsers[username].socket.on('logout', mOnLogout(username)); 
 
         Room.findOne({name: mRoomName}, {messages: {$slice: -50}}).exec(function(err, doc) {
             if(err || !doc){
@@ -108,13 +109,13 @@ var roomHandler = function(io, roomName, users) {
         if(!user)
         {
             console.log('!user');
-            return;
+            return false;
         }
 
         if(mRequiresLogin && !user.loggedIn)
         {
             console.log('required login fail');
-            return;
+            return false;
         }
 
         //TODO: find out if more checking is needed?
@@ -135,6 +136,8 @@ var roomHandler = function(io, roomName, users) {
             if(err)
                 console.log(err);      
         });
+
+        return true;
     }
 
     pub.leave = function(username) {
