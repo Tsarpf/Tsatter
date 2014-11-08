@@ -50,13 +50,17 @@ var roomHandler = function(io, roomName, users) {
     console.log(mio.of("/").sockets);
     */
         if(!(mRoomName in mRoomUsers[username].rooms) && !isAnon(username)) {
-            console.log('pushing new channel');
-            mRoomUsers[username].roomsArray.push(mRoomName);
+            console.log('joinion new room');
             User.findOneAndUpdate({username: username}, {$push: {rooms: mRoomName}}, {upsert: true}).exec(function(err, doc) {
                 console.log(doc);
                 if(err)
                     console.log(err);
             });
+        }
+
+        //TODO: remove O(n) indexOf
+        if(mRoomUsers[username].roomsArray.indexOf(mRoomName) < 0) {
+            mRoomUsers[username].roomsArray.push(mRoomName);
         }
 
         mRoomUsers[username].rooms[mRoomName] = pub;

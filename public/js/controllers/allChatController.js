@@ -26,12 +26,13 @@ angular.module('tsatter').controller('AllChatController', ['$rootScope', '$scope
     });
 
     socket.on('roomLists', function(data) {
-        console.log('all rooms');
 
+        console.log('all rooms');
         $scope.allRooms = data.allRooms;
         console.log($scope.allRooms);
         console.log(data.allRooms);
 
+        console.log('userRooms');
         $scope.userRooms = data.userRooms;
         console.log($scope.userRooms);
         console.log(data.userRooms);

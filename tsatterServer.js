@@ -80,37 +80,10 @@ var runServer = function(options) {
 
     var io = require('socket.io')(server);
 
-/*
-io.use(passportSocketIo.authorize({
-    cookieParser: cookieParser,
-    key: key,
-    secret: secret,
-    store: mongooseSessionStore,
-    success: onAuthorizeSuccess,
-    fail: onAuthorizeFail,
-}));
-
-
-function onAuthorizeSuccess(data, accept) {
-console.log('authorize success');
-console.log(data);
-accept();
-};
-
-function onAuthorizeFail(data, message, error, accept){
-  if(error)  throw new Error(message);
-    console.log('authorize fail');
-    console.log(data);
-  return accept();
-}
-*/
-
-
     var cookieParserF = cookieParser(secret);
 
     //TODO: move this somewhere nicer?
     io.use(function(socket, next){
-        //console.log('ses' + socket.handshake);
         cookieParserF(socket.handshake, {}, function(err){
             if (err) {
                 console.log("error in parsing cookie");
