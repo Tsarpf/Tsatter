@@ -7,18 +7,6 @@ var should = require('should'),
     setCookie = require('../setSocketHandshakeCookies'),
     agent = requestSuper.agent(app);
 
-
-describe('File serving', function() {
-    it('should load a page containing Tsattr when requesting index', function(done) {
-        agent
-        .get('/')
-        .expect('Content-Type', /html/)
-        .expect(/Tsattr/)
-        .expect(200)
-        .end(done)
-    });
-});
-
 describe('Server', function() {
     var fstSock, sndSock;
     var testRoom = "TESTROOM";
@@ -27,8 +15,24 @@ describe('Server', function() {
     var password = "testpassword";
     var cookies;
     var url = 'http://127.0.0.1:' + port;
-    beforeEach(function(done){
 
+    before(function(done){
+        fstSock = client(url);
+        fstSock.on('registerSuccess', function(regData) {
+            done();
+        });
+        //If the registration fails it's because the user already exists. That's usually just fine
+        fstSock.on('registerFail', function(regData) {
+            console.log(regData);
+            done();
+        });
+        fstSock.on('connect', function() {
+            fstSock.emit('register', {username: username, password: password});
+        });
+
+    });
+
+    beforeEach(function(done){
         //Get a different session for each test
         cookies = request.jar();
         setCookie(cookies);
@@ -78,18 +82,9 @@ describe('Server', function() {
         fstSock.on('joinSuccess', function(data) {
             sndSock.emit('join', {room: testRoom});
         });
+        fstSock.emit('join', {room: testRoom}, function(data) {
+        });
 
-        //If the registration fails it's because the user already exists. That's ok
-        fstSock.on('registerSuccess', function() {
-            fstSock.emit('join', {room: testRoom}, function(data) {
-            });
-        });
-        fstSock.on('registerFail', function(regData) {
-            console.log(regData);
-            fstSock.emit('join', {room: testRoom}, function(data) {
-            });
-        });
-        fstSock.emit('register', {username: username, password: password});
     });
 
     it('should have it\'s tests beforeEach fixed if /login starts returning more than 1 cookie', function() {
@@ -107,3 +102,13 @@ describe('Server', function() {
 
 });
 
+describe('File serving', function() {
+    it('should load a page containing Tsattr when requesting index', function(done) {
+        agent
+        .get('/')
+        .expect('Content-Type', /html/)
+        .expect(/Tsattr/)
+        .expect(200)
+        .end(done)
+    });
+});

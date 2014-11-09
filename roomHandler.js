@@ -111,8 +111,6 @@ var roomHandler = function(io, roomName, users) {
 
         //TODO: find out if more checking is needed?
 
-        console.log('sending to ' + mRoomName);
-        console.log(message);
         mio.to(mRoomName).emit(mRoomName, message);
          
         Room.findOneAndUpdate(

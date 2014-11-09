@@ -118,7 +118,7 @@ var runServer = function(options) {
                 }
 
                 if (!err && !session) 
-                    err = new Error('session not found');
+                    console.log('session not found');
 
                 if (err) {
                      console.log('failed connection to socket.io:', err);
