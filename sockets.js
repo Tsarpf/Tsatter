@@ -71,8 +71,6 @@ var changeUsername = function(old, newn){
 }
 
 var sendRoomLists = function(userinfo) {
-    console.log('roomsarray in sendroomlist');
-    console.log(userinfo.roomsArray);
     var obj = {
         userRooms: userinfo.roomsArray,
         allRooms: recentlyActiveRooms 
@@ -137,7 +135,7 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         };
 
 
-        console.log('new connection');
+        //console.log('new connection');
 
         if(socket.session && socket.session.username) { //username from  cookie
             var username = socket.session.username;    
@@ -149,14 +147,11 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
 
         
         socket.on('hello', function(data, fn) {
-            console.log('got hello at server');
             sendRoomLists(userinfo);
 
             fn({username: userinfo.username, loggedIn: userinfo.loggedIn, rooms: userinfo.roomsArray});
         });
         socket.on('join', function(data, fn) {
-            //console.log('room: ' + data.room);
-            console.log('got join at server');
             if(!channels[data.room]){
                 channels[data.room] = roomHandler(io, data.room, users);
             }
@@ -179,8 +174,6 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             }
         });
         socket.on('message', function(data) {
-            console.log('got message at server');
-            console.log(data);
             if(channels[data.room]){
                 var wasAllowed = channels[data.room].send({username: userinfo.username, message: data.message});
 

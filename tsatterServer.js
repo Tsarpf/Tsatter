@@ -125,7 +125,7 @@ var runServer = function(options) {
 
                 }
                 else {
-                    console.log('successful connection to socket.io');
+                    //console.log('successful connection to socket.io');
                 }
                 next(err);
             });

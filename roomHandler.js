@@ -36,10 +36,8 @@ var roomHandler = function(io, roomName, users) {
         //Overwrite if exists
         mRoomUsers[username] = mAllUsers[username];
         mRoomUsers[username].socket.join(mRoomName);
-        console.log('joined room ' + mRoomName);
 
         if(!(mRoomName in mRoomUsers[username].rooms) && !isAnon(username)) {
-            console.log('joining new room');
             User.findOneAndUpdate({username: username}, {$push: {rooms: mRoomName}}, {upsert: true}).exec(function(err, doc) {
                 console.log(doc);
                 if(err)
@@ -116,7 +114,6 @@ var roomHandler = function(io, roomName, users) {
         console.log('sending to ' + mRoomName);
         console.log(message);
         mio.to(mRoomName).emit(mRoomName, message);
-        mio.to(mRoomName).emit('testi', 'moi');
          
         Room.findOneAndUpdate(
             {name: mRoomName},

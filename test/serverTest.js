@@ -23,6 +23,8 @@ describe('Server', function() {
     var fstSock, sndSock;
     var testRoom = "TESTROOM";
     var testMsg = "yeah testing yay";
+    var username = "testuser9001";
+    var password = "testpassword";
     var cookies;
     var url = 'http://127.0.0.1:' + port;
     beforeEach(function(done){
@@ -33,7 +35,7 @@ describe('Server', function() {
         request.post({
             jar: cookies,
             url: url + '/login',
-            form: {username: 'teitsi', password: 'meitsi'}
+            form: {username: username, password: password}
         }, function(){
             var cookieVal = cookies.cookies[0].value;
             var options = {
@@ -50,8 +52,6 @@ describe('Server', function() {
                 console.log(obj);
             });
             fstSock.on('disconnect', function(obj) {
-                console.log('disconnect');
-                console.log(obj);
             });
         });
     });
@@ -62,11 +62,9 @@ describe('Server', function() {
     });
 
     it('shoulddawouldda', function(done) {
-        this.timeout(3000);
+        this.timeout(6000);
         var msgs = [];
         fstSock.on(testRoom, function(data) {
-            console.log('got message');
-            console.log(data.message);
             msgs.push(data.message);
             if(msgs.length === 2) {
                 msgs[0].should.endWith('joined room');
@@ -74,21 +72,24 @@ describe('Server', function() {
                 done();
             }
         });
-        fstSock.on('testi', function(data) {
-            console.log('testattu ja toimii');
-            console.log(data);
-        });
         sndSock.on('joinSuccess', function(data) {
-            console.log('second join success');
             sndSock.emit('message', {message: testMsg, room: testRoom});
         });
         fstSock.on('joinSuccess', function(data) {
             sndSock.emit('join', {room: testRoom});
         });
-        fstSock.emit('join', {room: testRoom}, function(data) {
-            console.log('client join data');
-            console.log(data);
+
+        //If the registration fails it's because the user already exists. That's ok
+        fstSock.on('registerSuccess', function() {
+            fstSock.emit('join', {room: testRoom}, function(data) {
+            });
         });
+        fstSock.on('registerFail', function(regData) {
+            console.log(regData);
+            fstSock.emit('join', {room: testRoom}, function(data) {
+            });
+        });
+        fstSock.emit('register', {username: username, password: password});
     });
 
     it('should have it\'s tests beforeEach fixed if /login starts returning more than 1 cookie', function() {
