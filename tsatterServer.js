@@ -80,7 +80,6 @@ var runServer = function(options) {
 
     var io = require('./socketioSingleton')(server);
 
-    /*
     var cookieParserF = cookieParser(secret);
     //TODO: move this somewhere nicer?
     io.use(function(socket, next){
@@ -132,7 +131,6 @@ var runServer = function(options) {
             });
         });
     });
-    */
 
     //routes
     require('./routes')(app);

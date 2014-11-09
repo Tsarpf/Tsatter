@@ -9,10 +9,6 @@ var should = require('should'),
 
 
 describe('File serving', function() {
-    before(function(done) {
-       done();
-    });
-
     it('should load a page containing Tsattr when requesting index', function(done) {
         agent
         .get('/')
@@ -20,9 +16,6 @@ describe('File serving', function() {
         .expect(/Tsattr/)
         .expect(200)
         .end(done)
-    });
-
-    after(function() {
     });
 });
 
@@ -47,8 +40,6 @@ describe('Server', function() {
                 forceNew: true,
                 query: "cookie=" + cookieVal
             }
-            //fstSock = client(url + '/?cookie=' + cookieVal, options);
-            //sndSock = client(url + '/?cookie=' + cookieVal, options);
             fstSock = client(url, options);
             sndSock = client(url, options);
             fstSock.on('connect', function() {
