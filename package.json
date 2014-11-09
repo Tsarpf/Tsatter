@@ -12,6 +12,7 @@
     "body-parser": "*",
     "supertest": "*",
     "jade": "*",
+    "request": "*",
     "passport": "*",
     "passport.socketio": "*",
     "passport-local-mongoose": "*",
