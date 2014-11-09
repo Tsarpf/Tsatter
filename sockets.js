@@ -107,7 +107,6 @@ var login = function(userinfo, username) {
         }
         userinfo.loggedIn = true;
         console.log('rooms:');
-        console.log(doc);
         console.log(doc.rooms);
         for(var i = 0; i < doc.rooms.length; i++) {
             userinfo.rooms[doc.rooms[i]] = {};
@@ -128,8 +127,6 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
     sessionStore = mongooseSessionStore;
 
     io.on('connection', function(socket) {
-        //console.log('SOCKETTISDGFJDSKLFJ');
-        //console.log(socket);
         count++;
         var userinfo = {
             socket: socket,
@@ -139,22 +136,8 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             roomsArray: ['test']
         };
 
-        console.log('------------------------ on connection ----------------------------- ');
-        //console.log(io);
-
-/*
-        console.log('before');
-        console.log(socket);
-        socket.join('TESTROOM');
-        console.log('after');
-        console.log(socket);
-*/
-        //io.to('TESTROOM').emit('TESTROOM', {message: 'moi'});
-        //io.to('TESTROOM').emit('testi', {});
-        //socket.emit('testi', {hi: 'derp'});
 
         console.log('new connection');
-        //console.log(socket.session);
 
         if(socket.session && socket.session.username) { //username from  cookie
             var username = socket.session.username;    
@@ -177,6 +160,8 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             if(!channels[data.room]){
                 channels[data.room] = roomHandler(io, data.room, users);
             }
+
+
             channels[data.room].join(userinfo.username);
             sendRoomLists(userinfo);
             if(fn) {

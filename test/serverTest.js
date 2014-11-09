@@ -13,9 +13,6 @@ describe('Server', function() {
     var cookies;
     var url = 'http://127.0.0.1:' + port;
     beforeEach(function(done){
-        var options = {
-            forceNew: true
-        }
 
         //Get a different session for each test
         cookies = request.jar();
@@ -26,8 +23,14 @@ describe('Server', function() {
             form: {username: 'teitsi', password: 'meitsi'}
         }, function(){
             var cookieVal = cookies.cookies[0].value;
-            fstSock = client(url + '/?cookie=' + cookieVal, options);
-            sndSock = client(url + '/?cookie=' + cookieVal, options);
+            var options = {
+                forceNew: true,
+                query: "cookie=" + cookieVal
+            }
+            //fstSock = client(url + '/?cookie=' + cookieVal, options);
+            //sndSock = client(url + '/?cookie=' + cookieVal, options);
+            fstSock = client(url, options);
+            sndSock = client(url, options);
             fstSock.on('connect', function() {
                 done();
             });
@@ -49,16 +52,20 @@ describe('Server', function() {
 
     it('shoulddawouldda', function(done) {
         this.timeout(3000);
+        var msgs = [];
         fstSock.on(testRoom, function(data) {
             console.log('got message');
-            console.log(data);
-            data.message.should.equal(testMsg);
-            done();
+            console.log(data.message);
+            msgs.push(data.message);
+            if(msgs.length === 2) {
+                msgs[0].should.endWith('joined room');
+                msgs[1].should.be.exactly(testMsg);
+                done();
+            }
         });
         fstSock.on('testi', function(data) {
             console.log('testattu ja toimii');
             console.log(data);
-            done();
         });
         sndSock.on('joinSuccess', function(data) {
             console.log('second join success');
@@ -71,10 +78,6 @@ describe('Server', function() {
             console.log('client join data');
             console.log(data);
         });
-        /*
-        fstSock.emit('login', {username: 'teitsi', password: 'meitsi'}, function() {
-        });
-        */
     });
 
     it('should have it\'s tests beforeEach fixed if /login starts returning more than 1 cookie', function() {

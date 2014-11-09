@@ -31,26 +31,15 @@ var roomHandler = function(io, roomName, users) {
             return false;
         }
 
+        mio.to(mRoomName).emit(mRoomName, {message: username + " joined room"});
+
         //Overwrite if exists
         mRoomUsers[username] = mAllUsers[username];
         mRoomUsers[username].socket.join(mRoomName);
         console.log('joined room ' + mRoomName);
 
-        //console.log(mRoomUsers[username].socket);
-
-        //console.log('pls join socket');
-        //console.log(io);
-
-        //console.log(mRoomUsers[username].socket);
-
-        //mio.to(mRoomName).emit('testi','moi');
-    /*
-    console.log(mio.of("/"));
-    console.log(mio.of("/").connected);
-    console.log(mio.of("/").sockets);
-    */
         if(!(mRoomName in mRoomUsers[username].rooms) && !isAnon(username)) {
-            console.log('joinion new room');
+            console.log('joining new room');
             User.findOneAndUpdate({username: username}, {$push: {rooms: mRoomName}}, {upsert: true}).exec(function(err, doc) {
                 console.log(doc);
                 if(err)
@@ -126,8 +115,6 @@ var roomHandler = function(io, roomName, users) {
 
         console.log('sending to ' + mRoomName);
         console.log(message);
-        //console.log(mRoomUsers);
-        //console.log(mio);
         mio.to(mRoomName).emit(mRoomName, message);
         mio.to(mRoomName).emit('testi', 'moi');
          

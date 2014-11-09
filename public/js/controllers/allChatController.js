@@ -19,6 +19,7 @@ angular.module('tsatter').controller('AllChatController', ['$rootScope', '$scope
     });
     socket.on('disconnect', function() {
         alert('Disconnected!');
+        location.reload();
     });
 
     socket.on('loginSuccess', function(data) {
