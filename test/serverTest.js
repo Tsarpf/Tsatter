@@ -36,10 +36,28 @@ describe('Server', function() {
     afterEach(function(){
         fstSock.disconnect();
         sndSock.disconnect();
-      // runs after each test in this block
     });
 
-    it('shoulddawouldda', function(done) {
+    it("shouldn't transmit messages between users in different rooms", function(done) {
+        var msgs = [];
+        fstSock.on(testRoom, function(data) {
+            msgs.push(data.message);
+        });
+        sndSock.on('joinSuccess', function(data) {
+            sndSock.emit('message', {message: testMsg, room: testRoom + 'other'});
+            setTimeout(function(){
+                msgs.length.should.be.exactly(1);
+                done();
+            }, 1000);
+        });
+        fstSock.on('joinSuccess', function(data) {
+            sndSock.emit('join', {room: testRoom});
+        });
+        fstSock.emit('join', {room: testRoom}, function(data) {
+        });
+    });
+
+    it('should transmit messages between users in the same room', function(done) {
         this.timeout(6000);
         var msgs = [];
         fstSock.on(testRoom, function(data) {
