@@ -3,8 +3,28 @@ var should = require('should'),
     server = require('../tsatterServer')({port: port}),
     client = require('socket.io-client'),
     request = require('request'),
-    setCookie = require('../setSocketHandshakeCookies');
+    requestSuper = require('supertest'),
+    setCookie = require('../setSocketHandshakeCookies'),
+    agent = requestSuper.agent(app);
 
+
+describe('File serving', function() {
+    before(function(done) {
+       done();
+    });
+
+    it('should load a page containing Tsattr when requesting index', function(done) {
+        agent
+        .get('/')
+        .expect('Content-Type', /html/)
+        .expect(/Tsattr/)
+        .expect(200)
+        .end(done)
+    });
+
+    after(function() {
+    });
+});
 
 describe('Server', function() {
     var fstSock, sndSock;
