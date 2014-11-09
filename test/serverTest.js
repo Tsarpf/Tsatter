@@ -39,19 +39,23 @@ describe('Server', function() {
     });
 
     it("shouldn't transmit messages between users in different rooms", function(done) {
-        var msgs = [];
+        var testRoomOther = testRoom + 'other';
         fstSock.on(testRoom, function(data) {
-            msgs.push(data.message);
+            data.message.should.endWith('joined room');
+        });
+        fstSock.on(testRoomOther, function(data) {
+            assert(false);
+            data.message.should.endWith('joined room');
         });
         sndSock.on('joinSuccess', function(data) {
-            sndSock.emit('message', {message: testMsg, room: testRoom + 'other'});
+            sndSock.emit('message', {message: testMsg, room: testRoomOther});
+            sndSock.emit('message', {message: testMsg, room: testRoom});
             setTimeout(function(){
-                msgs.length.should.be.exactly(1);
                 done();
             }, 1000);
         });
         fstSock.on('joinSuccess', function(data) {
-            sndSock.emit('join', {room: testRoom});
+            sndSock.emit('join', {room: testRoomOther});
         });
         fstSock.emit('join', {room: testRoom}, function(data) {
         });
