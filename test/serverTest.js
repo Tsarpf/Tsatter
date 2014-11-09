@@ -19,6 +19,7 @@ describe('Server', function() {
     before(function(done){
         fstSock = client(url);
         fstSock.on('registerSuccess', function(regData) {
+            console.log('register success');
             done();
         });
         //If the registration fails it's because the user already exists. That's usually just fine
