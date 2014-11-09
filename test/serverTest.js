@@ -16,48 +16,21 @@ describe('Server', function() {
     var cookies;
     var url = 'http://127.0.0.1:' + port;
 
-    before(function(done){
-        fstSock = client(url);
-        fstSock.on('registerSuccess', function(regData) {
-            console.log('register success');
-            done();
-        });
-        //If the registration fails it's because the user already exists. That's usually just fine
-        fstSock.on('registerFail', function(regData) {
-            console.log(regData);
-            done();
-        });
-        fstSock.on('connect', function() {
-            fstSock.emit('register', {username: username, password: password});
-        });
-
-    });
 
     beforeEach(function(done){
-        //Get a different session for each test
-        cookies = request.jar();
-        setCookie(cookies);
-        request.post({
-            jar: cookies,
-            url: url + '/login',
-            form: {username: username, password: password}
-        }, function(){
-            var cookieVal = cookies.cookies[0].value;
-            var options = {
-                forceNew: true,
-                query: "cookie=" + cookieVal
-            }
-            fstSock = client(url, options);
-            sndSock = client(url, options);
-            fstSock.on('connect', function() {
-                done();
-            });
-            fstSock.on('error', function(obj) {
-                console.log('error');
-                console.log(obj);
-            });
-            fstSock.on('disconnect', function(obj) {
-            });
+        var options = {
+            forceNew: true,
+        }
+        fstSock = client(url, options);
+        sndSock = client(url, options);
+        fstSock.on('connect', function() {
+            done();
+        });
+        fstSock.on('error', function(obj) {
+            console.log('error');
+            console.log(obj);
+        });
+        fstSock.on('disconnect', function(obj) {
         });
     });
     afterEach(function(){
@@ -86,10 +59,6 @@ describe('Server', function() {
         fstSock.emit('join', {room: testRoom}, function(data) {
         });
 
-    });
-
-    it('should have it\'s tests beforeEach fixed if /login starts returning more than 1 cookie', function() {
-        cookies.cookies.length.should.equal(1);
     });
 
     it('should return a username starting with anon on hello', function(done) {
