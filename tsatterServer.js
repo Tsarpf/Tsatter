@@ -112,10 +112,10 @@ var runServer = function(options) {
 
             mongooseSessionStore.get(sid, function(err, session){
 
-                if(session) {
-                    socket.session = session;
-                    socket.session.sid = sid;
-                }
+                if(!session) socket.session = {};
+
+                socket.session = session;
+                socket.session.sid = sid;
 
                 if (!err && !session) 
                     console.log('session not found');
