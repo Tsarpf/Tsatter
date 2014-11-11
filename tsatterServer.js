@@ -113,8 +113,8 @@ var runServer = function(options) {
             mongooseSessionStore.get(sid, function(err, session){
 
                 if(!session) socket.session = {};
+                else socket.session = session;
 
-                socket.session = session;
                 socket.session.sid = sid;
 
                 if (!err && !session) 
