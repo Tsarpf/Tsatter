@@ -2,7 +2,7 @@ angular.module('tsatter').controller('AllChatController', ['$rootScope', '$scope
     $rootScope.vars = {
         loggedIn: false
     };
-    $scope.joinThisChannel = "New channel name....";
+    $scope.joinThisChannel = "";
     $scope.userRooms = [];
     $scope.allRooms = [];
     this.clicked=function() {
