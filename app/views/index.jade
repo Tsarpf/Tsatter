@@ -23,7 +23,7 @@ block content
 
 
 
-                .col-xs-9
-                    tabset(type="pills")
-                        tab(heading="{{room}}", ng-repeat="room in userRooms")
-                            ts-chat(room-name="{{room}}")
+            .col-xs-9
+                tabset(type="pills")
+                    tab(ng-repeat="room in userRooms", heading="{{room}}")
+                        ts-chat(room-name="{{room}}")
