@@ -1,7 +1,7 @@
 Tsatter
 =======
 
-[![Build Status](https://magnum.travis-ci.com/Tsarpf/Tsatter.svg?token=dpDDmxyBN2PpMoNQcvmf&branch=master)](https://magnum.travis-ci.com/Tsarpf/Tsatter)
+[![Build Status](https://travis-ci.org/Tsarpf/Tsatter.svg?branch=master)](https://magnum.travis-ci.com/Tsarpf/Tsatter)
 
 ######Stuff:
 - Uses custom MEAN.
