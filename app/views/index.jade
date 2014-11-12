@@ -4,25 +4,26 @@ block content
 
     h1 Tsatter Pre-Alpha
 
-    div(ng-controller="AllChatController as allCtrl", class="row")
+    div(ng-controller="AllChatController as allCtrl")
 
-        input(ng-click="allCtrl.clicked()", ng-keyup="$event.keyCode == 13 && allCtrl.join()", ng-model="joinThisChannel", type="text", class="form-control" placeholder="New room name...")
+        div(class="row")
+            input(ng-click="allCtrl.clicked()", ng-keyup="$event.keyCode == 13 && allCtrl.join()", ng-model="joinThisChannel", type="text", class="form-control" placeholder="New room name...")
 
-    div(class="row")
+        div(class="row")
 
-        div(class="col-xs-3")
+            div(class="col-xs-3")
 
-            strong {{vars.username}}'s channels
-                ul
-                    li(ng-repeat="room in userRooms") {{room}}
+                strong {{vars.username}}'s channels
+                    ul
+                        li(ng-repeat="room in userRooms") {{room}}
 
-            strong Recently active channels
-                ul
-                    li(ng-repeat="room in allRooms") {{room}}
+                strong Recently active channels
+                    ul
+                        li(ng-repeat="room in allRooms") {{room}}
 
 
 
-            .col-xs-9
-                tabset(type="pills")
-                    tab(heading="{{room}}", ng-repeat="room in userRooms")
-                        ts-chat(room-name="{{room}}")
+                .col-xs-9
+                    tabset(type="pills")
+                        tab(heading="{{room}}", ng-repeat="room in userRooms")
+                            ts-chat(room-name="{{room}}")
