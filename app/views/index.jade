@@ -6,7 +6,7 @@ block content
 
     div(ng-controller="AllChatController as allCtrl")
 
-        input(ng-click="allCtrl.clicked()", ng-keyup="$event.keyCode == 13 && allCtrl.join()", ng-model="joinThisChannel", type="text", class="form-control")
+        input(ng-click="allCtrl.clicked()", ng-keyup="$event.keyCode == 13 && allCtrl.join()", ng-model="joinThisChannel", type="text", class="form-control" placeholder="New room name...")
 
         div(class="row")
 
