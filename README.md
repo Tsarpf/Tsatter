@@ -6,13 +6,13 @@ Tsatter
 ######Stuff:
 An over-engineered lightweight chatting web application I've done in my free time using MongoDB, Express, AngularJS, NodeJS, Socket.IO, etc.
 
-BDD development using should.
-Automatic tests using Mocha
-Continuous Integration using Travis-CI
-Continuous Deployment
-Dynamic HTML templates using Jade.
-Sensitive data secured by using Passport.js for logins. (SSL/TLS support will be added before release)
-Layout and look using Twitter Bootstrap
+- BDD development using should.
+- Automatic tests using Mocha
+- Continuous Integration using Travis-CI
+- Continuous Deployment
+- Dynamic HTML templates using Jade.
+- Sensitive data secured by using Passport.js for logins. (SSL/TLS support will be added before release)
+- Layout and look using Twitter Bootstrap
 
 Current features:
 - Persistent chat rooms, users' login data and messages.
