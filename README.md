@@ -1,13 +1,24 @@
 Tsatter
 =======
 
-[![Build Status](https://magnum.travis-ci.com/Tsarpf/Tsatter.svg?token=dpDDmxyBN2PpMoNQcvmf&branch=master)](https://magnum.travis-ci.com/Tsarpf/Tsatter)
+[![Build Status](https://travis-ci.org/Tsarpf/Tsatter.svg?branch=master)](https://magnum.travis-ci.com/Tsarpf/Tsatter)
 
 ######Stuff:
-- Uses custom MEAN.
-- CI using Travis-CI, since you have access to this repo you should be able to access the build statuses etc through travis web page
-- Custom CD, the project lives here when it's working in any reasonable way: 128.199.52.104
-- HTML templating with Jade so we don't have to write actual shitty html. (Should work well with angular as well)
+An over-engineered lightweight chatting web application I've done in my free time using MongoDB, Express, AngularJS, NodeJS, Socket.IO, etc.
 
+- BDD development using should.
+- Automatic tests using Mocha
+- Continuous Integration using Travis-CI
+- Continuous Deployment
+- Dynamic HTML templates using Jade.
+- Sensitive data secured by using Passport.js for logins. (SSL/TLS support will be added before release)
+- Layout and look using Twitter Bootstrap
 
-##Old implementation in the old branch.
+Current features:
+- Persistent chat rooms, users' login data and messages.
+- Login sessions saved to a (encrypted) cookie so login sessions persistent over page changes.
+- 50 message backlog from chat room sent upon joining.
+- When logged in joined rooms are saved to user data and reopened automatically on login.
+- Dynamically updated list of recently active chat rooms.
+etc.
+
