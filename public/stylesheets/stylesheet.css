@@ -1,3 +1,7 @@
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.vspace { margin-top: 15px; }
+
 .loginfield{
     display: inline;
 }

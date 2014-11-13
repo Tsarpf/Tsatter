@@ -1,4 +1,4 @@
-div(ng-controller="UserHeaderController as userCtrl", ng-model="vars.loggedIn")
+div(ng-controller="UserHeaderController as userCtrl", ng-model="vars.loggedIn", class="vspace")
     div(ng-show="vars.loggedIn", class="loginfield")
 
         form(ng-submit="logout()", class="form-inline", role="form")
