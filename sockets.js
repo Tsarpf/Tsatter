@@ -152,16 +152,16 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             fn({username: userinfo.username, loggedIn: userinfo.loggedIn, rooms: userinfo.roomsArray});
         });
         socket.on('join', function(data, fn) {
+            if(data.room === undefined || data.room === '') {
+                socket.emit('joinFail', {reason: 'No room name supplied or it was empty string'});
+                return;
+            }
             if(!channels[data.room]){
                 channels[data.room] = roomHandler(io, data.room, users);
             }
 
-
             channels[data.room].join(userinfo.username);
             sendRoomLists(userinfo);
-            if(fn) {
-                fn('test');
-            }
         });
         socket.on('leave', function(data) {
             if(data.room) {

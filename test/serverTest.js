@@ -116,6 +116,18 @@ describe('Server', function() {
         });
         fstSock.emit('register', {username: 'test'});
     });
+    it('should return joinFail when trying to join a channel without a name', function(done) {
+        fstSock.on('joinFail', function(data) {
+            done();
+        });
+        fstSock.emit('join', {room: ''});
+    });
+    it('should return joinFail when client sends a join event but doesn\'t supply a room name', function(done) {
+        fstSock.on('joinFail', function(data) {
+            done();
+        });
+        fstSock.emit('join', {});
+    });
 
 
 });
