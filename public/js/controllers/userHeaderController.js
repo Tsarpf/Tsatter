@@ -1,3 +1,5 @@
+//TODO: make login system a service
+
 angular.module('tsatter').controller("UserHeaderController", ['$rootScope', '$scope', 'socket', function($rootScope, $scope, socket) {
     $scope.loginState = "";
     $scope.login = function() {
@@ -43,7 +45,10 @@ angular.module('tsatter').controller("UserHeaderController", ['$rootScope', '$sc
     });
 
     socket.on('registerFail', function(data) {
-        $scope.loginState = "Register failed: " + data.reason.toString();
+        var error = "";
+        if(data.reason.message) error = data.reason.message;
+        else error = data.reason;
+        $scope.loginState = "Register failed: " + error;
     });
 }]);
 

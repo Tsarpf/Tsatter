@@ -196,9 +196,10 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         socket.on('register', function(data) {
             //TODO: move anon checking to document validator
             //if(data.username.indexOf('anon') == 0 && IsNumeric(data.username.substring(4)))
-            if(isAnon(data.username))
+
+            if(data.username === undefined || isAnon(data.username))
             {
-                socket.emit('registerFail', {reason: 'Cannot register as anon'});
+                socket.emit('registerFail', {reason: 'Cannot register as anon or without an username'});
                 return;
             }
             User.register(new User({ username : data.username }), data.password, function(err, user) {
