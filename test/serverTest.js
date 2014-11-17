@@ -90,6 +90,32 @@ describe('Server', function() {
         });
     });
 
+    it('should return registerFail when trying to register without password', function(done) {
+        fstSock.on('registerFail', function(data) {
+            done();
+        });
+        fstSock.emit('register', {username: 'test', password: ''});
+    });
+
+    it('should return registerFail when trying to register without username', function(done) {
+        fstSock.on('registerFail', function(data) {
+            done();
+        });
+        fstSock.emit('register', {username: '', password: 'derp'});
+    });
+
+    it('should return registerFail when completely missing username field', function(done) {
+        fstSock.on('registerFail', function(data) {
+            done();
+        });
+        fstSock.emit('register', {password: 'derp'});
+    });
+    it('should return registerFail when completely missing password field', function(done) {
+        fstSock.on('registerFail', function(data) {
+            done();
+        });
+        fstSock.emit('register', {username: 'test'});
+    });
 
 
 });
