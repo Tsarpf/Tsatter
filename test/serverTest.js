@@ -5,7 +5,7 @@ var should = require('should'),
     request = require('request'),
     requestSuper = require('supertest'),
     setCookie = require('../setSocketHandshakeCookies'),
-    agent = requestSuper.agent(app);
+    agent = requestSuper.agent(server.app);
 
 describe('Server', function() {
     var fstSock, sndSock;
