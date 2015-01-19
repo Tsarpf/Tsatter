@@ -23,7 +23,7 @@ An over-engineered lightweight chatting web application I've done in my free tim
 - Sensitive data secured by using Passport.js for logins. (SSL/TLS support will be added before release)
 - Layout and look using Twitter Bootstrap
 
-Current features:
+####Current features:
 - Persistent chat rooms, users' login data and messages.
 - Login sessions saved to a (encrypted) cookie so login sessions persistent over page changes.
 - 50 message backlog from chat room sent upon joining.
