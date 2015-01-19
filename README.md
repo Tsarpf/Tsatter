@@ -3,7 +3,11 @@ Tsatter
 
 [![Build Status](https://travis-ci.org/Tsarpf/Tsatter.svg?branch=master)](https://magnum.travis-ci.com/Tsarpf/Tsatter)
 
-######Stuff:
+- npm start to run
+- npm test to run tests
+
+
+######About:
 An over-engineered lightweight chatting web application I've done in my free time using MongoDB, Express, AngularJS, NodeJS, Socket.IO, etc.
 
 - BDD development using should.
