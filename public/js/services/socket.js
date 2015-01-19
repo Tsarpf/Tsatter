@@ -1,5 +1,6 @@
 angular.module('tsatter').factory('socket', function($rootScope) {
-    var socket = io('128.199.52.104');
+    var address = location.host;
+    var socket = io(address);
     return {
         on: function(channel, callback) {
             socket.on(channel, function () {
