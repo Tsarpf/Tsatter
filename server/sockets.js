@@ -60,8 +60,8 @@ var changeUsername = function(old, newn){
 
 
     console.log('user rooms');
-    console.log(users[newn].rooms);
-    for(var channel in users[newn].rooms) {
+    console.log(users[newn].currentRooms);
+    for(var channel in users[newn].currentRooms) {
         //console.log(channel);
         if(channels.hasOwnProperty(channel)) {
             channels[channel].usernameChanged(old, newn);
@@ -107,7 +107,7 @@ var login = function(userinfo, username) {
         console.log('rooms:');
         console.log(doc.rooms);
         for(var i = 0; i < doc.rooms.length; i++) {
-            userinfo.rooms[doc.rooms[i]] = {};
+            userinfo.currentRooms[doc.rooms[i]] = {};
         }
         userinfo.roomsArray = doc.rooms;
         userinfo.username = username;
@@ -129,7 +129,7 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         var userinfo = {
             socket: socket,
             loggedIn: false,
-            rooms: {},
+            currentRooms: {},
             username: nextAnon(),
             roomsArray: ['test']
         };
@@ -243,6 +243,14 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
 
             userinfo.username = name; 
             fn({username: name, loggedIn: false});
+        });
+
+        socket.on('disconnect', function(data, fn) {
+            if(isAnon(userinfo.username) || userinfo.username == undefined) {
+                for(var room in userinfo.roomsArray){
+
+                }
+            }
         });
 
     });

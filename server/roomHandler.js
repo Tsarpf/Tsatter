@@ -37,7 +37,7 @@ var roomHandler = function(io, roomName, users) {
         mRoomUsers[username] = mAllUsers[username];
         mRoomUsers[username].socket.join(mRoomName);
 
-        if(!(mRoomName in mRoomUsers[username].rooms) && !isAnon(username)) {
+        if(!(mRoomName in mRoomUsers[username].currentRooms) && !isAnon(username)) {
             User.findOneAndUpdate({username: username}, {$push: {rooms: mRoomName}}, {upsert: true}).exec(function(err, doc) {
                 console.log(doc);
                 if(err)
@@ -50,7 +50,7 @@ var roomHandler = function(io, roomName, users) {
             mRoomUsers[username].roomsArray.push(mRoomName);
         }
 
-        mRoomUsers[username].rooms[mRoomName] = pub;
+        mRoomUsers[username].currentRooms[mRoomName] = pub;
 
         mRoomUsers[username].socket.on('logout', mOnLogout(username)); 
 
