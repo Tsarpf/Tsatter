@@ -1,1 +1,1 @@
-var run = require('./tsatterServer.js')({port: 3000});
+var run = require('./server/tsatterServer.js')({port: 3000});

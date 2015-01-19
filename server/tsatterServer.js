@@ -31,7 +31,7 @@ var runServer = function(options) {
         console.log("(re)connected to database.");
     });
 
-    var User = require('./app/models/user');
+    var User = require('../app/models/user');
     passport.use(User.createStrategy());
 
 
@@ -39,7 +39,7 @@ var runServer = function(options) {
     passport.deserializeUser(User.deserializeUser());
 
 
-    var pub = __dirname + '/public';
+    var pub = __dirname + '/../public';
     app.use(express.static(pub));
     app.use(bodyParser.urlencoded({extended:true}));
     app.use(cookieParser());
@@ -65,7 +65,7 @@ var runServer = function(options) {
 
     //Use jade
     app.set('view engine', 'jade');
-    app.set('views', __dirname + '/app/views');
+    app.set('views', __dirname + '/../app/views');
 
     //Always use pretty html.
     app.locals.pretty = true;
@@ -78,7 +78,7 @@ var runServer = function(options) {
     });
 
 
-    var io = require('./socketioSingleton')(server);
+    var io = require('socket.io')(server);
 
     var cookieParserF = cookieParser(secret);
     //TODO: move this somewhere nicer?

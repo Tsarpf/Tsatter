@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var User = require('./app/models/user');
+var User = require('../app/models/user');
 var roomHandler = require('./roomHandler.js');
 
 

@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
-    Room = require('./app/models/room'),
-    User = require('./app/models/user');
+    Room = require('../app/models/room'),
+    User = require('../app/models/user');
 
 var isAnon = function(username) {
     if(username.indexOf('anon') !== 0) {

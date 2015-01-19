@@ -1,4 +1,4 @@
-for x in `ps x | grep "node tsatterServer.js" | awk '{print $1}'`
+for x in `ps x | grep "node run.js" | awk '{print $1}'`
 do
     kill $x
 done

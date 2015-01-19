@@ -1,10 +1,10 @@
 var port = 4000;
 var should = require('should'),
-    server = require('../tsatterServer')({port: port}),
+    server = require('../server/tsatterServer')({port: port}),
     client = require('socket.io-client'),
     request = require('request'),
     requestSuper = require('supertest'),
-    setCookie = require('../setSocketHandshakeCookies'),
+    setCookie = require('./setSocketHandshakeCookies'),
     agent = requestSuper.agent(server.app);
 
 describe('Server', function() {
