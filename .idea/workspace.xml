@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6826e67-a1ab-40e3-8362-3c11765910a9" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/partials/chat.jade" afterPath="$PROJECT_DIR$/app/views/partials/chat.jade" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/controllers/chatController.js" afterPath="$PROJECT_DIR$/public/js/controllers/chatController.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/roomHandler.js" afterPath="$PROJECT_DIR$/server/roomHandler.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/sockets.js" afterPath="$PROJECT_DIR$/server/sockets.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="tsatter.iws" />
@@ -30,11 +27,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="sockets.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="sockets.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/sockets.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.9819549" vertical-offset="327" max-vertical-offset="4824">
-              <caret line="127" column="0" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="756" max-vertical-offset="4824">
+              <caret line="42" column="26" selection-start-line="42" selection-start-column="26" selection-end-line="42" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -43,7 +40,7 @@
       <file leaf-file-name="chat.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/views/partials/chat.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="396">
+            <state vertical-scroll-proportion="0.0" vertical-offset="288" max-vertical-offset="396">
               <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
               <folding />
             </state>
@@ -53,7 +50,7 @@
       <file leaf-file-name="roomHandler.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/roomHandler.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1893" max-vertical-offset="3924">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1137" max-vertical-offset="3924">
               <caret line="141" column="10" selection-start-line="141" selection-start-column="10" selection-end-line="141" selection-end-column="10" />
               <folding />
             </state>
@@ -63,7 +60,7 @@
       <file leaf-file-name="userheader.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/views/partials/userheader.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="738">
+            <state vertical-scroll-proportion="0.0" vertical-offset="198" max-vertical-offset="738">
               <caret line="11" column="96" selection-start-line="11" selection-start-column="96" selection-end-line="11" selection-end-column="96" />
               <folding />
             </state>
@@ -80,11 +77,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="chatController.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="chatController.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/js/controllers/chatController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1494">
-              <caret line="31" column="8" selection-start-line="31" selection-start-column="8" selection-end-line="31" selection-end-column="8" />
+            <state vertical-scroll-proportion="0.3372591" vertical-offset="0" max-vertical-offset="1868">
+              <caret line="35" column="8" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -109,10 +106,10 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/public/js/services/socket.js" />
-        <option value="$PROJECT_DIR$/public/js/controllers/chatController.js" />
         <option value="$PROJECT_DIR$/app/views/partials/chat.jade" />
         <option value="$PROJECT_DIR$/server/roomHandler.js" />
         <option value="$PROJECT_DIR$/server/sockets.js" />
+        <option value="$PROJECT_DIR$/public/js/controllers/chatController.js" />
       </list>
     </option>
   </component>
@@ -122,7 +119,7 @@
   <component name="ProjectFrameBounds">
     <option name="y" value="27" />
     <option name="width" value="1829" />
-    <option name="height" value="2133" />
+    <option name="height" value="2019" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -395,7 +392,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="27" width="1829" height="2133" extended-state="0" />
+    <frame x="0" y="27" width="1829" height="2019" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -485,7 +482,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1080">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -549,7 +545,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1080">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -589,7 +584,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1080">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -776,7 +770,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1995">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -804,18 +797,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/controllers/chatController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1494">
-          <caret line="31" column="8" selection-start-line="31" selection-start-column="8" selection-end-line="31" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/routes.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1995">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/sockets.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4824">
+          <caret line="42" column="26" selection-start-line="42" selection-start-column="26" selection-end-line="42" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -828,10 +821,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/sockets.js">
+    <entry file="file://$PROJECT_DIR$/public/js/controllers/chatController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9819549" vertical-offset="327" max-vertical-offset="4824">
-          <caret line="127" column="0" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.3372591" vertical-offset="0" max-vertical-offset="1868">
+          <caret line="35" column="8" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="8" />
           <folding />
         </state>
       </provider>

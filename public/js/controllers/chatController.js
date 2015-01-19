@@ -23,13 +23,17 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     });
 
     socket.on('joinedRoom', function(obj) {
-        $scope.users.push(obj.username);
-        console.log($scope.users);
+        if(obj.room === $scope.roomName) {
+            $scope.users.push(obj.username);
+            console.log($scope.users);
+        }
     });
     socket.on('leftRoom', function(obj) {
-        var userIdx = $scope.users.indexOf(obj.username);
-        $scope.users.splice(userIdx, 1);
-        console.log($scope.users);
+        if(obj.room === $scope.roomName) {
+            var userIdx = $scope.users.indexOf(obj.username);
+            $scope.users.splice(userIdx, 1);
+            console.log($scope.users);
+        }
     });
 
     //we have to do this in a timeout so that the directive is initialized 
