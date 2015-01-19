@@ -3,6 +3,7 @@ span(ng-controller="ChatController as chatCtrl", class="chat vspace")
     .row.tscontainer
 
         .users.col-xs-2
+            p(ng-repeat="user in users")
 
         div(class="messages col-xs-8", ng-attr-id="{{room}}")
 

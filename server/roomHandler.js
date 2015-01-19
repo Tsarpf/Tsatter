@@ -20,24 +20,33 @@ var roomHandler = function(io, roomName, users) {
 
     var mRoomName = roomName;
     var mio = io;
-    var mAllUsers = users;
-    var mRoomUsers = {};
+    var mAllUsers = users; //A reference to the list of all users currently online from sockets.js. Really confusing. Please fix.
+    var mRoomUsers = {}; //Users allowed in the room
+    var mRoomCurrentUsers = {};
     var mInviteOnly = false;
     var mRequiresLogin = false;
 
+    //This whole function is fugly. Clean up please.
     pub.join = function(username) {
         if(!mRoomUsers.hasOwnProperty(username) && mInviteOnly){ //If the room doesn't already have the user in it's user list
             mAllUsers[username].socket.emit('joinFail', {reason: 'Invite only channel'});
             return false;
         }
 
+        //Send to others that a new user joined
         mio.to(mRoomName).emit(mRoomName, {message: username + " joined room"});
+        mio.to(mRoomName).emit('joinedRoom', {username: username});
 
+        //Pull new user from all users list and add to this channels allowed list etc.
         //Overwrite if exists
         mRoomUsers[username] = mAllUsers[username];
+        //join the socket.io room
         mRoomUsers[username].socket.join(mRoomName);
 
+
+        //If not already there and not anon
         if(!(mRoomName in mRoomUsers[username].currentRooms) && !isAnon(username)) {
+            //Persist the knowledge that the user belongs to this room within his persistent data.
             User.findOneAndUpdate({username: username}, {$push: {rooms: mRoomName}}, {upsert: true}).exec(function(err, doc) {
                 console.log(doc);
                 if(err)
@@ -49,9 +58,10 @@ var roomHandler = function(io, roomName, users) {
         if(mRoomUsers[username].roomsArray.indexOf(mRoomName) < 0) {
             mRoomUsers[username].roomsArray.push(mRoomName);
         }
-
         mRoomUsers[username].currentRooms[mRoomName] = pub;
 
+        //If the room is invite only, don't allow anons -> add handler to make sure the user is thrown out if he logs out.
+        //A bit weird... Maybe fix this?
         mRoomUsers[username].socket.on('logout', mOnLogout(username)); 
 
 
@@ -59,6 +69,7 @@ var roomHandler = function(io, roomName, users) {
             if(doc===null){
                 return;
             }
+           //Add user to the room's user list
            Room.findOneAndUpdate(
            {name: mRoomName},
            {$push: {users: {_id: doc._id}}}
@@ -71,16 +82,22 @@ var roomHandler = function(io, roomName, users) {
            });
         });
 
+        //Add to current users, needed for channel users list and stuff I guess
+        mRoomCurrentUsers[username] = "";
+
+        //Get an initial backlog of messages from the room. At the time of writing it's -50
         Room.findOne({name: mRoomName}, {messages: {$slice: -50}}).exec(function(err, doc) {
-            if(err || !doc){
-                mRoomUsers[username].socket.emit('joinSuccess', {messages: [], room: mRoomName});
-                return;
+            var messages = [];
+            if(!err || doc){
+                messages = doc.messages;
             }
-            mRoomUsers[username].socket.emit('joinSuccess', {messages: doc.messages, room: mRoomName}); 
+            //TODO: check if Object.keys is O(n) or something, if so, no idea for the mRoomCurrentUsers to be an object instead of an array
+            mRoomUsers[username].socket.emit('joinSuccess', {messages: messages, room: mRoomName, currentUsers: Object.keys(mRoomCurrentUsers)});
         });
 
+
         return true;        
-    }
+    };
 
     pub.usernameChanged = function(old, newname) {
         delete mRoomUsers[old]
@@ -90,7 +107,7 @@ var roomHandler = function(io, roomName, users) {
             message: old + ' is now known as ' + newname
         };
         mio.to(mRoomName).emit(mRoomName, msg);
-    }
+    };
 
     pub.send = function(message) {
         var user = mRoomUsers[message.username];
@@ -103,6 +120,7 @@ var roomHandler = function(io, roomName, users) {
             return false;
         }
 
+        //Is this only for debug mode? then remove from 'release' version
         if(mRequiresLogin && !user.loggedIn)
         {
             console.log('required login fail');
@@ -124,20 +142,30 @@ var roomHandler = function(io, roomName, users) {
         });
 
         return true;
-    }
+    };
 
     pub.leave = function(username) {
+        delete mRoomCurrentUsers[username];
+        mRoomUsers[username].socket.leave(mRoomName); //TODO: check if this crashes if user is already disconnected etc.
+        mio.to(mRoomName).emit(mRoomName, {message: username + " left room"});
+        mRoomUsers[username].socket.emit('leftRoom', {username: username});
+    };
 
+    //Not sure if this will be necessary, maybe we can just use pub.leave in all cases?
+    pub.disconnect = function(username) {
     }
 
     var mOnLogout = function(username) {
         return function(){
-            if(mInviteOnly) { 
-                mRoomUsers[username].socket.leave(mRoomName);
+            if(mInviteOnly) {
+                //Hopefully no race conditions here?
+                pub.leave(username);
+
+                //mRoomUsers[username].socket.leave(mRoomName);
                 //mRoomUsers[username] = {};
             }
         }
-    }
+    };
 
     var mLoadRoom = function() {
         Room.findOne({
@@ -175,10 +203,10 @@ var roomHandler = function(io, roomName, users) {
     var mConstruct = function(){
         mLoadRoom();
 
-    }
+    };
     mConstruct();
 
     return pub;
-}
+};
 
 module.exports = roomHandler;

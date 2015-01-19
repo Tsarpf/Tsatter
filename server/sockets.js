@@ -129,7 +129,7 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         var userinfo = {
             socket: socket,
             loggedIn: false,
-            currentRooms: {},
+            currentRooms: {}, //This list might be pretty easy to remove and just use roomsArray? Only has references to it in this file and three in roomHandler
             username: nextAnon(),
             roomsArray: ['test']
         };
@@ -166,7 +166,9 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         socket.on('leave', function(data) {
             if(data.room) {
                 try {
-                    socket.leave(data.room);
+                    if(channels[data.room]) {
+                        channels[data.room].leave(userinfo.username);
+                    }
                 }
                 catch(err){
                     console.log(err);
@@ -246,9 +248,9 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         });
 
         socket.on('disconnect', function(data, fn) {
-            if(isAnon(userinfo.username) || userinfo.username == undefined) {
-                for(var room in userinfo.roomsArray){
-
+            for(var room in userinfo.currentRooms){
+                if(channels[room]) {
+                    channels[room].leave(userinfo.username);
                 }
             }
         });
