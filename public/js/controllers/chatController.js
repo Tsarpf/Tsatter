@@ -9,6 +9,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             firstJoin = false;
             $scope.messages = $scope.messages.concat(obj.messages);
             $scope.users = $scope.users.concat(obj.currentUsers);
+            console.log($scope.users);
             $timeout(function(){
                 if(bottomScroll) {
                     $scope.msgDiv.scrollTop = $scope.msgDiv.scrollHeight;
@@ -23,10 +24,12 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
 
     socket.on('joinedRoom', function(obj) {
         $scope.users.push(obj.username);
+        console.log($scope.users);
     });
     socket.on('leftRoom', function(obj) {
         var userIdx = $scope.users.indexOf(obj.username);
         $scope.users.splice(userIdx, 1);
+        console.log($scope.users);
     });
 
     //we have to do this in a timeout so that the directive is initialized 

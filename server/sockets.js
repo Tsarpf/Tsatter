@@ -125,7 +125,6 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
     sessionStore = mongooseSessionStore;
 
     io.on('connection', function(socket) {
-        count++;
         var userinfo = {
             socket: socket,
             loggedIn: false,

@@ -35,7 +35,7 @@ var roomHandler = function(io, roomName, users) {
 
         //Send to others that a new user joined
         mio.to(mRoomName).emit(mRoomName, {message: username + " joined room"});
-        mio.to(mRoomName).emit('joinedRoom', {username: username});
+        mio.to(mRoomName).emit('joinedRoom', {room: mRoomName, username: username});
 
         //Pull new user from all users list and add to this channels allowed list etc.
         //Overwrite if exists
@@ -88,7 +88,7 @@ var roomHandler = function(io, roomName, users) {
         //Get an initial backlog of messages from the room. At the time of writing it's -50
         Room.findOne({name: mRoomName}, {messages: {$slice: -50}}).exec(function(err, doc) {
             var messages = [];
-            if(!err || doc){
+            if(!err && doc && doc.messages){
                 messages = doc.messages;
             }
             //TODO: check if Object.keys is O(n) or something, if so, no idea for the mRoomCurrentUsers to be an object instead of an array
@@ -148,7 +148,7 @@ var roomHandler = function(io, roomName, users) {
         delete mRoomCurrentUsers[username];
         mRoomUsers[username].socket.leave(mRoomName); //TODO: check if this crashes if user is already disconnected etc.
         mio.to(mRoomName).emit(mRoomName, {message: username + " left room"});
-        mRoomUsers[username].socket.emit('leftRoom', {username: username});
+        mio.to(mRoomName).emit('leftRoom', {room: mRoomName, username: username});
     };
 
     //Not sure if this will be necessary, maybe we can just use pub.leave in all cases?
