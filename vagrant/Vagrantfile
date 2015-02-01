@@ -6,6 +6,7 @@ Vagrant.configure(2) do |config|
     v.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
 end
   config.vm.provision :shell, path: "setup.sh"
+  config.vm.network "forwarded_port", guest: 3000, host: 8080
 
 
   # Create a forwarded port mapping which allows access to a specific port
