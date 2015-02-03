@@ -1,4 +1,4 @@
-var port = 4000;
+var port = 3000;
 var should = require('should'),
     server = require('../server/tsatterServer')({port: port}),
     client = require('socket.io-client'),
