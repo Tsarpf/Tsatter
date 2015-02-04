@@ -1,6 +1,5 @@
 Tsatter
 =======
-Build failing until I have a chance to fix tests within docker etc.
 [![Build Status](https://travis-ci.org/Tsarpf/Tsatter.svg?branch=master)](https://magnum.travis-ci.com/Tsarpf/Tsatter)
 
 ###Probably running the newest development version here: http://prototyping.xyz/
@@ -11,9 +10,9 @@ Build failing until I have a chance to fix tests within docker etc.
 
 
 ####About:
-An over-engineered lightweight chatting web application I've done in my free time using MongoDB, Express, AngularJS, NodeJS, Socket.IO, etc.
+An over-engineered lightweight chatting web application I've done in my free time using MongoDB, Express, AngularJS, NodeJS, Docker, etc.
 
-- NEW! Dockerized development and deployment environments for super easy install on all machines.
+#####- NEW! Dockerized development and deployment environments for simplified installs on new machines!
 - BDD development using should.
 - Automatic tests using Mocha
 - Continuous Integration using Travis-CI
