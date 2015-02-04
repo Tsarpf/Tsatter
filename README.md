@@ -1,6 +1,6 @@
 Tsatter
 =======
-
+Build failing until I have a chance to fix tests within docker etc.
 [![Build Status](https://travis-ci.org/Tsarpf/Tsatter.svg?branch=master)](https://magnum.travis-ci.com/Tsarpf/Tsatter)
 
 ###Probably running the newest development version here: http://prototyping.xyz/
