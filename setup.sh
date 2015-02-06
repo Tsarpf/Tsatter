@@ -1,3 +1,8 @@
+docker pull luzifer/inspircd
+docker stop inspirk
+docker rm -f inspirk
+docker run --name inspirk -v $(pwd)/inspircd/conf:/inspircd/conf -p 6667 luzifer/inspircd 
+
 docker pull mongo
 docker pull dockerfile/nodejs
 docker build -t tsatter/web:latest .

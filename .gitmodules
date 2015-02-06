@@ -1,0 +1,6 @@
+[submodule "docker-inspircd"]
+	path = docker-inspircd
+	url = https://github.com/jesterpm/docker-inspircd
+[submodule "inspircd/docker-inspircd"]
+	path = inspircd/docker-inspircd
+	url = https://github.com/jesterpm/docker-inspircd
