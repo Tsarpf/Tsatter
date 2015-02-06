@@ -22,7 +22,15 @@ var runServer = function(options) {
     var connect = function() {
         var options = {server: {socketOptions: {keepAlive: 1}}};
         //mongooseConn = mongoose.createConnection("mongodb://localhost/", options);
-        mongooseConn = mongoose.connect("mongodb://db_1/", options);
+        if(process.env.TRAVIS) {
+            //travis yay
+            mongooseConn = mongoose.connect("mongodb://localhost/", options);
+
+        }
+        else { 
+            //docker yay
+            mongooseConn = mongoose.connect("mongodb://db_1/", options);
+        }
     };
     connect();
     mongoose.connection.on('error', console.error.bind(console, 'connection error:'));

@@ -2,6 +2,8 @@ language: node_js
 node_js:
     - "0.11"
 
+script: cd environment && npm install && npm test
+
 services:
     - mongodb
 
