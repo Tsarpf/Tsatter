@@ -1,9 +1,7 @@
-#docker pull luzifer/inspircd
 docker stop inspirk
 docker rm -f inspirk
 cd inspircd
-docker build -t tsatter/inspirk:latest .
-docker run --name inspirk -v $(pwd)/conf:/inspircd/conf -p 6667 tsatter/inspirk 
+./start.sh
 cd ../
 
 docker pull mongo

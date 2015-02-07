@@ -14,14 +14,8 @@ RUN rm -rf /var/lib/apt/lists && \
     make && make install && \
     apt-get purge -y build-essential
 
-VOLUME ["/inspircd/conf"]
-
-EXPOSE 6667 6697
+EXPOSE 6667 
 
 USER inspircd
-
-#ENTRYPOINT["/bin/bash"]
 CMD bash -C '/inspircd/conf/start.sh'; bash;
-
-#ENTRYPOINT ["/inspircd/bin/inspircd"]
 
