@@ -20,6 +20,7 @@ EXPOSE 6667 6697
 
 USER inspircd
 
+#ENTRYPOINT["/bin/bash"]
 CMD bash -C '/inspircd/conf/start.sh'; bash;
 
 #ENTRYPOINT ["/inspircd/bin/inspircd"]
