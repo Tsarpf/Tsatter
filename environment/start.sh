@@ -5,5 +5,6 @@ do
   sleep 1
 done
 echo "$(date) - connected successfully"
+cd src
 npm test
 npm start
