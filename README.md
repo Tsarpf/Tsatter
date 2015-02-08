@@ -4,10 +4,14 @@ Tsatter
 
 ###Probably running the newest development version here: http://prototyping.xyz/
 
-###How to use
+###How to deploy
 - install docker
 - run setup.sh
 
+###How to develop
+- install docker
+- run setup.sh
+- edit files in the environment folder, changes are automatically synced to the container and the server within the container restarted (using nodemon)
 
 ####About:
 An over-engineered lightweight chatting web application I've done in my free time using MongoDB, Express, AngularJS, NodeJS, Docker, etc.
