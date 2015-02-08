@@ -88,7 +88,6 @@ var runServer = function(options) {
 
     var io = require('socket.io')(server);
 
-    //var cookieParserF = cookieParser(secret);
     io.use(checkSocketHandshakeCookie(cookieParser(secret), key));
 
     //routes
