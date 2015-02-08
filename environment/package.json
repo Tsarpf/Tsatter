@@ -17,12 +17,13 @@
     "passport.socketio": "*",
     "passport-local-mongoose": "*",
     "socket.io": "*",
+    "nodemon": "*",
     "socket.io-client": "*",
     "xmlhttprequest": "*"
   },
 
   "scripts": {
-    "start": "node run.js",
+    "start": "nodemon run.js",
     "test": "./node_modules/.bin/mocha"
   }
 

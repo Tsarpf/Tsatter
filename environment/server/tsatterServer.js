@@ -52,7 +52,7 @@ var runServer = function(options) {
     app.use(bodyParser.urlencoded({extended:true}));
     app.use(cookieParser());
     var key = 'express.sid';
-    var secret = 'new key';
+    var secret = 'hide and or load this from file when deploying to production';
     var maxAge = new Date(Date.now() + 3600000);
     app.use(session({
         cookieParser: cookieParser,
@@ -88,57 +88,8 @@ var runServer = function(options) {
 
     var io = require('socket.io')(server);
 
-    var cookieParserF = cookieParser(secret);
-    //TODO: move this somewhere nicer?
-    io.use(function(socket, next){
-        cookieParserF(socket.handshake, {}, function(err){
-            if (err) {
-                console.log("error in parsing cookie");
-                return next(err);
-            }
-            var url = socket.request.url;
-            var urlCookie = url.indexOf('cookie') >= 0;
-            if (!socket.handshake.signedCookies && !urlCookie) {
-                console.log("no secureCookies|signedCookies found");
-                return next(new Error("no secureCookies found"));
-            }
-
-            var sid;
-            if(urlCookie)  {
-                //TODO: find out just how slow this is
-                try {
-                    sid = url.substring(url.indexOf('=') + 1, url.indexOf('&')); 
-                    sid = sid.substring(sid.indexOf('%3A') + 3, sid.indexOf('.'));
-                }
-                catch(err) {
-                    console.log(err);
-                }
-            }
-            else if(socket.handshake.signedCookies){
-                sid = socket.handshake.signedCookies[key];
-            }
-
-            mongooseSessionStore.get(sid, function(err, session){
-
-                if(!session) socket.session = {};
-                else socket.session = session;
-
-                socket.session.sid = sid;
-
-                if (!err && !session) 
-                    console.log('session not found');
-
-                if (err) {
-                     console.log('failed connection to socket.io:', err);
-
-                }
-                else {
-                    //console.log('successful connection to socket.io');
-                }
-                next(err);
-            });
-        });
-    });
+    //var cookieParserF = cookieParser(secret);
+    io.use(checkSocketHandshakeCookie(cookieParser(secret), key));
 
     //routes
     require('./routes')(app);
@@ -152,6 +103,58 @@ var runServer = function(options) {
 
 }
 
+function checkSocketHandshakeCookie(cookieParser, key) {
+    var f = function (socket, next) {
+        cookieParser(socket.handshake, {}, function (err) {
+            if (err) {
+                console.log("error in parsing cookie");
+                return next(err);
+            }
+            var url = socket.request.url;
+            var urlCookie = url.indexOf('cookie') >= 0;
+            if (!socket.handshake.signedCookies && !urlCookie) {
+                console.log("no secureCookies|signedCookies found");
+                return next(new Error("no secureCookies found"));
+            }
+
+            var sid;
+            if (urlCookie) {
+                //TODO: find out just how slow this is
+                try {
+                    sid = url.substring(url.indexOf('=') + 1, url.indexOf('&'));
+                    sid = sid.substring(sid.indexOf('%3A') + 3, sid.indexOf('.'));
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            }
+            else if (socket.handshake.signedCookies) {
+                sid = socket.handshake.signedCookies[key];
+            }
+
+            mongooseSessionStore.get(sid, function (err, session) {
+
+                if (!session) socket.session = {};
+                else socket.session = session;
+
+                socket.session.sid = sid;
+
+                if (!err && !session)
+                    console.log('session not found');
+
+                if (err) {
+                    console.log('failed connection to socket.io:', err);
+
+                }
+                else {
+                    //console.log('successful connection to socket.io');
+                }
+                next(err);
+            });
+        });
+    }
+    return f;
+}
 module.exports = function(options) {
     return runServer(options);
 }
