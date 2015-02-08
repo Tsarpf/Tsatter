@@ -2,7 +2,7 @@ language: node_js
 node_js:
     - "0.11"
 
-script: cd environment && npm install && npm travistest
+script: cd environment && npm install && npm run-script travistest
 
 services:
     - mongodb
