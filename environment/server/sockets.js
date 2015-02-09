@@ -18,9 +18,7 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             username = nextAnon();
         }
 
-
         var connObj = {
-            channels: ['#test'],
             port: 6667,
             userName: username,
             autoConnect: false
@@ -32,12 +30,14 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         });
 
         client.addListener('error', function(message) {
-            console.log('error: ' + message);
+            console.log('error:');
+            console.log(message);
         });
 
         client.addListener('message', function(nick, channel, message) {
             console.log('got message');
             console.log(channel + ' ' + nick + ': ' + message);
+            socket.emit(channel, {nick: nick, message: message});
         });
 
         client.addListener('join', function(channel, nick, message) {
@@ -54,9 +54,31 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             });
         });
 
+
+        client.on('names', function(channel, nicks) {
+           socket.emit('names', {channel: channel, nicks: nicks})
+        });
+        socket.on('join', function(msg) {
+            client.join(msg.channel, function() {
+                socket.emit('join', {channel: msg.channel})
+            });
+        });
+        socket.on('privmsg', function(msg) {
+            client.say(msg.channel, msg.message);
+        });
+        socket.on('message', function(msg) {
+            client.send.apply(msg.command, msg.args);
+        });
+
+        socket.on('error', function(err) {
+            console.log(err);
+        });
+
     });
-}
+};
+
+//send /<command>s straight to IRC-server. Except for cases where we have our own detour
 
 module.exports = {
     initCons: initializeConnections 
-}
+};
