@@ -45,6 +45,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         }
         joinRoom($scope.roomName);
     });
+
     var joinRoom=function(roomName) {
         socket.emit('join', {channel: $scope.roomName});
         $scope.messages.push({nick: 'server', message: " Welcome to room '" + roomName + "'"});
@@ -60,13 +61,17 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     this.addOne = function() {
         this.test++;
     };
+
     this.sendMsg = function () {
         var msgObj = {channel: $scope.roomName, message: $scope.msg};
         //console.log(msgObj);
         socket.emit('privmsg', msgObj);
+        $scope.messages.push({message: $scope.msg, nick: 'meitsi'}); //TODO: replace with real nick
         $scope.msg = "";
     };
+
     this.first = true;
+
     this.clicked=function() {
         if(this.first) {
             $scope.msg = "";

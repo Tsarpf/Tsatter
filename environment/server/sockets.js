@@ -1,5 +1,5 @@
 var irc = require('irc');
-var ircServerAddress = 'ircserver';
+var ircServerAddress = 'ircserver'; //similar to localhost, set by docker in the system's hosts file
 
 var count = 0;
 function nextAnon() {
