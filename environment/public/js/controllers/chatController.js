@@ -3,37 +3,45 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     $scope.messages = [];
     $scope.users = [];
     $scope.msg = "Enter message";
-    var firstJoin = true;
-    socket.on('join', function(obj) {
-        if(obj.channel === $scope.roomName && firstJoin) {
-            firstJoin = false;
-            /*
-            $scope.messages = $scope.messages.concat(obj.messages);
-            $scope.users = $scope.users.concat(obj.currentUsers);
-            console.log($scope.users);
-            $timeout(function(){
-                if(bottomScroll) {
-                    $scope.msgDiv.scrollTop = $scope.msgDiv.scrollHeight;
-                    console.log('scroll pls');
-                }
-            }, 500); //Ugly? //TODO: Yes it is. Doesn't work when user changes between existing channels
-            */
-        }
-        else {
-            //console.log(obj.room + ' isnt ' + $scope.roomName);
-        }
+
+    //we have to do this in a timeout so that the directive is initialized
+    $timeout(function(){
+        joinChannel($scope.channelName);
     });
 
+    var joinChannel=function(channelName) {
+        if(channelName.indexOf('#') < 0) {
+            $scope.channelName= '#' + $scope.channelName;
+            channelName = $scope.channelName;
+        }
+        socket.joinChannel(channelName);
+        $scope.messages.push({nick: 'server', message: ' Welcome to channel ' + channelName + '\''});
+
+        $scope.$on(channelName, handler);
+    };
+
+    function handler(event, data) {
+        console.log(' ');
+        console.log(' ');
+        console.log('event');
+        console.log(event);
+        console.log('data');
+        console.log(data);
+        console.log(' ');
+        console.log(' ');
+    }
+
+    $scope.message = function(data) {
+        $scope.messages.push(data.message);
+    };
+
+    /*
+    var firstJoin = true;
+
     socket.on('names', function(obj) {
+        console.log('got names');
         if(obj.channel === $scope.roomName) {
             $scope.users = Object.keys(obj.nicks);
-            console.log($scope.users);
-        }
-    });
-    socket.on('leftRoom', function(obj) {
-        if(obj.room === $scope.roomName) {
-            var userIdx = $scope.users.indexOf(obj.username);
-            $scope.users.splice(userIdx, 1);
             console.log($scope.users);
         }
     });
@@ -45,22 +53,16 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         }
         joinRoom($scope.roomName);
     });
-
     var joinRoom=function(roomName) {
         socket.emit('join', {channel: $scope.roomName});
         $scope.messages.push({nick: 'server', message: " Welcome to room '" + roomName + "'"});
-        console.log('joining: ' + roomName);
-        //socket.emit('join', {room: roomName});
-        socket.on($scope.roomName, function(data) {
-            //console.log(data);
-            $scope.messages.push(data);
-        });
-    }
-
-
-    this.addOne = function() {
-        this.test++;
     };
+
+    socket.on($scope.roomName, function(data) {
+        //console.log(data);
+        $scope.messages.push(data);
+    });
+
 
     this.sendMsg = function () {
         var msgObj = {channel: $scope.roomName, message: $scope.msg};
@@ -88,4 +90,5 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
 
     $scope.$on('msgRepeatFinished', function(event) {
     });
+    */
 }]);

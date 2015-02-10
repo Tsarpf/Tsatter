@@ -25,6 +25,10 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         };
         var client = new irc.Client(ircServerAddress, username, connObj);
 
+        function toClient(eventName, messageObj) {
+
+        }
+
         client.addListener('raw', function(message) {
             //console.log(message);
         });
@@ -34,38 +38,73 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             console.log(message);
         });
 
-        client.addListener('message', function(nick, channel, message) {
-            console.log('got message');
-            console.log(channel + ' ' + nick + ': ' + message);
-            socket.emit(channel, {nick: nick, message: message});
+        client.on('names', function(channel, nicks) {
+            socket.emit('names', {channel: channel, nicks: nicks})
+            //socket.emit(channel, {nicks});
         });
 
-        client.addListener('join', function(channel, nick, message) {
-            console.log('joined channel');
-            console.log(channel + ' ' + nick + ': ' + message);
-            client.say(channel, 'oh hi ' + nick);
+        client.addListener('join', function(channel, nick, messageObj) {
+            //socket.emit('join', {nick:nick, channel: channel});
+            socket.emit(channel, messageObj);
         });
+
+        client.addListener('message', function(nick, channelOrNick, messageTxt, messageObj) {
+            //TODO: look into whether this is a good implementation for private messages
+            socket.emit(channelOrNick, messageObj);
+        });
+
+        client.addListener('topic', function(channel, topic, nick, messageObj) {
+            socket.emit(channel, messageObj);
+        });
+
+        client.addListener('part', function(channel, nick, reason, messageObj) {
+            socket.emit(channel, messageObj);
+        });
+
+        client.addListener('quit', function(nick, reason, channels, messageObj) {
+            //TODO: broadcast the nick to all channels
+        });
+
+        client.addListener('kick', function(channel, nick, by, reason, messageObj) {
+            socket.emit(channel, messageObj);
+        });
+
+        client.addListener('nick', function(oldNick, newNick, channels, messageObj) {
+            //TODO: broadcast the nick to all channels
+            //socket.emit(channel, messageObj);
+        });
+
+        client.addListener('invite', function(channel, from, messageObj) {
+            socket.emit(channel, messageObj);
+        });
+
+        client.addListener('+mode', function(channel, by, mode, argument, messageObj) {
+            socket.emit(channel, messageObj);
+        });
+
+        client.addListener('-mode', function(channel, by, mode, argument, messageObj) {
+            socket.emit(channel, messageObj);
+        });
+
 
         client.connect(function() {
             console.log('connected');
-            client.join('#test2', function(nick, message) {
-                console.log('joined channel test2');
-                client.say('#test2', 'hello world');
-            });
         });
 
 
-        client.on('names', function(channel, nicks) {
-           socket.emit('names', {channel: channel, nicks: nicks})
-        });
+
+
+
         socket.on('join', function(msg) {
             client.join(msg.channel, function() {
                 socket.emit('join', {channel: msg.channel})
             });
         });
+
         socket.on('privmsg', function(msg) {
             client.say(msg.channel, msg.message);
         });
+
         socket.on('message', function(msg) {
             client.send.apply(msg.command, msg.args);
         });
