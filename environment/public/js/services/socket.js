@@ -39,12 +39,26 @@ angular.module('tsatter').factory('socket', function($rootScope) {
     var listeners = {};
     return {
 
-        joinChannel: function(channelName) {
+        joinChannel: function(channel) {
             //listeners[channelName] = listenersObj;
-            socket.on(channelName, function(data) {
-                $rootScope.$broadcast(channelName, data);
+            socket.on(channel, function(data) {
+                console.log('data at factory');
+                console.log(data);
+                console.log(' ');
+                $rootScope.$broadcast(channel, data);
             });
-            socket.send({join: channelName});
+            socket.emit('join', {channel: channel});
+        },
+
+        emit: function(channel, data, callback) {
+            socket.emit(channel, data, function() {
+                var args = arguments;
+                $rootScope.$apply(function() {
+                    if(callback) {
+                        callback.apply(socket, args);
+                    }
+                });
+            });
         }
 
 
@@ -59,16 +73,6 @@ angular.module('tsatter').factory('socket', function($rootScope) {
                 });
             });
         },
-        emit: function(channel, data, callback) {
-            socket.emit(channel, data, function() {
-                var args = arguments;
-                $rootScope.$apply(function() {
-                    if(callback) {
-                        callback.apply(socket, args);
-                    }
-                });
-            });
-        }
         */
     };
 });

@@ -3,13 +3,13 @@ angular.module('tsatter').controller('AllChatController', ['$rootScope', '$scope
         loggedIn: false
     };
     $scope.joinThisChannel = "";
-    $scope.userRooms = [];
-    $scope.allRooms = [];
+    $scope.userChannels = [];
+    $scope.allChannels = [];
     this.clicked=function() {
         $scope.joinThisChannel = "";
     };
     this.join=function() {
-        $scope.userRooms.push(String($scope.joinThisChannel));
+        $scope.userChannels.push(String($scope.joinThisChannel));
         $scope.joinThisChannel = "";
     };
     /*

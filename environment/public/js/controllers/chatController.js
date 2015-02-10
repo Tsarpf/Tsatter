@@ -10,6 +10,8 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     });
 
     var joinChannel=function(channelName) {
+        console.log('join:');
+        console.log(channelName);
         if(channelName.indexOf('#') < 0) {
             $scope.channelName= '#' + $scope.channelName;
             channelName = $scope.channelName;

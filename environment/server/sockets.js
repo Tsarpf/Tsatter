@@ -96,6 +96,8 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
 
 
         socket.on('join', function(msg) {
+            console.log('got join');
+            console.log(msg);
             client.join(msg.channel, function() {
                 socket.emit('join', {channel: msg.channel})
             });
@@ -106,7 +108,7 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         });
 
         socket.on('message', function(msg) {
-            client.send.apply(msg.command, msg.args);
+            //client.send.apply(msg.command, msg.args);
         });
 
         socket.on('error', function(err) {

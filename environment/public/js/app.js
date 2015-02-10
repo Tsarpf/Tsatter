@@ -30,12 +30,14 @@ app.directive('tsChatMessage', function($timeout) {
         restrict: "E",
         templateUrl: '/partials/chatmessage',
         link: function(scope, element, attrs) {
+            /*
             if(scope.$last === true){
                 $timeout(function() {
                     scope.$emit('msgRepeatFinished');
                     scope.lastElementScroll(attrs.id);
                 });
             }
+            */
         }
     };
 });
