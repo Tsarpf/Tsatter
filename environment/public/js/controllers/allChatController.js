@@ -7,11 +7,12 @@ angular.module('tsatter').controller('AllChatController', ['$rootScope', '$scope
     $scope.allRooms = [];
     this.clicked=function() {
         $scope.joinThisChannel = "";
-    }
+    };
     this.join=function() {
         $scope.userRooms.push(String($scope.joinThisChannel));
         $scope.joinThisChannel = "";
-    }
+    };
+    /*
     socket.emit('hello', {}, function(data) {
         console.log(data);
         $rootScope.vars.loggedIn = data.loggedIn;
@@ -38,6 +39,7 @@ angular.module('tsatter').controller('AllChatController', ['$rootScope', '$scope
         console.log($scope.userRooms);
         console.log(data.userRooms);
     })
+     */
 
 
 }]);

@@ -30,9 +30,11 @@ angular.module('tsatter').factory('socket', function($rootScope) {
     var address = location.host;
     var socket = io(address);
 
+    /*
     socket.on('message', function() {
 
     });
+    */
 
     var listeners = {};
     return {
@@ -43,9 +45,10 @@ angular.module('tsatter').factory('socket', function($rootScope) {
                 $rootScope.$broadcast(channelName, data);
             });
             socket.send({join: channelName});
-        },
+        }
 
 
+        /*
         on: function(channel, callback) {
             socket.on(channel, function () {
                 var args = arguments;
@@ -66,5 +69,6 @@ angular.module('tsatter').factory('socket', function($rootScope) {
                 });
             });
         }
+        */
     };
 });

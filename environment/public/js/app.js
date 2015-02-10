@@ -16,10 +16,10 @@ app.directive('tsChat', function($timeout) {
         templateUrl: '/partials/chat',
         link: function(scope, element, attrs) {
             console.log("le attribute:");
-            console.log(attrs.roomName);
-            scope.roomName = attrs.roomName;
+            console.log(attrs.channelName);
+            scope.channelName = attrs.channelName;
             $timeout(function() {
-                scope.msgDiv = document.getElementById(attrs.roomName);
+                scope.msgDiv = document.getElementById(attrs.channelName);
             });
         }
     };
