@@ -25,10 +25,6 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         };
         var client = new irc.Client(ircServerAddress, username, connObj);
 
-        function toClient(eventName, messageObj) {
-
-        }
-
         client.addListener('raw', function(message) {
             //console.log(message);
         });
@@ -39,29 +35,33 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         });
 
         client.on('names', function(channel, nicks) {
-            socket.emit('names', {channel: channel, nicks: nicks})
-            //socket.emit(channel, {nicks});
+            socket.emit(channel, {nicks: nicks, command: 'NAMES'});
         });
 
         client.addListener('join', function(channel, nick, messageObj) {
+            console.log(messageObj);
             //socket.emit('join', {nick:nick, channel: channel});
             socket.emit(channel, messageObj);
         });
 
         client.addListener('message', function(nick, channelOrNick, messageTxt, messageObj) {
             //TODO: look into whether this is a good implementation for private messages
+            console.log(messageObj);
             socket.emit(channelOrNick, messageObj);
         });
 
         client.addListener('topic', function(channel, topic, nick, messageObj) {
+            console.log(messageObj);
             socket.emit(channel, messageObj);
         });
 
         client.addListener('part', function(channel, nick, reason, messageObj) {
+            console.log(messageObj);
             socket.emit(channel, messageObj);
         });
 
         client.addListener('quit', function(nick, reason, channels, messageObj) {
+            console.log(messageObj);
             //TODO: broadcast the nick to all channels
         });
 

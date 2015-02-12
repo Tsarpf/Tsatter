@@ -1,6 +1,7 @@
 angular.module('tsatter').controller('AllChatController', ['$rootScope', '$scope', 'socket', function($rootScope, $scope, socket) {
     $rootScope.vars = {
-        loggedIn: false
+        loggedIn: false,
+        nickname: 'anon'
     };
     $scope.joinThisChannel = "";
     $scope.userChannels = [];

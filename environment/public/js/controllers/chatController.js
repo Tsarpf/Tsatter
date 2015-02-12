@@ -1,4 +1,4 @@
-angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$scope', 'socket', function($timeout, $anchorScroll, $location, $scope, socket) {
+angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$scope', 'socket', '$rootScope', function($timeout, $anchorScroll, $location, $scope, socket, $rootScope) {
     //$scope.msgDiv = {};
     $scope.messages = [];
     $scope.users = [];
@@ -23,20 +23,51 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     };
 
     function handler(event, data) {
-        console.log(' ');
-        console.log(' ');
-        console.log('event');
-        console.log(event);
-        console.log('data');
-        console.log(data);
-        console.log(' ');
-        console.log(' ');
+        switch(data.command) {
+            case 'PRIVMSG':
+                $scope.receiveMessage(data);
+                break;
+            case 'JOIN':
+                $scope.userJoin(data);
+                break;
+            case 'NAMES':
+                console.log(data);
+                $scope.names(data);
+                break;
+            default:
+                console.log('no handler for: ' + data.command);
+                console.log(data);
+                break;
+        }
     }
 
-    $scope.message = function(data) {
+    $scope.names = function(data) {
+        $scope.users = Object.keys(data.nicks);
+    }
+    $scope.userJoin = function(data) {
+        $scope.users.push(data.nick);
+    };
+
+    $scope.receiveMessage = function(data) {
         $scope.messages.push(data.message);
     };
 
+    this.sendMessage = function() {
+        console.log('send message');
+       var obj = {channel: $scope.channelName, message: $scope.message}
+        socket.emit('privmsg', obj);
+        $scope.messages.push({message: $scope.message, nick: $rootScope.vars.nickname});
+        $scope.message = '';
+    };
+
+    this.first = true;
+    this.clicked=function() {
+        console.log('jou');
+        if(this.first) {
+            $scope.message = '';
+            this.first = false;
+        }
+    }
     /*
     var firstJoin = true;
 
@@ -74,14 +105,6 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         $scope.msg = "";
     };
 
-    this.first = true;
-
-    this.clicked=function() {
-        if(this.first) {
-            $scope.msg = "";
-            this.first = false;
-        }
-    }
 
     var bottomScroll = true;
     $scope.lastElementScroll=function(elementId) {

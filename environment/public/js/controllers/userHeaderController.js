@@ -2,6 +2,8 @@
 
 angular.module('tsatter').controller("UserHeaderController", ['$rootScope', '$scope', 'socket', function($rootScope, $scope, socket) {
     $scope.loginState = "";
+    //$rootScope.vars.nickname = 'anon';
+    /*
     $scope.login = function() {
         var obj = {};
         obj.username = $scope.username;
@@ -24,6 +26,7 @@ angular.module('tsatter').controller("UserHeaderController", ['$rootScope', '$sc
             $scope.loginState = "Logged out!";
         }
     };
+    */
 
     /*
     socket.on('loginFail', function(data) {
