@@ -46,7 +46,19 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
 
         client.addListener('message', function(nick, channelOrNick, messageTxt, messageObj) {
             //TODO: look into whether this is a good implementation for private messages
+
+            var date = new Date(Date.now());
+            var timestamp = {
+                a: date.getFullYear(),
+                mo: date.getMonth() + 1, //months starts from 0 because.
+                d: date.getDay(),
+                h: date.getHours(),
+                m: date.getMinutes(),
+                s: date.getSeconds(),
+                ms: date.getMilliseconds()
+            };
             console.log(messageObj);
+            messageObj.timestamp = timestamp;
             socket.emit(channelOrNick, messageObj);
         });
 
@@ -91,10 +103,6 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             console.log('connected');
         });
 
-
-
-
-
         socket.on('join', function(msg) {
             console.log('got join');
             console.log(msg);
@@ -112,6 +120,7 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         });
 
         socket.on('error', function(err) {
+            console.log('socket error');
             console.log(err);
         });
 

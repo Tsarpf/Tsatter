@@ -19,44 +19,58 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         socket.joinChannel(channelName);
         $scope.messages.push({nick: 'server', message: ' Welcome to channel ' + channelName + '\''});
 
-        $scope.$on(channelName, handler);
+        $scope.$on(channelName, function(event, data) {
+            if($scope.handler.hasOwnProperty(data.command)) {
+                console.log('command called:');
+                console.log(data.command);
+                $scope.handler[data.command](data);
+            }
+            else {
+                console.log('no handler for:');
+                console.log(event);
+                console.log(data);
+            }
+        });
     };
 
-    function handler(event, data) {
-        switch(data.command) {
-            case 'PRIVMSG':
-                $scope.receiveMessage(data);
-                break;
-            case 'JOIN':
-                $scope.userJoin(data);
-                break;
-            case 'NAMES':
-                console.log(data);
-                $scope.names(data);
-                break;
-            default:
-                console.log('no handler for: ' + data.command);
-                console.log(data);
-                break;
-        }
-    }
 
+    $scope.part = function(data) {
+        var idx = $scope.users.indexOf(data.nick);
+        if(idx < 0) return;
+        $scope.users.splice(idx, 1);
+    };
     $scope.names = function(data) {
         $scope.users = Object.keys(data.nicks);
-    }
-    $scope.userJoin = function(data) {
+    };
+    $scope.join = function(data) {
         $scope.users.push(data.nick);
     };
 
     $scope.receiveMessage = function(data) {
-        $scope.messages.push(data.message);
+        console.log(data);
+        $scope.messages.push({message: data.args[1], nick: data.nick, timestamp: data.timestamp});
+    };
+
+    $scope.handler = {
+        PRIVMSG: $scope.receiveMessage,
+        JOIN: $scope.join,
+        NAMES: $scope.names,
+        PART: $scope.part,
     };
 
     this.sendMessage = function() {
         console.log('send message');
        var obj = {channel: $scope.channelName, message: $scope.message}
         socket.emit('privmsg', obj);
-        $scope.messages.push({message: $scope.message, nick: $rootScope.vars.nickname});
+
+        var date = new Date(Date.now());
+        var timestamp = {
+            h: date.getHours(),
+            m: date.getMinutes(),
+            s: date.getSeconds()
+        }
+
+        $scope.messages.push({message: $scope.message, nick: $rootScope.vars.nickname, timestamp: timestamp});
         $scope.message = '';
     };
 
@@ -67,7 +81,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             $scope.message = '';
             this.first = false;
         }
-    }
+    };
     /*
     var firstJoin = true;
 
