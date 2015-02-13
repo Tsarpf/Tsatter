@@ -29,6 +29,12 @@ angular.module('tsatter').factory('socket', function($rootScope) {
 angular.module('tsatter').factory('socket', function($rootScope) {
     var address = location.host;
     var socket = io(address);
+    socket.on('message', function(message) {
+        console.log(message);
+        $rootScope.$apply(function() {
+            $rootScope.$broadcast(message.command, message);
+        });
+    });
 
     /*
     socket.on('message', function() {

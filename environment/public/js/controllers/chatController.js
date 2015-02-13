@@ -48,7 +48,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
 
     $scope.receiveMessage = function(data) {
         console.log(data);
-        $scope.messages.push({message: data.args[1], nick: data.nick, timestamp: data.timestamp});
+        $scope.messages.push({message: data.args[1], nick: data.nick, timestamp: getTimestamp()});
     };
 
     $scope.handler = {
@@ -58,19 +58,23 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         PART: $scope.part,
     };
 
-    this.sendMessage = function() {
-        console.log('send message');
-       var obj = {channel: $scope.channelName, message: $scope.message}
-        socket.emit('privmsg', obj);
-
+    var getTimestamp = function() {
         var date = new Date(Date.now());
         var timestamp = {
             h: date.getHours(),
             m: date.getMinutes(),
-            s: date.getSeconds()
+            s: date.getSeconds(),
+            ms: date.getMilliseconds()
         }
 
-        $scope.messages.push({message: $scope.message, nick: $rootScope.vars.nickname, timestamp: timestamp});
+        return timestamp;
+    };
+
+    this.sendMessage = function() {
+        console.log('send message');
+       var obj = {channel: $scope.channelName, message: $scope.message}
+        socket.emit('privmsg', obj);
+        $scope.messages.push({message: $scope.message, nick: $rootScope.vars.nickname, timestamp: getTimestamp()});
         $scope.message = '';
     };
 

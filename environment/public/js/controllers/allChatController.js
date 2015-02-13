@@ -1,4 +1,18 @@
-angular.module('tsatter').controller('AllChatController', ['$rootScope', '$scope', 'socket', function($rootScope, $scope, socket) {
+angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootScope', '$scope', 'socket', function($timeout, $rootScope, $scope, socket) {
+
+    /*
+    $timeout(function(){
+        $scope.userChannels.push('#ses');
+    }, 1000);
+    */
+
+    $scope.$on('rpl_welcome', function(event, data) {
+        console.log('connected');
+        //console.log(data);
+        $scope.userChannels.push('#ses');
+        $rootScope.vars.nickname = data.nick;
+    });
+
     $rootScope.vars = {
         loggedIn: false,
         nickname: 'anon'
@@ -9,6 +23,7 @@ angular.module('tsatter').controller('AllChatController', ['$rootScope', '$scope
     this.clicked=function() {
         $scope.joinThisChannel = "";
     };
+
     this.join=function() {
         $scope.userChannels.push(String($scope.joinThisChannel));
         $scope.joinThisChannel = "";
