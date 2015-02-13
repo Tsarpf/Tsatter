@@ -12,6 +12,10 @@ angular.module('tsatter').factory('socket', function($rootScope) {
         alert('Disconnected!');
         location.reload();
     });
+    socket.on('reconnect', function() {
+        alert('Disconnected!');
+        location.reload();
+    });
 
     return {
         joinChannel: function(channel) {

@@ -116,6 +116,14 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             console.log(err);
         });
 
+        socket.on('reconnect', function() {
+            client.disconnect('socket closed');
+        });
+
+        socket.on('disconnect', function() {
+            client.disconnect('socket closed');
+        });
+
         socket.on('close', function() {
             client.disconnect('socket closed');
         });
