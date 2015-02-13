@@ -8,6 +8,11 @@ angular.module('tsatter').factory('socket', function($rootScope) {
         });
     });
 
+    socket.on('disconnect', function() {
+        alert('Disconnected!');
+        location.reload();
+    });
+
     return {
         joinChannel: function(channel) {
             //listeners[channelName] = listenersObj;
