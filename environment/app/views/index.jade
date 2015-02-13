@@ -13,7 +13,7 @@ block content
 
             div(class="col-xs-3")
 
-                strong {{vars.username}}'s channels
+                strong {{$root.vars.username}}'s channels
                 ul
                     li(ng-repeat="channel in userChannels") {{channel}}
 
