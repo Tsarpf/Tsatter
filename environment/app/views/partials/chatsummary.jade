@@ -1,3 +1,8 @@
 //
    Created by Tsarpf on 2/14/15.
 
+div(class="col-xs-3 chatsummary")
+    p(class="centered-text") <strong>{{result.topic}}</strong>
+    img(src="{{result.imageUrl}}", class="chatsummarypicture")
+    p(ng-repeat="message in result.messages") {{message}}
+

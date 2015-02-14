@@ -17,4 +17,60 @@ module.exports = function(app) {
         var name = req.params.name;
         res.render('partials/' + name);
     });
+
+    app.get('/activity/', function(req, res, next) {
+        var obj = [
+            {
+                messages: ['hello iamaboy anda message', 'tseke vaara', 'joujou'],
+                topic: 'sup',
+                imageUrl: 'http://i.imgur.com/dH4Ilnh.gif'
+            },
+            {
+                messages: ['mesitsuun'],
+                topic: 'topikkidesu',
+                imageUrl: 'http://i.imgur.com/voyE0oi.jpg?1'
+            },
+            {
+                messages: ['mesitsuun', 'jouko hainen', 'meikä läinen'],
+                topic: 'topikkidesu',
+                imageUrl: 'http://i.imgur.com/OCJ1HnW.jpg'
+            },
+            {
+                messages: ['mesitsuun', 'naalfdkgalökdjf'],
+                topic: 'topikkidesu',
+                imageUrl: 'http://i.imgur.com/JB0Fd3R.gif'
+            },
+            {
+                messages: ['aa long mssagea long mssagea long mssagea long mssagea long mssagea long mssagea long mssagea long mssagea long mssage long mssage', 'ses'],
+                topic: 'immatopic',
+                imageUrl: 'http://i.imgur.com/VEnIb5i.jpg'
+            },
+            {
+                messages: ['hello iamaboy anda message', 'tseke vaara', 'joujou'],
+                topic: 'sup',
+                imageUrl: 'http://i.imgur.com/dH4Ilnh.gif'
+            },
+            {
+                messages: ['mesitsuun'],
+                topic: 'topikkidesu',
+                imageUrl: 'http://i.imgur.com/voyE0oi.jpg?1'
+            },
+            {
+                messages: ['mesitsuun', 'jouko hainen', 'meikä läinen'],
+                topic: 'topikkidesu',
+                imageUrl: 'http://i.imgur.com/OCJ1HnW.jpg'
+            },
+            {
+                messages: ['mesitsuun', 'naalfdkgalökdjf'],
+                topic: 'topikkidesu',
+                imageUrl: 'http://i.imgur.com/JB0Fd3R.gif'
+            },
+            {
+                messages: ['aa long mssagea long mssagea long mssagea long mssagea long mssagea long mssagea long mssagea long mssagea long mssage long mssage', 'ses'],
+                topic: 'immatopic',
+                imageUrl: 'http://i.imgur.com/VEnIb5i.jpg'
+            },
+        ];
+        res.json(obj);
+    });
 };

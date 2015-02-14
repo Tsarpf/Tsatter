@@ -10,6 +10,19 @@
     height:500px;
     width:500px;
 }
+
+.chatsummary {
+    /*height:500px;*/
+    margin-top: 10px;
+    outline: 1px solid orange;
+    float: left;
+}
+
+.chatsummarypicture {
+    max-width: 100%;
+    height: auto;
+}
+
 .tscontainer {
     top: 0px;
     right: 0px;
@@ -46,6 +59,9 @@
     word-break: break-word;
 }
 
+.centered-text {
+    text-align: center;
+}
 
 /*message entry line */
 .newMessage {
