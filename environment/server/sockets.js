@@ -27,7 +27,7 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         var client = new irc.Client(ircServerAddress, username, connObj);
 
         client.addListener('raw', function(message) {
-            console.log(message);
+            //console.log(message);
         });
 
         client.addListener('error', function(message) {
