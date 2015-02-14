@@ -22,11 +22,13 @@ An over-engineered lightweight chatting web application I've done in my free tim
 - Dockerized development and deployment environments for simplified installs on new machines!
 - BDD development using should.
 - Automated tests using Mocha
-- Continuous Integration using Travis-CI
-- Continuous Deployment
 - Dynamic HTML templates using Jade.
 - Sensitive data secured by using Passport.js for logins. (SSL/TLS support will be added before release)
 - Layout and look using Twitter Bootstrap
+
+Used to have and will have again in the future:
+- Continuous Integration using Travis-CI
+- Continuous Deployment
 
 ####Current features:
 - Persistent chat rooms, users' login data and messages.
