@@ -1,4 +1,4 @@
-angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$scope', 'socket', '$rootScope', function($timeout, $anchorScroll, $location, $scope, socket, $rootScope) {
+angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$scope', 'socket', '$rootScope', 'command', function($timeout, $anchorScroll, $location, $scope, socket, $rootScope, command) {
     //$scope.msgDiv = {};
     $scope.messages = [];
     $scope.users = [];
@@ -12,10 +12,6 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     var joinChannel=function(channelName) {
         console.log('join:');
         console.log(channelName);
-        if(channelName.indexOf('#') < 0) {
-            $scope.channelName= '#' + $scope.channelName;
-            channelName = $scope.channelName;
-        }
         socket.joinChannel(channelName);
         addServerMessage('Welcome to the channel ' + channelName);
 
@@ -78,8 +74,15 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     };
 
     this.privmsg = function() {
+        if($scope.message.indexOf('/') === 0) {
+            //Was a command
+            command.commandHandler($scope.message);
+            $scope.message = '';
+            return;
+        }
+
         console.log('send message');
-       var obj = {channel: $scope.channelName, message: $scope.message}
+        var obj = {channel: $scope.channelName, message: $scope.message}
         socket.emit('privmsg', obj);
         addMessage($scope.message, $rootScope.vars.nickname);
         $scope.message = '';
@@ -93,44 +96,8 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             this.first = false;
         }
     };
+
     /*
-    var firstJoin = true;
-
-    socket.on('names', function(obj) {
-        console.log('got names');
-        if(obj.channel === $scope.roomName) {
-            $scope.users = Object.keys(obj.nicks);
-            console.log($scope.users);
-        }
-    });
-
-    //we have to do this in a timeout so that the directive is initialized 
-    $timeout(function(){
-        if($scope.roomName.indexOf('#') < 0) {
-            $scope.roomName = '#' + $scope.roomName;
-        }
-        joinRoom($scope.roomName);
-    });
-    var joinRoom=function(roomName) {
-        socket.emit('join', {channel: $scope.roomName});
-        $scope.messages.push({nick: 'server', message: " Welcome to room '" + roomName + "'"});
-    };
-
-    socket.on($scope.roomName, function(data) {
-        //console.log(data);
-        $scope.messages.push(data);
-    });
-
-
-    this.sendMsg = function () {
-        var msgObj = {channel: $scope.roomName, message: $scope.msg};
-        //console.log(msgObj);
-        socket.emit('privmsg', msgObj);
-        $scope.messages.push({message: $scope.msg, nick: 'meitsi'}); //TODO: replace with real nick
-        $scope.msg = "";
-    };
-
-
     var bottomScroll = true;
     $scope.lastElementScroll=function(elementId) {
         if(bottomScroll) {

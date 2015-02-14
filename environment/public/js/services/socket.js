@@ -37,6 +37,10 @@ angular.module('tsatter').factory('socket', function($rootScope) {
                     }
                 });
             });
+        },
+
+        send: function(object) {
+            socket.send(object);
         }
     };
 });

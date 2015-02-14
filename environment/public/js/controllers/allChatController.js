@@ -23,37 +23,13 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     };
 
     this.join=function() {
+        if($scope.joinThisChannel.indexOf('#') != 0) {
+            $scope.joinThisChannel = '#' + $scope.joinThisChannel ;
+            channelName = $scope.joinThisChannel;
+        }
         $scope.userChannels.push(String($scope.joinThisChannel));
         $scope.joinThisChannel = "";
     };
-    /*
-    socket.emit('hello', {}, function(data) {
-        console.log(data);
-        $rootScope.vars.loggedIn = data.loggedIn;
-        $rootScope.vars.username = data.username;
-    });
-    socket.on('disconnect', function() {
-        alert('Disconnected!');
-        location.reload();
-    });
 
-    socket.on('loginSuccess', function(data) {
-        $scope.userRooms = data.rooms;
-    });
-
-    socket.on('roomLists', function(data) {
-
-        console.log('all rooms');
-        $scope.allRooms = data.allRooms;
-        console.log($scope.allRooms);
-        console.log(data.allRooms);
-
-        console.log('userRooms');
-        $scope.userRooms = data.userRooms;
-        console.log($scope.userRooms);
-        console.log(data.userRooms);
-    })
-     */
-
-
+    //Handle adding stuff to allRooms?
 }]);

@@ -112,6 +112,12 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             console.log(err);
         });
 
+        socket.on('message', function(messageObj) {
+            console.log('got raw message from socket');
+            console.log(messageObj.commandAndArgs);
+            client.send.apply(client, messageObj.commandAndArgs);
+        });
+
         socket.on('reconnect', function() {
             client.disconnect('reconnect not allowed');
         });
@@ -126,8 +132,6 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
 
     });
 };
-
-//send /<command>s straight to IRC-server. Except for cases where we have our own detour
 
 module.exports = {
     initCons: initializeConnections 
