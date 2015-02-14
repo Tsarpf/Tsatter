@@ -16,10 +16,10 @@ app.directive('tsChat', function($timeout) {
         templateUrl: '/partials/chat',
         link: function(scope, element, attrs) {
             console.log("le attribute:");
-            console.log(attrs.roomName);
-            scope.roomName = attrs.roomName;
+            console.log(attrs.channelName);
+            scope.channelName = attrs.channelName;
             $timeout(function() {
-                scope.msgDiv = document.getElementById(attrs.roomName);
+                scope.msgDiv = document.getElementById(attrs.channelName);
             });
         }
     };
@@ -30,12 +30,14 @@ app.directive('tsChatMessage', function($timeout) {
         restrict: "E",
         templateUrl: '/partials/chatmessage',
         link: function(scope, element, attrs) {
+            /*
             if(scope.$last === true){
                 $timeout(function() {
                     scope.$emit('msgRepeatFinished');
                     scope.lastElementScroll(attrs.id);
                 });
             }
+            */
         }
     };
 });

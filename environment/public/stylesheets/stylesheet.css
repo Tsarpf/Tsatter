@@ -26,6 +26,7 @@
     height: 90%;
     min-height: 90%;
     outline: 1px solid orange;
+    overflow: hidden;
 }
 
 .messages {
@@ -69,7 +70,7 @@
     position: relative;
 } 
 
-.new-room {
+.new-channel {
     width: 25em;
 }
 @-webkit-keyframes enter {

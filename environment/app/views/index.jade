@@ -7,23 +7,20 @@ block content
     div(ng-controller="AllChatController as allCtrl")
 
         div(class="row vspace")
-            input(ng-click="allCtrl.clicked()", ng-keyup="$event.keyCode == 13 && allCtrl.join()", ng-model="joinThisChannel", typeahead="room for room in allRooms | filter:$viewValue | limitTo:10", type="text", class="form-control", placeholder="New room name...")
-
-        div(class="row vspace")
 
             div(class="col-xs-3")
 
                 strong {{vars.username}}'s channels
                 ul
-                    li(ng-repeat="room in userRooms") {{room}}
+                    li(ng-repeat="channel in userChannels") {{channel}}
 
                 strong Recently active channels
                 ul
-                    li(ng-repeat="room in allRooms") {{room}}
+                    li(ng-repeat="channel in allChannels") {{channel}}
 
 
 
             .col-xs-9
                 tabset(type="'pills'")
-                    tab(ng-repeat="room in userRooms", heading="{{room}}")
-                        ts-chat(room-name="{{room}}")
+                    tab(ng-repeat="channel in userChannels", heading="{{channel}}")
+                        ts-chat(channel-name="{{channel}}")
