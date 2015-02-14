@@ -1,0 +1,15 @@
+{
+  "name": "Tsatter",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular-bootstrap": "*",
+    "angular": "*",
+    "angular-animate": "*",
+    "bootstrap": "*",
+    "socket.io-client": "*",
+    "jquery": "*"
+  },
+  "resolutions": {
+    "angular": "1.3.13"
+  }
+}
