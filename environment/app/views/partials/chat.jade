@@ -12,5 +12,5 @@ span(ng-controller="ChatController as chatCtrl", class="chat vspace")
             
         .tsmedia.col-xs-2
 
-        input(ng-click="chatCtrl.clicked()", ng-keyup="$event.keyCode == 13 && chatCtrl.sendMessage()", ng-model="message", type="text", class="newMessage col-xs-offset-2 col-xs-8")
+        input(ng-click="chatCtrl.clicked()", ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg()", ng-model="message", type="text", class="newMessage col-xs-offset-2 col-xs-8")
 

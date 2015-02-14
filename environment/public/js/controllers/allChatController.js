@@ -1,10 +1,8 @@
 angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootScope', '$scope', 'socket', function($timeout, $rootScope, $scope, socket) {
 
-    /*
     $timeout(function(){
-        $scope.userChannels.push('#ses');
-    }, 1000);
-    */
+         $scope.vars = $rootScope.vars;
+    });
 
     $scope.$on('rpl_welcome', function(event, data) {
         console.log('connected');

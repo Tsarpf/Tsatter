@@ -107,17 +107,13 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
             client.say(msg.channel, msg.message);
         });
 
-        socket.on('message', function(msg) {
-            //client.send.apply(msg.command, msg.args);
-        });
-
         socket.on('error', function(err) {
             console.log('socket error');
             console.log(err);
         });
 
         socket.on('reconnect', function() {
-            client.disconnect('socket closed');
+            client.disconnect('reconnect not allowed');
         });
 
         socket.on('disconnect', function() {

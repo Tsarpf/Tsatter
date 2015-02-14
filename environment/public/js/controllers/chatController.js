@@ -17,7 +17,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             channelName = $scope.channelName;
         }
         socket.joinChannel(channelName);
-        $scope.messages.push({nick: 'server', message: ' Welcome to channel ' + channelName + '\''});
+        addServerMessage('Welcome to the channel ' + channelName);
 
         $scope.$on(channelName, function(event, data) {
             if($scope.handler.hasOwnProperty(data.command)) {
@@ -33,48 +33,55 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         });
     };
 
-
     $scope.part = function(data) {
         var idx = $scope.users.indexOf(data.nick);
         if(idx < 0) return;
         $scope.users.splice(idx, 1);
+        addServerMessage(data.nick + ' left the channel');
     };
     $scope.names = function(data) {
         $scope.users = Object.keys(data.nicks);
     };
     $scope.join = function(data) {
         $scope.users.push(data.nick);
+        addServerMessage(data.nick + ' joined the channel');
     };
 
-    $scope.receiveMessage = function(data) {
+    $scope.privmsg = function(data) {
         console.log(data);
-        $scope.messages.push({message: data.args[1], nick: data.nick, timestamp: getTimestamp()});
+        addMessage(data.args[1], data.nick);
     };
 
     $scope.handler = {
-        PRIVMSG: $scope.receiveMessage,
+        PRIVMSG: $scope.privmsg,
         JOIN: $scope.join,
         NAMES: $scope.names,
         PART: $scope.part,
     };
 
+    var addServerMessage = function(message) {
+        addMessage(message, 'server');
+    };
+
+    var addMessage = function(message, nick) {
+        $scope.messages.push({message: message, nick: nick, timestamp: getTimestamp()});
+    };
+
     var getTimestamp = function() {
         var date = new Date(Date.now());
-        var timestamp = {
+        return {
             h: date.getHours(),
             m: date.getMinutes(),
             s: date.getSeconds(),
             ms: date.getMilliseconds()
-        }
-
-        return timestamp;
+        };
     };
 
-    this.sendMessage = function() {
+    this.privmsg = function() {
         console.log('send message');
        var obj = {channel: $scope.channelName, message: $scope.message}
         socket.emit('privmsg', obj);
-        $scope.messages.push({message: $scope.message, nick: $rootScope.vars.nickname, timestamp: getTimestamp()});
+        addMessage($scope.message, $rootScope.vars.nickname);
         $scope.message = '';
     };
 
