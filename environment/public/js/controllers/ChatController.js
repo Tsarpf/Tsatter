@@ -75,19 +75,40 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         };
     };
 
-    this.privmsg = function() {
-        if($scope.message.indexOf('/') === 0) {
-            //Was a command
-            command.send($scope.message);
-            $scope.message = '';
-            return;
-        }
+    var customCommandHandlers = {
+        op: op,
+    };
 
-        console.log('send message');
-        var obj = {channel: $scope.channelName, message: $scope.message}
-        socket.emit('privmsg', obj);
-        addMessage($scope.message, $rootScope.vars.nickname);
+    function op(args) {
+        command.send(['mode', $scope.channelName, '+o', args[1]]);
+    }
+
+
+    this.privmsg = function() {
+        var message = $scope.message;
         $scope.message = '';
+
+        //If a command
+        if(message.indexOf('/') === 0) {
+            if (message.indexOf('/') === 0) {
+                message = message.substring(1); //Lose the leading /
+            }
+            var words = message.split(' ');
+
+            var cmd = words[0].toLowerCase();
+            if(customCommandHandlers.hasOwnProperty(cmd)) {
+                customCommandHandlers[cmd](words);
+            }
+            else {
+                command.send(message);
+            }
+        }
+        else {
+            console.log('send message');
+            var obj = {channel: $scope.channelName, message: message}
+            socket.emit('privmsg', obj);
+            addMessage(message, $rootScope.vars.nickname);
+        }
     };
 
     this.first = true;

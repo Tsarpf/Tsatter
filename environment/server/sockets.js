@@ -116,8 +116,8 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
 
         socket.on('message', function(messageObj) {
             console.log('got raw message from socket');
-            console.log(messageObj.commandAndArgs);
-            client.send.apply(client, messageObj.commandAndArgs);
+            console.log(messageObj.command);
+            client.send.apply(client, messageObj.command);
         });
 
         socket.on('reconnect', function() {

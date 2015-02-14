@@ -6,12 +6,12 @@ angular.module('tsatter').factory('command', function($rootScope, socket) {
         send: function(message) {
             console.log('got command');
             console.log(message);
-            if (message.indexOf('/') === 0) {
-                message = message.substring(1); //Lose the leading /
-            }
-            var words = message.split(' ');
 
-            socket.send({commandAndArgs: words});
+            if(typeof message === 'string') {
+               message = message.split(' ');
+            }
+
+            socket.send({command: message});
         }
     }
 });
