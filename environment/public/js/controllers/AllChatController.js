@@ -25,11 +25,15 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     this.join=function() {
         if($scope.joinThisChannel.indexOf('#') != 0) {
             $scope.joinThisChannel = '#' + $scope.joinThisChannel ;
-            channelName = $scope.joinThisChannel;
         }
         $scope.userChannels.push(String($scope.joinThisChannel));
         $scope.joinThisChannel = "";
     };
+
+
+    socket.on('all', function(message) {
+
+    });
 
     //Handle adding stuff to allRooms?
 }]);
