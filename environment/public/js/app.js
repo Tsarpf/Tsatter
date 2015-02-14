@@ -25,6 +25,26 @@ app.directive('tsChat', function($timeout) {
     };
 });
 
+app.directive('tsChatSummary', function() {
+    return {
+        restrict: "E",
+        templateUrl: 'partials/chatsummary',
+        link: function(scope, element, attrs) {
+
+        }
+    };
+});
+
+app.directive('tsDiscovery', function() {
+    return {
+        restrict: "E",
+        templateUrl: 'partials/discovery',
+        link: function(scope, element, attrs) {
+
+        }
+    };
+});
+
 app.directive('tsChatMessage', function($timeout) {
     return {
         restrict: "E",

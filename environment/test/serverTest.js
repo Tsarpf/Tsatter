@@ -104,7 +104,7 @@ describe('Server', function() {
 });
 
 describe('File serving', function() {
-    it('should load a page containing Tsattr when requesting index', function(done) {
+    it('should load a page containing Tsatter when requesting index', function(done) {
         agent
         .get('/')
         .expect('Content-Type', /html/)

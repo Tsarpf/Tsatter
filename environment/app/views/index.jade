@@ -6,21 +6,22 @@ block content
 
     div(ng-controller="AllChatController as allCtrl")
 
-        div(class="row vspace")
+        tabset(type="'tabs'" justified="true")
+            tab(class="row vspace", heading="Channels")
 
-            div(class="col-xs-3")
+                div(class="col-xs-3")
 
-                strong {{vars.username}}'s channels
-                ul
-                    li(ng-repeat="channel in userChannels") {{channel}}
+                    strong {{vars.username}}'s channels
+                    ul
+                        li(ng-repeat="channel in userChannels") {{channel}}
 
-                strong Recently active channels
-                ul
-                    li(ng-repeat="channel in allChannels") {{channel}}
+                    strong Recently active channels
+                    ul
+                        li(ng-repeat="channel in allChannels") {{channel}}
 
-
-
-            .col-xs-9
-                tabset(type="'pills'")
-                    tab(ng-repeat="channel in userChannels", heading="{{channel}}")
-                        ts-chat(channel-name="{{channel}}")
+                .col-xs-9
+                    tabset(type="'pills'")
+                        tab(ng-repeat="channel in userChannels", heading="{{channel}}")
+                            ts-chat(channel-name="{{channel}}")
+            tab(class="row vspace", heading="Discover")
+                ts-discovery
