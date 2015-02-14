@@ -7,9 +7,6 @@ block content
     div(ng-controller="AllChatController as allCtrl")
 
         div(class="row vspace")
-            input(ng-click="allCtrl.clicked()", ng-keyup="$event.keyCode == 13 && allCtrl.join()", ng-model="joinThisChannel", typeahead="channel for channel in allChannels | filter:$viewValue | limitTo:10", type="text", class="form-control", placeholder="New channel name...")
-
-        div(class="row vspace")
 
             div(class="col-xs-3")
 

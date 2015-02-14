@@ -12,7 +12,6 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     var joinChannel=function(channelName) {
         console.log('join:');
         console.log(channelName);
-        socket.joinChannel(channelName);
         addServerMessage('Welcome to the channel ' + channelName);
 
         $scope.$on(channelName, function(event, data) {
@@ -27,6 +26,9 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
                 console.log(data);
             }
         });
+
+        command.send('names ' + channelName);
+
     };
 
     $scope.part = function(data) {
@@ -76,7 +78,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     this.privmsg = function() {
         if($scope.message.indexOf('/') === 0) {
             //Was a command
-            command.commandHandler($scope.message);
+            command.send($scope.message);
             $scope.message = '';
             return;
         }
@@ -90,7 +92,6 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
 
     this.first = true;
     this.clicked=function() {
-        console.log('jou');
         if(this.first) {
             $scope.message = '';
             this.first = false;

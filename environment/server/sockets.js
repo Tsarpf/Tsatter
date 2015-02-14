@@ -39,9 +39,13 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         });
 
         client.addListener('join', function(channel, nick, messageObj) {
-            console.log(messageObj);
-            //socket.emit('join', {nick:nick, channel: channel});
-            socket.emit(channel, messageObj);
+            if(nick === username) {
+                socket.send(messageObj);
+            }
+            else {
+                console.log(messageObj);
+                socket.emit(channel, messageObj);
+            }
         });
 
         client.addListener('message', function(nick, channelOrNick, messageTxt, messageObj) {
@@ -98,9 +102,7 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         socket.on('join', function(msg) {
             console.log('got join');
             console.log(msg);
-            client.join(msg.channel, function() {
-                socket.emit('join', {channel: msg.channel})
-            });
+            client.join(msg.channel);
         });
 
         socket.on('privmsg', function(msg) {

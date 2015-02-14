@@ -1,4 +1,4 @@
-angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootScope', '$scope', 'socket', function($timeout, $rootScope, $scope, socket) {
+angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootScope', '$scope', 'socket', 'command', function($timeout, $rootScope, $scope, socket, command) {
 
     $timeout(function(){
          $scope.vars = $rootScope.vars;
@@ -6,9 +6,21 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
 
     $scope.$on('rpl_welcome', function(event, data) {
         console.log('connected');
-        //console.log(data);
-        $scope.userChannels.push('#ses');
+        command.send('join #ses'); //Join default channel while developing
         $rootScope.vars.nickname = data.nick;
+    });
+
+    $scope.$on('JOIN', function(event, data) {
+        console.log('got join');
+        console.log(data);
+        var channel = data.args[0];
+        if($scope.userChannels.indexOf(channel) < 0) {
+            socket.listenChannel(channel);
+            $scope.userChannels.push(channel);
+        }
+        else {
+            console.log('got join for an existing channel?');
+        }
     });
 
     $rootScope.vars = {
@@ -29,11 +41,4 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
         $scope.userChannels.push(String($scope.joinThisChannel));
         $scope.joinThisChannel = "";
     };
-
-
-    socket.on('all', function(message) {
-
-    });
-
-    //Handle adding stuff to allRooms?
 }]);

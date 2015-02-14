@@ -3,10 +3,12 @@
  */
 angular.module('tsatter').factory('command', function($rootScope, socket) {
     return {
-        commandHandler: function(message) {
+        send: function(message) {
             console.log('got command');
             console.log(message);
-            var message = message.substring(1); //Lose the leading /
+            if (message.indexOf('/') === 0) {
+                message = message.substring(1); //Lose the leading /
+            }
             var words = message.split(' ');
 
             socket.send({commandAndArgs: words});

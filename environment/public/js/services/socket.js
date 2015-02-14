@@ -18,18 +18,16 @@ angular.module('tsatter').factory('socket', function($rootScope) {
     });
 
     return {
-        joinChannel: function(channel) {
-            //listeners[channelName] = listenersObj;
+        listenChannel: function(channel) {
             socket.on(channel, function(data) {
                 $rootScope.$apply(function() {
                     $rootScope.$broadcast(channel, data);
                 });
             });
-            socket.emit('join', {channel: channel});
         },
 
-        emit: function(channel, data, callback) {
-            socket.emit(channel, data, function() {
+        emit: function(event, data, callback) {
+            socket.emit(event, data, function() {
                 var args = arguments;
                 $rootScope.$apply(function() {
                     if(callback) {
