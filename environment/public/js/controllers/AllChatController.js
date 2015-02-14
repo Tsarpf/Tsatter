@@ -10,6 +10,16 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
         $rootScope.vars.nickname = data.nick;
     });
 
+    $scope.$on('NICK', function(event, data) {
+        console.log('got nick change');
+        var channels = socket.getChannels();
+        for(var channel in channels) {
+            if(channels.hasOwnProperty(channel)) {
+                $scope.$broadcast(channels[channel], data);
+            }
+        }
+    });
+
     $scope.$on('JOIN', function(event, data) {
         console.log('got join');
         console.log(data);

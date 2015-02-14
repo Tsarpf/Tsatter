@@ -17,14 +17,19 @@ angular.module('tsatter').factory('socket', function($rootScope) {
         location.reload();
     });
 
+    var channels = [];
+
     return {
         listenChannel: function(channel) {
+            channels.push(channel);
             socket.on(channel, function(data) {
                 $rootScope.$apply(function() {
                     $rootScope.$broadcast(channel, data);
                 });
             });
         },
+
+        getChannels: function() { return channels; },
 
         emit: function(event, data, callback) {
             socket.emit(event, data, function() {

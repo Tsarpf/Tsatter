@@ -50,11 +50,20 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         addMessage(data.args[1], data.nick);
     };
 
+    $scope.nick = function(data) {
+        console.log('got nick');
+        console.log(data);
+        var idx = $scope.users.indexOf(data.nick);
+        $scope.users.splice(idx, 1, data.args[0]);
+        addServerMessage(data.nick + ' is now known as ' + data.args[0]);
+    };
+
     $scope.handler = {
         PRIVMSG: $scope.privmsg,
         JOIN: $scope.join,
         NAMES: $scope.names,
         PART: $scope.part,
+        NICK: $scope.nick
     };
 
     var addServerMessage = function(message) {

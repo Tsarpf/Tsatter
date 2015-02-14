@@ -9,6 +9,7 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
     var io = socketio;
 
     io.on('connection', function(socket) {
+        console.log('got connection');
 
         var username;
         if(socket.session && socket.session.username) {
@@ -26,7 +27,7 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         var client = new irc.Client(ircServerAddress, username, connObj);
 
         client.addListener('raw', function(message) {
-            //console.log(message);
+            console.log(message);
         });
 
         client.addListener('error', function(message) {
@@ -50,12 +51,15 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
 
         client.addListener('message', function(nick, channelOrNick, messageTxt, messageObj) {
             //TODO: look into whether this is a good implementation for private messages
+            console.log('message');
+            console.log(messageObj);
             socket.emit(channelOrNick, messageObj);
         });
 
-        client.addListener('registered', function(message) {
-            message.nick = username;
-            socket.send(message);
+        client.addListener('registered', function(messageObj) {
+            console.log(messageObj);
+            messageObj.nick = username;
+            socket.send(messageObj);
         });
 
         client.addListener('topic', function(channel, topic, nick, messageObj) {
@@ -69,28 +73,34 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         });
 
         client.addListener('quit', function(nick, reason, channels, messageObj) {
+            console.log('got quit');
             console.log(messageObj);
             //TODO: broadcast the nick to all channels
         });
 
         client.addListener('kick', function(channel, nick, by, reason, messageObj) {
+            console.log('kick');
+            console.log(messageObj);
             socket.emit(channel, messageObj);
         });
 
         client.addListener('nick', function(oldNick, newNick, channels, messageObj) {
-            //TODO: broadcast the nick to all channels
-            //socket.emit(channel, messageObj);
+            console.log('kick');
+            socket.send(messageObj);
         });
 
         client.addListener('invite', function(channel, from, messageObj) {
+            console.log(messageObj);
             socket.emit(channel, messageObj);
         });
 
         client.addListener('+mode', function(channel, by, mode, argument, messageObj) {
+            console.log(messageObj);
             socket.emit(channel, messageObj);
         });
 
         client.addListener('-mode', function(channel, by, mode, argument, messageObj) {
+            console.log(messageObj);
             socket.emit(channel, messageObj);
         });
 
@@ -112,23 +122,33 @@ var initializeConnections = function(socketio, passportjs, mongooseSessionStore)
         socket.on('error', function(err) {
             console.log('socket error');
             console.log(err);
+            //client.disconnect('socket error');
         });
 
         socket.on('message', function(messageObj) {
             console.log('got raw message from socket');
             console.log(messageObj.command);
-            client.send.apply(client, messageObj.command);
+            try {
+                client.send.apply(client, messageObj.command);
+            }
+            catch(err) {
+                console.log('send fail');
+                console.log(err);
+            }
         });
 
         socket.on('reconnect', function() {
+            console.log('reconnect');
             client.disconnect('reconnect not allowed');
         });
 
-        socket.on('disconnect', function() {
-            client.disconnect('socket closed');
+        socket.on('disconnect', function(test) {
+            console.log('disconnect ' + test);
+            client.disconnect('socket disconnected');
         });
 
         socket.on('close', function() {
+            console.log('close');
             client.disconnect('socket closed');
         });
 
