@@ -3,7 +3,8 @@ Tsatter
 Tests currently do not work on travis. Should work locally though.
 [![Build Status](https://travis-ci.org/Tsarpf/Tsatter.svg?branch=master)](https://magnum.travis-ci.com/Tsarpf/Tsatter)
 
-###Probably running the newest development version here: http://prototyping.xyz/
+####Probably running the newest development version here: http://prototyping.xyz/ 
+####You can also join the same channels by connecting to prototyping.xyz using your favorite IRC-client. 
 
 ###How to deploy
 - install docker
