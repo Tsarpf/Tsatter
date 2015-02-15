@@ -14,6 +14,15 @@ cp bower_components/angular-animate/angular-animate.min.js src/public/libs/js/
 cp bower_components/angular-animate/angular-animate.min.js.map src/public/libs/js/
 cp bower_components/socket.io-client/socket.io.js src/public/libs/js/
 cp bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js src/public/libs/js/
+
+cp bower_components/bootstrap/dist/css/bootstrap.css src/public/libs/css/
+cp bower_components/bootstrap/dist/css/bootstrap.css.map src/public/libs/css/
+cp bower_components/angular/angular.js src/public/libs/js/
+cp bower_components/angular/angular.js.map src/public/libs/js/
+cp bower_components/angular-animate/angular-animate.js src/public/libs/js/
+cp bower_components/angular-animate/angular-animate.js.map src/public/libs/js/
+cp bower_components/socket.io-client/socket.io.js src/public/libs/js/
+cp bower_components/angular-bootstrap/ui-bootstrap-tpls.js src/public/libs/js/
 cd src
 npm test
 npm start

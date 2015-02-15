@@ -6,8 +6,12 @@ block content
 
     div(ng-controller="AllChatController as allCtrl")
 
-        tabset(type="'tabs'" justified="true")
-            tab(class="row vspace", heading="Channels")
+        tabset(type="'pills'" justified="true")
+
+            tab(class="row vspace", heading="Discover")
+                ts-discovery(ng-controller="DiscoveryController as discoCtrl")
+
+            tab(ng-repeat="channel in userChannels", heading="{{channel}}")
                 div(class="col-xs-3")
 
                     strong Your channels
@@ -19,9 +23,5 @@ block content
                         li(ng-repeat="channel in allChannels") {{channel}}
 
                 .col-xs-9
-                    tabset(type="'pills'")
-                        tab(ng-repeat="channel in userChannels", heading="{{channel}}")
-                            ts-chat(channel-name="{{channel}}")
+                    ts-chat(channel-name="{{channel}}")
 
-            tab(class="row vspace", heading="Discover")
-                ts-discovery(ng-controller="DiscoveryController as discoCtrl")
