@@ -6,12 +6,12 @@ block content
 
     div(ng-controller="AllChatController as allCtrl")
 
-        tabset(type="'pills'" justified="true")
+        tabset(type="'pills'")
 
-            tab(class="row vspace", heading="Discover")
+            tab(class="", heading="Discover")
                 ts-discovery(ng-controller="DiscoveryController as discoCtrl")
 
-            tab(ng-repeat="channel in userChannels", heading="{{channel}}")
+            tab(class="", ng-repeat="channel in userChannels", heading="{{channel}}")
                 div(class="col-xs-3")
 
                     strong Your channels
