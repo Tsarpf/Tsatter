@@ -13,7 +13,7 @@
 
 .chatsummary {
     /*height:500px;*/
-    margin-top: 10px;
+    margin: 1px;
     outline: 1px solid orange;
     float: left;
 }
