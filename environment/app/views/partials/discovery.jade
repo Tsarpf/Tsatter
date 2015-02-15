@@ -6,5 +6,5 @@ div(deckgrid class="deckgrid", source="results")
     div(class="")
         p(class="centered-text") <strong>{{card.topic}}</strong>
         img(src="{{card.imageUrl}}", class="chatsummarypicture")
-        p(ng-repeat="message in card.messages") {{message}}
+        ts-card-messages(messages="{{card.messages}}")
 

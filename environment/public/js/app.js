@@ -25,12 +25,20 @@ app.directive('tsChat', function($timeout) {
     };
 });
 
-app.directive('tsChatSummary', function() {
+app.directive('tsCardMessages', function($compile) {
+    var getTemplate = function(messagesString) {
+        var template = '';
+        var messages = JSON.parse(messagesString);
+        for(var message in messages) {
+            template += '<p>' + messages[message] + '</p>';
+        }
+        return template;
+    };
     return {
-        restrict: "E",
-        templateUrl: 'partials/chatsummary',
-        link: function(scope, element, attrs) {
+        restrict: 'E',
 
+        link: function(scope, element, attrs) {
+            element.html(getTemplate(attrs.messages)).show();
         }
     };
 });
