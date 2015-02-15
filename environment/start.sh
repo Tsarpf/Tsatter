@@ -15,7 +15,9 @@ cp bower_components/angular-animate/angular-animate.min.js.map src/public/libs/j
 cp bower_components/socket.io-client/socket.io.js src/public/libs/js/
 cp bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js src/public/libs/js/
 
-cp -r bower_components src/public/libs/bower_components
+#cp bower_components/jquery/dist/jquery.js src/public/libs/js/
+#cp bower_components/imagesloaded/imagesloaded.js src/public/libs/js/
+cp bower_components/angular-deckgrid/angular-deckgrid.js src/public/libs/js/
 
 cp bower_components/bootstrap/dist/css/bootstrap.css src/public/libs/css/
 cp bower_components/bootstrap/dist/css/bootstrap.css.map src/public/libs/css/

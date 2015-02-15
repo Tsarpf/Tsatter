@@ -2,12 +2,9 @@
    Created by Tsarpf on 2/14/15.
 
 
-div(masonry column-width="200")
-    div(class="masonry-brick", ng-repeat="result in results")
-        p ses
-
-        //div(class="chatsummary")
-            p(class="centered-text") <strong>{{result.topic}}</strong>
-            img(src="{{result.imageUrl}}", class="chatsummarypicture")
-            p(ng-repeat="message in result.messages") {{message}}
+div(deckgrid class="deckgrid", source="results")
+    div(class="")
+        p(class="centered-text") <strong>{{card.topic}}</strong>
+        img(src="{{card.imageUrl}}", class="chatsummarypicture")
+        p(ng-repeat="message in card.messages") {{message}}
 
