@@ -3,9 +3,11 @@ var mongoose = require('mongoose'),
     passportLocalMongoose = require('passport-local-mongoose');
 
 var User = new Schema({
+    /*
     rooms : [{
         type: String
     }]
+    */
 });
 
 User.plugin(passportLocalMongoose);

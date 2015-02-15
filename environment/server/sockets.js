@@ -5,9 +5,7 @@ var count = 0;
 function nextAnon() {
     return 'anon' + (count++);
 }
-var initializeConnections = function(socketio, passportjs, mongooseSessionStore) {
-    var io = socketio;
-
+var initializeConnections = function(io, passportjs, mongooseSessionStore) {
     io.on('connection', function(socket) {
         console.log('got connection');
 
