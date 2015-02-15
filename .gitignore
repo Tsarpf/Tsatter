@@ -3,3 +3,9 @@ vagrant/vagrant*
 vagrant/d2*
 .idea/
 .vagrant/
+*.swp
+*.swo
+*.iws
+testenvironment/
+environment/public/libs
+environment/bower_components

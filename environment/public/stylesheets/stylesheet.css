@@ -10,6 +10,34 @@
     height:500px;
     width:500px;
 }
+
+.chatsummary {
+    /*height:500px;*/
+    margin: 1px;
+    outline: 1px solid orange;
+    float: left;
+}
+
+.chatsummarypicture {
+    max-width: 100%;
+    height: auto;
+}
+
+.deckgrid[deckgrid]::before {
+    /* Specifies that the grid should have a maximum of 4 columns. Each column will have the classes 'column' and 'column-1-4' */
+    content: '4 .column.column-1-4';
+    font-size: 0; /* See https://github.com/akoenig/angular-deckgrid/issues/14#issuecomment-35728861 */
+    visibility: hidden;
+}
+
+.deckgrid .column {
+    float: left;
+}
+
+.deckgrid .column-1-4 {
+    width: 25%;
+}
+
 .tscontainer {
     top: 0px;
     right: 0px;
@@ -26,6 +54,7 @@
     height: 90%;
     min-height: 90%;
     outline: 1px solid orange;
+    overflow: hidden;
 }
 
 .messages {
@@ -45,6 +74,9 @@
     word-break: break-word;
 }
 
+.centered-text {
+    text-align: center;
+}
 
 /*message entry line */
 .newMessage {
@@ -69,7 +101,7 @@
     position: relative;
 } 
 
-.new-room {
+.new-channel {
     width: 25em;
 }
 @-webkit-keyframes enter {

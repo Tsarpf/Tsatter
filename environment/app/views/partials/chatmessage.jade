@@ -1,5 +1,4 @@
-div(class="animate-enter single-message", ng-animate, ng-attr-id="{{roomName}}msg{{$index}}")
+div(class="animate-enter single-message", ng-animate, ng-attr-id="{{channelName}}msg{{$index}}")
     p
-        strong [{{message.username}}] 
-        | {{message.message}}
+        <small>{{message.timestamp.h}}:{{message.timestamp.m}}:{{message.timestamp.s}}</small> <strong>[{{message.nick}}]</strong> {{message.message}}
 

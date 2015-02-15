@@ -2,6 +2,8 @@
 
 angular.module('tsatter').controller("UserHeaderController", ['$rootScope', '$scope', 'socket', function($rootScope, $scope, socket) {
     $scope.loginState = "";
+    //$rootScope.vars.nickname = 'anon';
+    /*
     $scope.login = function() {
         var obj = {};
         obj.username = $scope.username;
@@ -23,8 +25,10 @@ angular.module('tsatter').controller("UserHeaderController", ['$rootScope', '$sc
         else{
             $scope.loginState = "Logged out!";
         }
-    }
+    };
+    */
 
+    /*
     socket.on('loginFail', function(data) {
         $scope.loginState = "Login failed: " + data.reason.toString();
         //$scope.loggedIn = false;
@@ -50,5 +54,6 @@ angular.module('tsatter').controller("UserHeaderController", ['$rootScope', '$sc
         else error = data.reason;
         $scope.loginState = "Register failed: " + error;
     });
+    */
 }]);
 
