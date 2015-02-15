@@ -1,4 +1,4 @@
-var app = angular.module('tsatter', ['ngAnimate', 'ui.bootstrap']);
+var app = angular.module('tsatter', ['ngAnimate', 'ui.bootstrap', 'wu.masonry']);
 
 app.directive('tsUserHeader', function() {
     return {
