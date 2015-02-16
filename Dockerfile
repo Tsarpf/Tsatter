@@ -1,5 +1,6 @@
 FROM dockerfile/nodejs
-RUN npm install -g nodemon && npm install -g bower
+RUN apt-get install -y screen
+RUN npm install -g nodemon && npm install -g bower && npm install -g forever
 RUN useradd -ms /bin/bash nonroot
 ADD environment/package.json /home/nonroot/environment/
 WORKDIR /home/nonroot/environment

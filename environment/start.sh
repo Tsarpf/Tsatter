@@ -29,4 +29,5 @@ cp bower_components/socket.io-client/socket.io.js src/public/libs/js/
 cp bower_components/angular-bootstrap/ui-bootstrap-tpls.js src/public/libs/js/
 cd src
 npm test
-npm start
+forever start -c "npm start" ./
+

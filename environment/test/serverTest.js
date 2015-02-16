@@ -64,13 +64,11 @@ if(!process.env.TRAVIS) {
             fstSock.on('message', function (data) {
                 if (data.command === 'rpl_welcome') {
                     fstSock.send({command: ['join', testChannel]});
-                    return;
                 }
             });
             sndSock.on('message', function (data) {
                 if (data.command === 'rpl_welcome') {
                     sndSock.send({command: ['join', testChannel]});
-                    return;
                 }
             });
 
