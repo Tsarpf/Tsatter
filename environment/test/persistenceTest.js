@@ -49,15 +49,26 @@ describe('persistence handler', function() {
         });
     });
 
-    it('should persist messages without urls', function(done) {
+    it('should create a new channel when none is found and a new message is saved', function(done) {
         persistenceHandler.saveMessage(testChannel, testNick, testMessage, function() {
-            //asdf
             Channel.find({name: testChannel}).exec(function(err, docs) {
                 docs.length.should.above(0);
                 done();
             });
         });
     });
+
+    it('should persist messages without urls', function(done) {
+        persistenceHandler.saveMessage(testChannel, testNick, testMessage, function() {
+            Channel.findOne({name: testChannel}).exec(function(err, doc) {
+                doc.messages.length.should.equal(2);
+                doc.messages[0].message.should.equal(testMessage);
+                done();
+            });
+        });
+    });
+
+
 });
 
 

@@ -9,9 +9,17 @@ var Channel = new Schema({
     },
     imageUrls: [String],
     messages: [{
-        message: String,
-        timestamp: {type: Date, default: Date.now},
-        nick: String
+        message: {
+            type: String,
+            required: true
+        },
+        timestamp: {
+            type: Date, default: Date.now
+        },
+        nick: {
+            type: String,
+            required: true
+        }
     }]
 });
 

@@ -12,12 +12,17 @@ var getUrls = function(message) {
 };
 
 var saveMessage = function(channelName, nick, message, callback) {
-    if(channelName.length === 0 || nick.length === 0 | message.length === 0) {
+    if(channelName.length === 0 || nick.length === 0 || message.length === 0) {
+        console.log('erroneous channel, nick or message');
         return callback('erroneous channel, nick or message');
     }
 
     var urls = getUrls(message);
-    var obj = {$push: {messages: message}}
+    var messageObj = {
+        message: message,
+        nick: nick
+    };
+    var obj = {$push: {messages: messageObj}};
     if(urls.length > 0) {
         obj.$push.imageUrls = { $each: urls};
     }
