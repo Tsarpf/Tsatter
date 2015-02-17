@@ -59,6 +59,7 @@ var getTop = function(count) {
     while(i < count && curr !== null) {
         arr.push(curr);
         curr = curr.next;
+        i++;
     }
     return arr;
 };
