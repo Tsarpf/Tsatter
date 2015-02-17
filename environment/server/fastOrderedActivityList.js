@@ -52,3 +52,19 @@ var updateList = function(channel) {
     }
 };
 
+var getTop = function(count) {
+    var arr = [];
+    var curr = head;
+    var i = 0;
+    while(i < count && curr !== null) {
+        arr.push(curr);
+    }
+    return arr;
+};
+
+
+module.exports = {
+    updateList: updateList,
+    getTop: getTop
+}
+
