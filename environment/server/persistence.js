@@ -4,7 +4,10 @@
  */
 
 var mongoose = require('mongoose'),
+    redis = require('redis'),
+    client = redis.createClient(6379, 'redis', {}),
     Channel = require('../app/models/channel');
+
 
 
 var getUrls = function(message) {
@@ -42,6 +45,14 @@ var saveMessage = function(channelName, nick, message, callback) {
     });
 };
 
+var updateChannelActivity = function(channelName, callback) {
+
+};
+
+var getLastActiveChannels = function(count, callback) {
+
+};
+
 var getMessages = function(channelName, messageCount, callback) {
     Channel.findOne({name: channelName}).exec(function(err, doc) {
           callback(doc.messages.slice(-messageCount));
@@ -51,6 +62,8 @@ var getMessages = function(channelName, messageCount, callback) {
 
 module.exports = {
     saveMessage: saveMessage,
+    updateChannelActivity: updateChannelActivity,
+    getLastActiveChannels: getLastActiveChannels,
     getMessages: getMessages
 };
 

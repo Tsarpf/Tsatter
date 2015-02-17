@@ -9,6 +9,8 @@
     "cookie-parser": "*",
     "mongoose": "*",
     "mongoose-session-store": "*",
+    "hiredis": "*",
+    "redis": "*",
     "body-parser": "*",
     "supertest": "*",
     "jade": "*",

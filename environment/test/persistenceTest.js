@@ -6,7 +6,7 @@
 var should = require('should'),
     mongoose = require('mongoose'),
     Channel = require('../app/models/channel');
-    persistenceHandler = require('../server/persistenceHandler');
+    persistenceHandler = require('../server/persistence');
 
 
 var testNick = "tester";
@@ -72,7 +72,7 @@ describe('persistence handler', function() {
         });
     });
 
-    it('should return as many messages as are available if more is requested', function(done) {
+    it('should return as many messages as are available if more are requested', function(done) {
         persistenceHandler.getMessages(testChannel, 5, function(messages) {
             messages.length.should.equal(2);
             done();
@@ -92,7 +92,18 @@ describe('persistence handler', function() {
             });
         });
     });
-    //it (the persister) should be able to return a bunch of messages upon request
+
+    /*
+    it('should update last active channels when update is called', function(done) {
+
+    });
+
+    it('should return channels that were active last', function(done) {
+        persistenceHandler.getLastActiveChannels(5, function(channels) {
+            //derp
+        });
+    });
+    */
 
     //make an another file for channel activity order tracker that uses redis etc for maximum O(1) awesomeness
 
