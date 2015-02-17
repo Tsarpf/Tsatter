@@ -42,6 +42,10 @@ describe('persistence handler', function() {
         }
     });
 
+    after(function() {
+        Channel.find({name: testChannel}).remove().exec();
+    });
+
     it('shouldn\'t find channels that do not exist', function(done) {
         Channel.find({name: testChannel}).exec(function(err, docs) {
             docs.length.should.equal(0);

@@ -43,7 +43,9 @@ var saveMessage = function(channelName, nick, message, callback) {
 };
 
 var getMessages = function(channelName, messageCount, callback) {
-
+    Channel.findOne({name: channelName}).exec(function(err, doc) {
+          callback(doc.messages.slice(-messageCount));
+    });
 };
 
 
