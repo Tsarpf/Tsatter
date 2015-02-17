@@ -14,7 +14,10 @@ var getUrls = function(message) {
 var saveMessage = function(channelName, nick, message, callback) {
     if(channelName.length === 0 || nick.length === 0 || message.length === 0) {
         console.log('erroneous channel, nick or message');
-        return callback('erroneous channel, nick or message');
+        if(callback)
+            return callback('erroneous channel, nick or message');
+        else
+            return;
     }
 
     var urls = getUrls(message);
@@ -34,11 +37,18 @@ var saveMessage = function(channelName, nick, message, callback) {
             if(err) {
                 console.log(err);
             }
-            return callback(null);
+            if(callback)
+                return callback(null);
     });
 };
 
+var getMessages = function(channelName, messageCount, callback) {
+
+};
+
+
 module.exports = {
-    saveMessage: saveMessage
+    saveMessage: saveMessage,
+    getMessages: getMessages
 };
 

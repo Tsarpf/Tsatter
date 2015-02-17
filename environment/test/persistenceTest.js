@@ -42,7 +42,7 @@ describe('persistence handler', function() {
         }
     });
 
-    it('shouldnt\'t find channels that do not exist', function(done) {
+    it('shouldn\'t find channels that do not exist', function(done) {
         Channel.find({name: testChannel}).exec(function(err, docs) {
             docs.length.should.equal(0);
             done();
@@ -68,6 +68,29 @@ describe('persistence handler', function() {
         });
     });
 
+    it('should return as many messages as are available if more is requested', function(done) {
+        persistenceHandler.getMessages(testChannel, 5, function(messages) {
+            messages.length.should.equal(2);
+            done();
+        })
+    });
+
+    it('shouldn\'t return more messages than what was requested', function(done) {
+        persistenceHandler.saveMessage(testChannel, testNick, testMessage, function() {
+            persistenceHandler.getMessages(testChannel, 1, function (messages) {
+                messages.length.should.equal(1);
+                persistenceHandler.saveMessage(testChannel, testNick, testMessage, function() {
+                    persistenceHandler.getMessages(testChannel, 3, function (messages) {
+                        messages.length.should.equal(3);
+                        done();
+                    });
+                });
+            });
+        });
+    });
+    //it (the persister) should be able to return a bunch of messages upon request
+
+    //make an another file for channel activity order tracker that uses redis etc for maximum O(1) awesomeness
 
 });
 

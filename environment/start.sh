@@ -30,4 +30,5 @@ cp bower_components/angular-bootstrap/ui-bootstrap-tpls.js src/public/libs/js/
 cd src
 npm test
 forever start -c "npm start" ./
+forever list
 
