@@ -167,7 +167,6 @@ describe('persistence handler', function() {
             persistenceHandler.saveMessage(testChannels[2], testNick, testMessage, function() {
                 persistenceHandler.saveMessage(testChannels[3], testNick, testMessage, function() {
                     persistenceHandler.getActiveChannels(0,50, function(err, results) {
-                        console.log(results);
                         results.length.should.be.above(3);
                         results[0].name.should.equal(testChannels[3]);
                         results[1].name.should.equal(testChannels[2]);
