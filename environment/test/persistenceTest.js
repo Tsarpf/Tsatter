@@ -78,6 +78,12 @@ describe('persistence handler', function() {
         });
     });
 
+    it('should find urls correctly', function(done) {
+        var urls = persistenceHandler.getUrls(testMessageWithUrls);
+        console.log(urls);
+        done();
+    });
+
     it('should persist both a message and an url from a message with an url', function(done) {
         persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrl, function() {
             Channel.findOne({name: testChannel}).exec(function(err, doc) {
@@ -121,6 +127,7 @@ describe('persistence handler', function() {
             });
         });
     });
+
 });
 
 

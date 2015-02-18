@@ -9,8 +9,10 @@ var mongoose = require('mongoose'),
 
 
 
+var urlRegex = /((((https?|ftp):\/\/)|www\.)(([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)|(([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(aero|asia|biz|cat|com|coop|info|int|jobs|mobi|museum|name|net|org|post|pro|tel|travel|xxx|edu|gov|mil|[a-zA-Z][a-zA-Z]))|([a-z]+[0-9]*))(:[0-9]+)?((\/|\?)[^ "]*[^ ,;\.:">)])?)|(spotify:[^ ]+:[^ ]+)/g;
+
 var getUrls = function(message) {
-    return [];
+    return message.match(urlRegex);
 };
 
 var saveMessage = function(channelName, nick, message, callback) {
@@ -22,7 +24,6 @@ var saveMessage = function(channelName, nick, message, callback) {
             return;
     }
 
-    var urls = getUrls(message);
     var messageObj = {
         message: message,
         nick: nick
@@ -31,7 +32,8 @@ var saveMessage = function(channelName, nick, message, callback) {
         $push: {messages: messageObj},
         $set: {lastUpdated: Date.now()}
     };
-    if(urls.length > 0) {
+    var urls = getUrls(message);
+    if(urls) {
         obj.$push.imageUrls = { $each: urls};
     }
     Channel.findOneAndUpdate(
@@ -71,6 +73,7 @@ var getMessages = function(channelName, messageCount, callback) {
 module.exports = {
     saveMessage: saveMessage,
     loadChannelActivityList: loadChannelActivityList,
-    getMessages: getMessages
+    getMessages: getMessages,
+    getUrls: getUrls
 };
 
