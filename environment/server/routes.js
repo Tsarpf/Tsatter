@@ -1,4 +1,5 @@
 var passport = require('passport'),
+    persistenceHandler = require('./persistence'),
     User = require('../app/models/user');
 
 module.exports = function(app) {
@@ -19,6 +20,12 @@ module.exports = function(app) {
     });
 
     app.get('/activity/', function(req, res, next) {
+        var from = req.query.from;
+        var to = req.query.to;
+        persistenceHandler.getActiveChannels(from, to, function(err, channels) {
+
+        });
+
         var obj = [
             {
                 messages: ['hello iamaboy anda message', 'tseke vaara', 'joujou'],

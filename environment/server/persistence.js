@@ -4,9 +4,10 @@
  */
 
 var mongoose = require('mongoose'),
-    activityList = require('./fastOrderedActivityList'),
     Channel = require('../app/models/channel');
 
+var channelPreviewMessageCount = 3;
+var channelPreviewImageUrlCount = 1;
 
 
 var urlRegex = /((((https?|ftp):\/\/)|www\.)(([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)|(([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(aero|asia|biz|cat|com|coop|info|int|jobs|mobi|museum|name|net|org|post|pro|tel|travel|xxx|edu|gov|mil|[a-zA-Z][a-zA-Z]))|([a-z]+[0-9]*))(:[0-9]+)?((\/|\?)[^ "]*[^ ,;\.:">)])?)|(spotify:[^ ]+:[^ ]+)/g;
@@ -59,27 +60,22 @@ var getActiveChannels = function(from, to, callback) {
         return callback('from bigger than to');
     }
 
-    var top = activityList.getTop(to);
-    if(to <= 50) {
-        return callback(null, top.slice(from));
-    }
-
-    console.log('post 50 not yet implemented');
-    return callback(null, top.slice(from));
-};
-
-var loadActiveChannels = function(callback) {
-    Channel.find(function(err, channels) {
+    Channel.find({}, null, {sort: {lastUpdated: 'desc'}}, function(err, docs) {
         if(err) {
             console.log(err);
-            return callback(err);
+            callback(err);
         }
+        var results = [];
 
-        for(var channel in channels) {
-            var obj = channels[channel];
-            activityList.updateList(obj.name);
+        for(var i = from; i < to && i < docs.length; i++) {
+            var obj = {
+                name: docs[i].name,
+                messages: docs[i].messages.slice(-channelPreviewMessageCount),
+                imageUrls: docs[i].imageUrls.slice(-channelPreviewImageUrlCount)
+            };
+            results.push(obj);
         }
-        return callback(null);
+        callback(null, results);
     });
 };
 
@@ -92,7 +88,6 @@ var getMessages = function(channelName, messageCount, callback) {
 
 module.exports = {
     saveMessage: saveMessage,
-    loadActiveChannels: loadActiveChannels,
     getMessages: getMessages,
     getActiveChannels: getActiveChannels,
     getUrls: getUrls

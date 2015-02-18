@@ -84,7 +84,6 @@ var runServer = function(options) {
         console.log("server running..");
     });
 
-
     var io = require('socket.io')(server);
 
     var persistenceHandler = require('./persistence');
@@ -94,12 +93,10 @@ var runServer = function(options) {
     //routes
     require('./routes')(app);
 
-
     //everything sockets related
     require('./sockets').initCons(io, passport, mongooseSessionStore, persistenceHandler);
 
     return {app: app, server: server, mongConn: mongooseConn};
-    //return app;
 
 }
 

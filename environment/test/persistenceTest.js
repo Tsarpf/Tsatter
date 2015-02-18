@@ -19,6 +19,18 @@ var testMessageWithUrls = 'a merry ' + urls[1] + ' to you ' + urls[2];
 
 var testChannel = '#achannelthingy';
 
+var testChannels = [
+    '#achannelthingy',
+    '#achannelthingy1',
+    '#achannelthingy2',
+    '#achannelthingy3',
+    '#achannelthingy4',
+    '#achannelthingy5',
+    '#achannelthingy6',
+    '#achannelthingy7',
+    '#achannelthingy8'
+];
+
 describe('persistence handler', function() {
     before(function(done) {
         var options = {
@@ -38,7 +50,9 @@ describe('persistence handler', function() {
         });
 
         //Remove old test stuff
-        Channel.find({name: testChannel}).remove().exec();
+        for(var channel in testChannels) {
+            Channel.find({name: testChannels[channel]}).remove().exec();
+        }
 
         if(mongoose.connection.readyState < 1) {
             mongoose.connect(url, options);
@@ -49,12 +63,21 @@ describe('persistence handler', function() {
     });
 
     after(function() {
-        Channel.find({name: testChannel}).remove().exec();
+        for(var channel in testChannels) {
+            Channel.find({name: testChannels[channel]}).remove().exec();
+        }
     });
 
     it('shouldn\'t find channels that do not exist', function(done) {
         Channel.find({name: testChannel}).exec(function(err, docs) {
             docs.length.should.equal(0);
+            done();
+        });
+    });
+
+    it('shouldn\'t break when asking for active channels when there are none', function(done) {
+        persistenceHandler.getActiveChannels(0,5, function(err, results) {
+            results.length.should.equal(0);
             done();
         });
     });
@@ -99,6 +122,7 @@ describe('persistence handler', function() {
     it('should persist both a message and urls from a message with multiple urls', function(done) {
         persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrls, function() {
             Channel.findOne({name: testChannel}).exec(function(err, doc) {
+                doc.messages.length.should.equal(4);
                 doc.messages[doc.messages.length - 1].message.should.equal(testMessageWithUrls);
                 doc.imageUrls[doc.imageUrls.length - 1].should.equal(urls[2]);
                 doc.imageUrls[doc.imageUrls.length - 2].should.equal(urls[1]);
@@ -138,11 +162,30 @@ describe('persistence handler', function() {
         });
     });
 
-    it('should give a list of active channels', function(done) {
-        persistenceHandler.loadActiveChannels(function() {
-            persistenceHandler.getActiveChannels(0,50, function(err, results) {
-                console.log(results);
-                results.length.should.be.above(3);
+    it('should give a list of active channels in correct order', function(done) {
+        persistenceHandler.saveMessage(testChannels[1], testNick, testMessage, function() {
+            persistenceHandler.saveMessage(testChannels[2], testNick, testMessage, function() {
+                persistenceHandler.saveMessage(testChannels[3], testNick, testMessage, function() {
+                    persistenceHandler.getActiveChannels(0,50, function(err, results) {
+                        console.log(results);
+                        results.length.should.be.above(3);
+                        results[0].name.should.equal(testChannels[3]);
+                        results[1].name.should.equal(testChannels[2]);
+                        results[2].name.should.equal(testChannels[1]);
+
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
+    it('shouldn\'t give more messages or image urls when getting active channels than the channel has', function(done) {
+        persistenceHandler.saveMessage(testChannels[6], testNick, testMessageWithUrls, function() {
+            persistenceHandler.getActiveChannels(0,1, function(err, results) {
+                results[0].name.should.equal(testChannels[6]);
+                results[0].messages.length.should.equal(1);
+                results[0].imageUrls.length.should.equal(1);
                 done();
             });
         });
