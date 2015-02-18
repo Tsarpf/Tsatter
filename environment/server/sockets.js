@@ -83,7 +83,10 @@ var addListeners = function(io, irc, persistenceHandler) {
         });
 
         client.addListener('nick', function (oldNick, newNick, channels, messageObj) {
-            console.log('kick');
+            if(oldNick === username) {
+                username = newNick;
+            }
+            console.log('nick');
             socket.send(messageObj);
         });
 

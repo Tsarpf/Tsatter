@@ -32,6 +32,9 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
 
     $scope.$on('NICK', function(event, data) {
         console.log('got nick change');
+        if(data.nick === $rootScope.vars.nickname) {
+            $rootScope.vars.nickname = data.args[0];
+        }
         var channels = socket.getChannels();
         for(var channel in channels) {
             if(channels.hasOwnProperty(channel)) {
