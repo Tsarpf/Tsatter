@@ -87,6 +87,8 @@ var runServer = function(options) {
 
     var io = require('socket.io')(server);
 
+    var persistenceHandler = require('./persistence');
+
     io.use(checkSocketHandshakeCookie(cookieParser(secret), key));
 
     //routes
@@ -94,7 +96,7 @@ var runServer = function(options) {
 
 
     //everything sockets related
-    require('./sockets').initCons(io, passport, mongooseSessionStore);
+    require('./sockets').initCons(io, passport, mongooseSessionStore, persistenceHandler);
 
     return {app: app, server: server, mongConn: mongooseConn};
     //return app;

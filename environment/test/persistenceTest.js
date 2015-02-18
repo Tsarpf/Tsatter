@@ -138,6 +138,16 @@ describe('persistence handler', function() {
         });
     });
 
+    it('should give a list of active channels', function(done) {
+        persistenceHandler.loadActiveChannels(function() {
+            persistenceHandler.getActiveChannels(0,50, function(err, results) {
+                console.log(results);
+                results.length.should.be.above(3);
+                done();
+            });
+        });
+    });
+
 });
 
 

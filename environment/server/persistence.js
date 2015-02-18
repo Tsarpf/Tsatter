@@ -49,7 +49,26 @@ var saveMessage = function(channelName, nick, message, callback) {
     });
 };
 
-var loadChannelActivityList = function(callback) {
+var getActiveChannels = function(from, to, callback) {
+    if(!from && !to) {
+        from = 0;
+        to = 50;
+    }
+    if(from > to) {
+        console.log('error');
+        return callback('from bigger than to');
+    }
+
+    var top = activityList.getTop(to);
+    if(to <= 50) {
+        return callback(null, top.slice(from));
+    }
+
+    console.log('post 50 not yet implemented');
+    return callback(null, top.slice(from));
+};
+
+var loadActiveChannels = function(callback) {
     Channel.find(function(err, channels) {
         if(err) {
             console.log(err);
@@ -60,6 +79,7 @@ var loadChannelActivityList = function(callback) {
             var obj = channels[channel];
             activityList.updateList(obj.name);
         }
+        return callback(null);
     });
 };
 
@@ -72,8 +92,9 @@ var getMessages = function(channelName, messageCount, callback) {
 
 module.exports = {
     saveMessage: saveMessage,
-    loadChannelActivityList: loadChannelActivityList,
+    loadActiveChannels: loadActiveChannels,
     getMessages: getMessages,
+    getActiveChannels: getActiveChannels,
     getUrls: getUrls
 };
 
