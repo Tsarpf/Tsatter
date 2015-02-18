@@ -73,7 +73,7 @@ describe('fast ordered activity list', function() {
         }
     });
 
-    it('should return all available channels when asking for more than what is a available', function() {
+    it('should return all available channels when asking for more than what is available', function() {
         var arr = activityList.getTop(100);
         arr.length.should.equal(6);
     });
