@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
 var channelPreviewMessageCount = 3;
 var channelPreviewImageUrlCount = 1;
 
-var placeholderImageUrl = "http://i.imgur.com/VxDc2fU.png";
+var placeholderImageUrl = "http://i.imgur.com/a7i3u6V.png";
 
 function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;

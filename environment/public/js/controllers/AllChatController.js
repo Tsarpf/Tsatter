@@ -1,5 +1,29 @@
 angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootScope', '$scope', 'socket', 'command', function($timeout, $rootScope, $scope, socket, command) {
+    $scope.form = {
+        channel: ''
+    };
+    $scope.userChannels = [];
 
+    $scope.joinChannel = function() {
+        var channel = $scope.form.channel;
+
+        if(channel === '#' || channel.length === 0) {
+            $scope.form.channel = 'Channel name should be at least 1 character long';
+            return;
+        }
+
+        if(channel.indexOf(' ') >= 0) {
+            $scope.form.channel = 'No spaces in channel names allowed';
+            return;
+        }
+
+        if(channel.indexOf('#') !== 0) {
+            channel = '#' + channel;
+        }
+
+        command.send('join ' + channel);
+        $scope.form.channel = '';
+    };
     $scope.$on('rpl_welcome', function(event, data) {
         console.log('connected');
         command.send('join #ses'); //Join default channel while developing
@@ -32,19 +56,5 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     $rootScope.vars = {
         loggedIn: false,
         nickname: 'anon'
-    };
-    $scope.joinThisChannel = "";
-    $scope.userChannels = [];
-    $scope.allChannels = [];
-    this.clicked=function() {
-        $scope.joinThisChannel = "";
-    };
-
-    this.join=function() {
-        if($scope.joinThisChannel.indexOf('#') != 0) {
-            $scope.joinThisChannel = '#' + $scope.joinThisChannel ;
-        }
-        $scope.userChannels.push(String($scope.joinThisChannel));
-        $scope.joinThisChannel = "";
     };
 }]);

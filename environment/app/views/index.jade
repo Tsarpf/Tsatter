@@ -14,14 +14,10 @@ block content
             tab(class="", ng-repeat="channel in userChannels", heading="{{channel}}")
                 div(class="col-xs-3")
 
-                    strong Your channels
-                    ul
-                        li(ng-repeat="channel in userChannels") {{channel}}
-
-                    strong Recently active channels
-                    ul
-                        li(ng-repeat="channel in allChannels") {{channel}}
-
                 .col-xs-9
                     ts-chat(channel-name="{{channel}}")
 
+            tab(class="", heading="+ Channel")
+                form(ng-submit="joinChannel()")
+                    input(type="text", ng-model="form.channel" size="50" placeholder="Channel name")
+                    input(type="submit" value="Join")
