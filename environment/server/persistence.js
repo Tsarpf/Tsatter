@@ -4,8 +4,7 @@
  */
 
 var mongoose = require('mongoose'),
-    redis = require('redis'),
-    client = redis.createClient(6379, 'redis', {}),
+    activityList = require('./fastOrderedActivityList'),
     Channel = require('../app/models/channel');
 
 
@@ -45,12 +44,18 @@ var saveMessage = function(channelName, nick, message, callback) {
     });
 };
 
-var updateChannelActivity = function(channelName, callback) {
+var loadChannelActivityList = function(callback) {
+    Channel.find(function(err, channels) {
+        if(err) {
+            console.log(err);
+            return callback(err);
+        }
 
-};
-
-var getLastActiveChannels = function(count, callback) {
-
+        for(var channel in channels) {
+            var obj = channels[channel];
+            activityList.updateList(obj.name);
+        }
+    });
 };
 
 var getMessages = function(channelName, messageCount, callback) {
@@ -62,8 +67,7 @@ var getMessages = function(channelName, messageCount, callback) {
 
 module.exports = {
     saveMessage: saveMessage,
-    updateChannelActivity: updateChannelActivity,
-    getLastActiveChannels: getLastActiveChannels,
+    loadChannelActivityList: loadChannelActivityList,
     getMessages: getMessages
 };
 
