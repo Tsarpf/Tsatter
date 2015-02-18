@@ -9,8 +9,14 @@ var should = require('should'),
     persistenceHandler = require('../server/persistence');
 
 
-var testNick = "tester";
-var testMessage = "hello world";
+var testNick = 'tester';
+var testMessage = 'hello world';
+
+var urls = ['http://google.com', 'http://github.com', 'http://imgur.com'];
+var testMessageWithUrl = 'hello world and a merry ' + urls[0] + ' to you too.';
+var testMessageWithUrls = 'a merry ' + urls[1] + ' to you ' + urls[2];
+
+
 var testChannel = '#achannelthingy';
 
 describe('persistence handler', function() {
@@ -72,9 +78,20 @@ describe('persistence handler', function() {
         });
     });
 
+    it('should persist both a message and an url from a message with an url', function(done) {
+        persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrl, function() {
+            Channel.findOne({name: testChannel}).exec(function(err, doc) {
+                doc.messages.length.should.equal(3);
+                doc.messages[doc.messages.length - 1].message.should.equal(testMessageWithUrl);
+                doc.imageUrls[0].should.equal(urls[0]);
+                done();
+            });
+        });
+    });
+
     it('should return as many messages as are available if more are requested', function(done) {
         persistenceHandler.getMessages(testChannel, 5, function(messages) {
-            messages.length.should.equal(2);
+            messages.length.should.equal(3);
             done();
         })
     });
@@ -92,21 +109,6 @@ describe('persistence handler', function() {
             });
         });
     });
-
-    /*
-    it('should update last active channels when update is called', function(done) {
-
-    });
-
-    it('should return channels that were active last', function(done) {
-        persistenceHandler.getLastActiveChannels(5, function(channels) {
-            //derp
-        });
-    });
-    */
-
-    //make an another file for channel activity order tracker that uses redis etc for maximum O(1) awesomeness
-
 });
 
 

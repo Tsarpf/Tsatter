@@ -6,20 +6,6 @@ var should = require('should');
 var activityList = require('../server/fastOrderedActivityList');
 
 describe('fast ordered activity list', function() {
-    before(function() {
-        // runs before all tests in this block
-    });
-    after(function(){
-        // runs after all tests in this block
-    });
-    beforeEach(function(){
-        // runs before each test in this block
-    });
-    afterEach(function(){
-        // runs after each test in this block
-    });
-    // test cases
-
     it('should return correct top when adding 5 new channels', function() {
         activityList.updateList('test0');
         activityList.updateList('test1');
@@ -89,7 +75,6 @@ describe('fast ordered activity list', function() {
 
     it('should return all available channels when asking for more than what is a available', function() {
         var arr = activityList.getTop(100);
-        console.log(arr);
         arr.length.should.equal(6);
     });
 });
