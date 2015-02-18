@@ -12,7 +12,7 @@ var should = require('should'),
 var testNick = 'tester';
 var testMessage = 'hello world';
 
-var urls = ['http://google.com', 'http://github.com', 'http://imgur.com'];
+var urls = ['http://i.imgur.com/Bz9fanO.gif', 'http://i.imgur.com/UBs2heD.gif', 'http://i.imgur.com/L76A4TV.gif'];
 var testMessageWithUrl = 'hello world and a merry ' + urls[0] + ' to you too.';
 var testMessageWithUrls = 'a merry ' + urls[1] + ' to you ' + urls[2];
 
@@ -71,13 +71,6 @@ describe('persistence handler', function() {
     it('shouldn\'t find channels that do not exist', function(done) {
         Channel.find({name: testChannel}).exec(function(err, docs) {
             docs.length.should.equal(0);
-            done();
-        });
-    });
-
-    it('shouldn\'t break when asking for active channels when there are none', function(done) {
-        persistenceHandler.getActiveChannels(0,5, function(err, results) {
-            results.length.should.equal(0);
             done();
         });
     });

@@ -11,11 +11,44 @@ var channelPreviewImageUrlCount = 1;
 
 var placeholderImageUrl = "http://i.imgur.com/VxDc2fU.png";
 
+function endsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+}
+
+var imageTypes = [
+    '.jpg',
+    '.jpeg',
+    '.gif',
+    '.png'
+];
 
 var urlRegex = /((((https?|ftp):\/\/)|www\.)(([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)|(([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(aero|asia|biz|cat|com|coop|info|int|jobs|mobi|museum|name|net|org|post|pro|tel|travel|xxx|edu|gov|mil|[a-zA-Z][a-zA-Z]))|([a-z]+[0-9]*))(:[0-9]+)?((\/|\?)[^ "]*[^ ,;\.:">)])?)|(spotify:[^ ]+:[^ ]+)/g;
 
 var getUrls = function(message) {
     return message.match(urlRegex);
+};
+
+var getImageUrls = function(urls) {
+    var resultUrls = [];
+    for(var idx in urls) {
+       var url = urls[idx];
+
+        if(endsWith(url.toLowerCase(), '.gifv') || endsWith(url.toLowerCase(), '.webm')) {
+            url = url.substring(0, url.length - '.gifv'.length);
+            url += ('.gif');
+            resultUrls.push(url);
+            continue;
+        }
+
+        for(var type in imageTypes) {
+            if(endsWith(url.toLowerCase(), imageTypes[type])) {
+                resultUrls.push(url);
+                break;
+            }
+        }
+    }
+
+    return resultUrls;
 };
 
 var saveMessage = function(channelName, nick, message, callback) {
@@ -35,7 +68,7 @@ var saveMessage = function(channelName, nick, message, callback) {
         $push: {messages: messageObj},
         $set: {lastUpdated: Date.now()}
     };
-    var urls = getUrls(message);
+    var urls = getImageUrls(getUrls(message));
     if(urls) {
         obj.$push.imageUrls = { $each: urls};
     }
