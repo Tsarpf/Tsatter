@@ -9,7 +9,7 @@ block content
         tabset(type="'tabs'")
 
             tab(class="", heading="Discover")
-                ts-discovery(ng-controller="DiscoveryController as discoCtrl")
+                ts-discovery(ng-controller="DiscoveryController as discoCtrl" ng-show="loaded")
 
             tab(class="", ng-repeat="channel in userChannels", heading="{{channel}}")
                 div(class="col-xs-3")

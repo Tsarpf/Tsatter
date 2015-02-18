@@ -28,9 +28,12 @@ app.directive('tsChat', function($timeout) {
 app.directive('tsCardMessages', function($compile) {
     var getTemplate = function(messagesString) {
         var template = '';
-        var messages = JSON.parse(messagesString);
-        for(var message in messages) {
-            template += '<p>' + messages[message] + '</p>';
+        if(messagesString) {
+            var messagesObj = JSON.parse(messagesString);
+            for (var idx in messagesObj) {
+                var messageObj = messagesObj[idx];
+                template += '<p>' + messageObj.nick + ': ' +  messageObj.message + '</p>';
+            }
         }
         return template;
     };
@@ -38,7 +41,10 @@ app.directive('tsCardMessages', function($compile) {
         restrict: 'E',
 
         link: function(scope, element, attrs) {
-            element.html(getTemplate(attrs.messages)).show();
+            if(attrs.messages) {
+                var template = getTemplate(attrs.messages);
+                element.html(template).show();
+            }
         }
     };
 });

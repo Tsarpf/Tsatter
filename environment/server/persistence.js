@@ -9,6 +9,8 @@ var mongoose = require('mongoose'),
 var channelPreviewMessageCount = 3;
 var channelPreviewImageUrlCount = 1;
 
+var placeholderImageUrl = "http://i.imgur.com/VxDc2fU.png";
+
 
 var urlRegex = /((((https?|ftp):\/\/)|www\.)(([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)|(([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(aero|asia|biz|cat|com|coop|info|int|jobs|mobi|museum|name|net|org|post|pro|tel|travel|xxx|edu|gov|mil|[a-zA-Z][a-zA-Z]))|([a-z]+[0-9]*))(:[0-9]+)?((\/|\?)[^ "]*[^ ,;\.:">)])?)|(spotify:[^ ]+:[^ ]+)/g;
 
@@ -68,10 +70,14 @@ var getActiveChannels = function(from, to, callback) {
         var results = [];
 
         for(var i = from; i < to && i < docs.length; i++) {
+            var imageUrls = docs[i].imageUrls.slice(-channelPreviewImageUrlCount);
+            if(imageUrls.length === 0) {
+                imageUrls = [placeholderImageUrl];
+            }
             var obj = {
                 name: docs[i].name,
                 messages: docs[i].messages.slice(-channelPreviewMessageCount),
-                imageUrls: docs[i].imageUrls.slice(-channelPreviewImageUrlCount)
+                imageUrls: imageUrls
             };
             results.push(obj);
         }

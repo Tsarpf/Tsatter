@@ -115,6 +115,7 @@ var addListeners = function(io, irc, persistenceHandler) {
 
         socket.on('privmsg', function (msg) {
             client.say(msg.channel, msg.message);
+            persistenceHandler.saveMessage(msg.channel, username, msg.message);
         });
 
         socket.on('error', function (err) {
