@@ -36,7 +36,6 @@ var runServer = function(options) {
     mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
     mongoose.connection.on('disconnected', connect);
     mongoose.connection.on('connected', function(){
-        console.log("(re)connected to database.");
     });
 
     var User = require('../app/models/user');

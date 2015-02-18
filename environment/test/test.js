@@ -1,6 +1,6 @@
 var should = require('should');
 
-describe('hooks', function() {
+describe('test test', function() {
   before(function() {
     // runs before all tests in this block
   });

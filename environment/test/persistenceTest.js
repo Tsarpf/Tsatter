@@ -79,12 +79,13 @@ describe('persistence handler', function() {
     });
 
     it('should find urls correctly', function(done) {
-        var urls = persistenceHandler.getUrls(testMessageWithUrls);
-        console.log(urls);
+        var testUrls = persistenceHandler.getUrls(testMessageWithUrls);
+        testUrls[0].should.equal(urls[1]);
+        testUrls[1].should.equal(urls[2]);
         done();
     });
 
-    it('should persist both a message and an url from a message with an url', function(done) {
+    it('should persist both a message and an url from a message with a url', function(done) {
         persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrl, function() {
             Channel.findOne({name: testChannel}).exec(function(err, doc) {
                 doc.messages.length.should.equal(3);
@@ -95,9 +96,20 @@ describe('persistence handler', function() {
         });
     });
 
+    it('should persist both a message and urls from a message with multiple urls', function(done) {
+        persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrls, function() {
+            Channel.findOne({name: testChannel}).exec(function(err, doc) {
+                doc.messages[doc.messages.length - 1].message.should.equal(testMessageWithUrls);
+                doc.imageUrls[doc.imageUrls.length - 1].should.equal(urls[2]);
+                doc.imageUrls[doc.imageUrls.length - 2].should.equal(urls[1]);
+                done();
+            });
+        });
+    });
+
     it('should return as many messages as are available if more are requested', function(done) {
-        persistenceHandler.getMessages(testChannel, 5, function(messages) {
-            messages.length.should.equal(3);
+        persistenceHandler.getMessages(testChannel, 6, function(messages) {
+            messages.length.should.equal(4);
             done();
         })
     });
@@ -105,14 +117,12 @@ describe('persistence handler', function() {
     it('should update channel last updated field when message is added', function(done) {
         persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrl, function() {
             Channel.findOne({name: testChannel}).exec(function(err, doc) {
-                console.log(Date.now() - doc.lastUpdated);
                 var maxMillisecondsSince = 100;
                 (Date.now() - doc.lastUpdated).should.be.below(maxMillisecondsSince);
                 done();
             });
         });
     });
-
 
     it('shouldn\'t return more messages than what was requested', function(done) {
         persistenceHandler.saveMessage(testChannel, testNick, testMessage, function() {
