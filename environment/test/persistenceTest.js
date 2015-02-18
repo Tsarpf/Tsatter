@@ -96,6 +96,18 @@ describe('persistence handler', function() {
         })
     });
 
+    it('should update channel last updated field when message is added', function(done) {
+        persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrl, function() {
+            Channel.findOne({name: testChannel}).exec(function(err, doc) {
+                console.log(Date.now() - doc.lastUpdated);
+                var maxMillisecondsSince = 100;
+                (Date.now() - doc.lastUpdated).should.be.below(maxMillisecondsSince);
+                done();
+            });
+        });
+    });
+
+
     it('shouldn\'t return more messages than what was requested', function(done) {
         persistenceHandler.saveMessage(testChannel, testNick, testMessage, function() {
             persistenceHandler.getMessages(testChannel, 1, function (messages) {
