@@ -5,7 +5,7 @@
 angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', function($scope, $http) {
     $scope.results = [];
     $scope.loaded = false;
-    function getContent() {
+    $scope.getContent = function() {
         $http.get('/activity/').
             success(function(data, status, headers, config) {
                 if(data.length > 0 && !$scope.loaded) {
@@ -26,7 +26,7 @@ angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 
                 console.log(headers);
                 console.log(config);
             });
-    }
+    };
 
-    getContent();
+    $scope.getContent();
 }]);
