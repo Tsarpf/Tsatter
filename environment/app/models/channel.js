@@ -20,7 +20,11 @@ var Channel = new Schema({
             type: String,
             required: true
         }
-    }]
+    }],
+    lastUpdated: {
+        type: Date,
+        required: true
+    }
 });
 
 module.exports = mongoose.model('Channel', Channel);

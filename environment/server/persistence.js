@@ -27,7 +27,10 @@ var saveMessage = function(channelName, nick, message, callback) {
         message: message,
         nick: nick
     };
-    var obj = {$push: {messages: messageObj}};
+    var obj = {
+        $push: {messages: messageObj},
+        $set: {lastUpdated: Date.now()}
+    };
     if(urls.length > 0) {
         obj.$push.imageUrls = { $each: urls};
     }
