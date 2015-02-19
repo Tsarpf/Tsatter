@@ -5,6 +5,7 @@ var should = require('should'),
     request = require('request'),
     requestSuper = require('supertest'),
     setCookie = require('./setSocketHandshakeCookies'),
+    Channel = require('../app/models/channel'),
     agent = requestSuper.agent(server.app);
 
 if(!process.env.TRAVIS) {
@@ -38,6 +39,10 @@ if(!process.env.TRAVIS) {
         afterEach(function () {
             fstSock.disconnect();
             sndSock.disconnect();
+        });
+
+        after(function() {
+            Channel.find({name: testChannel}).remove().exec();
         });
 
 

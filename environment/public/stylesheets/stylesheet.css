@@ -11,15 +11,16 @@
     width:500px;
 }
 
-.chatsummary {
-    /*height:500px;*/
-    margin: 1px;
-    outline: 1px solid orange;
-    float: left;
+.chat-summary {
+    margin: 10px;
+    outline: 2px solid orange;
     overflow: hidden;
+    /*
+    float: left;
+    */
 }
 
-.chatsummarypicture {
+.chat-summary-picture {
     max-width: 100%;
     height: auto;
 }
@@ -37,6 +38,7 @@
 
 .deckgrid .column-1-4 {
     width: 25%;
+    overflow: hidden;
 }
 
 .tscontainer {
