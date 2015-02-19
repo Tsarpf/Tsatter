@@ -43,7 +43,9 @@ app.directive('tsCardMessages', function($compile) {
         link: function(scope, element, attrs) {
             if(attrs.messages) {
                 var template = getTemplate(attrs.messages);
-                element.html(template).show();
+                if(template!='') {
+                    element.html(template).show();
+                }
             }
         }
     };

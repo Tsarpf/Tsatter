@@ -1,7 +1,7 @@
 button(type="button", ng-click="getContent()") Refresh
-div(deckgrid class="deckgrid", source="results")
+div(deckgrid class="deckgrid row", source="results")
     div(class="chatsummary")
-        p(class="centered-text") <strong>{{card.name}}</strong>
+        p(class="centered-text col-xs-3") <strong>{{card.name}}</strong>
         img(src="{{card.imageUrls[0]}}", class="chatsummarypicture")
         ts-card-messages(messages="{{card.messages}}")
 

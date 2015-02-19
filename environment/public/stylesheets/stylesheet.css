@@ -16,6 +16,7 @@
     margin: 1px;
     outline: 1px solid orange;
     float: left;
+    overflow: hidden;
 }
 
 .chatsummarypicture {
