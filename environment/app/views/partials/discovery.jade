@@ -4,4 +4,5 @@ div(deckgrid class="deckgrid row", source="results")
         p(class="centered-text chat-summary-messages") <strong>{{card.name}}</strong>
         img(src="{{card.imageUrls[0]}}", class="chat-summary-picture")
         ts-card-messages(messages="{{card.messages}}")
+        input(type="button", ng-click="mother.joinChannel(card.name)", value="test")
 

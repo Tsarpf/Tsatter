@@ -32,7 +32,7 @@ app.directive('tsCardMessages', function($compile) {
             var messagesObj = JSON.parse(messagesString);
             for (var idx in messagesObj) {
                 var messageObj = messagesObj[idx];
-                template += '<p>' + messageObj.nick + ': ' +  messageObj.message + '</p>';
+                template += '<p><strong>' + messageObj.nick + ':</strong> ' +  messageObj.message + '</p>';
             }
         }
         return template;
@@ -43,8 +43,9 @@ app.directive('tsCardMessages', function($compile) {
         link: function(scope, element, attrs) {
             if(attrs.messages) {
                 var template = getTemplate(attrs.messages);
-                if(template!='') {
-                    element.html(template).show();
+                var temp = element.html(template);
+                if(temp.show) {
+                    temp.show();
                 }
             }
         }
