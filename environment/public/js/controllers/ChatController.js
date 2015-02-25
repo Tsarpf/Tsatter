@@ -86,9 +86,13 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
 
     var customCommandHandlers = {
         op: op,
-        nick: nick
+        nick: nick,
+        part: part
     };
 
+    function part() {
+        command.send(['part', $scope.channelName]);
+    }
     function nick(args) {
         command.send(['nick', args[1]]);
     }
