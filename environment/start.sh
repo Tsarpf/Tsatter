@@ -29,6 +29,9 @@ cp bower_components/socket.io-client/socket.io.js src/public/libs/js/
 cp bower_components/angular-bootstrap/ui-bootstrap-tpls.js src/public/libs/js/
 cp bower_components/angular-scroll-glue/src/scrollglue.js src/public/libs/js/
 
+cp bower_components/angular-sanitize/angular-sanitize.js src/public/libs/js/
+
+
 cd src
 npm test
 forever start -c "npm start" ./

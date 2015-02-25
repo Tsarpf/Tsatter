@@ -1,4 +1,5 @@
 div(class="animate-enter single-message", ng-animate, ng-attr-id="{{channelName}}msg{{$index}}")
     p
-        <small>{{message.timestamp.h}}:{{message.timestamp.m}}:{{message.timestamp.s}}</small> <strong>[{{message.nick}}]</strong> {{message.message}}
+        <small>{{message.timestamp.h}}:{{message.timestamp.m}}:{{message.timestamp.s}}</small> <strong>[{{message.nick}}]</strong>
+        <span ng-bind-html="message.message | linky:'_blank'"> </span>
 

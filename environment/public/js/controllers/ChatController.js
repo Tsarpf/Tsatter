@@ -12,7 +12,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     var joinChannel=function(channelName) {
         console.log('join:');
         console.log(channelName);
-        addServerMessage('Welcome to the channel ' + channelName);
+        $scope.addServerMessage('Welcome to the channel ' + channelName);
 
         $scope.$on(channelName, function(event, data) {
             if($scope.handler.hasOwnProperty(data.command)) {
@@ -35,14 +35,14 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         var idx = $scope.users.indexOf(data.nick);
         if(idx < 0) return;
         $scope.users.splice(idx, 1);
-        addServerMessage(data.nick + ' left the channel');
+        $scope.addServerMessage(data.nick + ' left the channel');
     };
     $scope.names = function(data) {
         $scope.users = Object.keys(data.nicks);
     };
     $scope.join = function(data) {
         $scope.users.push(data.nick);
-        addServerMessage(data.nick + ' joined the channel');
+        $scope.addServerMessage(data.nick + ' joined the channel');
     };
 
     $scope.privmsg = function(data) {
@@ -55,7 +55,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         console.log(data);
         var idx = $scope.users.indexOf(data.nick);
         $scope.users.splice(idx, 1, data.args[0]);
-        addServerMessage(data.nick + ' is now known as ' + data.args[0]);
+        $scope.addServerMessage(data.nick + ' is now known as ' + data.args[0]);
     };
 
     $scope.handler = {
@@ -66,11 +66,11 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         NICK: $scope.nick
     };
 
-    var addServerMessage = function(message) {
-        addMessage(message, 'server');
+    $scope.addServerMessage = function(message) {
+        $scope.addMessage(message, 'server');
     };
 
-    var addMessage = function(message, nick) {
+    $scope.addMessage = function(message, nick) {
         $scope.messages.push({message: message, nick: nick, timestamp: getTimestamp()});
     };
 
@@ -125,7 +125,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             console.log('send message');
             var obj = {channel: $scope.channelName, message: message}
             socket.emit('privmsg', obj);
-            addMessage(message, $rootScope.vars.nickname);
+            $scope.addMessage(message, $rootScope.vars.nickname);
         }
     };
 

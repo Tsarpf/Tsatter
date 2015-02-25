@@ -1,4 +1,4 @@
-var app = angular.module('tsatter', ['ngAnimate', 'ui.bootstrap', 'akoenig.deckgrid']);
+var app = angular.module('tsatter', ['ngAnimate', 'ui.bootstrap', 'akoenig.deckgrid', 'ngSanitize']);
 
 app.directive('tsUserHeader', function() {
     return {
@@ -25,7 +25,7 @@ app.directive('tsChat', function($timeout) {
     };
 });
 
-app.directive('tsCardMessages', function($compile) {
+app.directive('tsCardMessages', function() {
     var getTemplate = function(messagesString) {
         var template = '';
         if(messagesString) {
@@ -44,9 +44,7 @@ app.directive('tsCardMessages', function($compile) {
             if(attrs.messages) {
                 var template = getTemplate(attrs.messages);
                 var temp = element.html(template);
-                if(temp.show) {
-                    temp.show();
-                }
+                temp.show();
             }
         }
     };
@@ -57,24 +55,15 @@ app.directive('tsDiscovery', function() {
         restrict: "E",
         templateUrl: 'partials/discovery',
         link: function(scope, element, attrs) {
-
         }
     };
 });
 
-app.directive('tsChatMessage', function($timeout) {
+app.directive('tsChatMessage', function($compile) {
     return {
         restrict: "E",
         templateUrl: '/partials/chatmessage',
         link: function(scope, element, attrs) {
-            /*
-            if(scope.$last === true){
-                $timeout(function() {
-                    scope.$emit('msgRepeatFinished');
-                    scope.lastElementScroll(attrs.id);
-                });
-            }
-            */
         }
     };
 });

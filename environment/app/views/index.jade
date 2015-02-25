@@ -12,9 +12,9 @@ block content
                 ts-discovery(ng-controller="DiscoveryController as discoCtrl")
 
             tab(class="", ng-repeat="channel in userChannels", heading="{{channel}}")
-                div(class="col-xs-3")
+                //div(class="col-xs-3")
 
-                .col-xs-9
+                .col-xs-12
                     ts-chat(channel-name="{{channel}}")
 
             tab(class="", heading="+ Channel")
