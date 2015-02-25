@@ -56,6 +56,11 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
         }
     });
 
+    $scope.$on('PART', function(event, data) {
+        console.log(data);
+        $scope.userChannels.splice($scope.userChannels.indexOf(data.args[0]), 1);
+    });
+
     $rootScope.vars = {
         loggedIn: false,
         nickname: 'anon'

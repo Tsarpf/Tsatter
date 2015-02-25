@@ -66,8 +66,13 @@ var addListeners = function(io, irc, persistenceHandler) {
         });
 
         client.addListener('part', function (channel, nick, reason, messageObj) {
-            console.log(messageObj);
-            socket.emit(channel, messageObj);
+            if(nick === username) {
+                socket.send(messageObj);
+            }
+            else {
+                console.log(messageObj);
+                socket.emit(channel, messageObj);
+            }
         });
 
         client.addListener('quit', function (nick, reason, channels, messageObj) {
