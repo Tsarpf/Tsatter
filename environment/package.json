@@ -2,6 +2,9 @@
   "name": "Tsatter",
   "description": "Chat thingy",
   "dependencies": {
+    "grunt": "*",
+    "grunt-bower-task": "*",
+    "grunt-wiredep": "*",
     "mocha": "*",
     "should": "*",
     "express": "*",
