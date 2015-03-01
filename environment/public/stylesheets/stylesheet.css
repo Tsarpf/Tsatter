@@ -60,7 +60,7 @@
     height: 90%;
     min-height: 90%;
     outline: 1px solid orange;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .messages {
