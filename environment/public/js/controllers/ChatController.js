@@ -120,6 +120,10 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         focus('editNick');
     };
 
+    $scope.stopEditingNick = function() {
+        $scope.editingNick = false;
+    };
+
     $scope.ownNickAreaSubmit = function() {
         console.log('called it');
         console.log($scope.nick);
