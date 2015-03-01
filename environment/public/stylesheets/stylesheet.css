@@ -56,6 +56,10 @@
     outline: 2px solid grey;
 }
 
+.own-nick-area {
+    height: 10%;
+}
+
 .users {
     height: 90%;
     min-height: 90%;

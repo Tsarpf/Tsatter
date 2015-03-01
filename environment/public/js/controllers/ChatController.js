@@ -1,13 +1,16 @@
-angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$scope', 'socket', '$rootScope', 'command', function($timeout, $anchorScroll, $location, $scope, socket, $rootScope, command) {
-    //$scope.msgDiv = {};
+angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$scope', 'socket', '$rootScope', 'command', 'focus', function($timeout, $anchorScroll, $location, $scope, socket, $rootScope, command, focus) {
     $scope.messages = [];
     $scope.users = [];
-    $scope.msg = "Enter message";
     $scope.glued = true;
+    $scope.nick = '';
+    $scope.ownNickAreaType = 'button';
+
+    $scope.editingNick = false;
 
     //we have to do this in a timeout so that the directive is initialized
     $timeout(function(){
         joinChannel($scope.channelName);
+        $scope.nick = $rootScope.vars.nickname;
     });
 
     var joinChannel=function(channelName) {
@@ -54,6 +57,9 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     $scope.nick = function(data) {
         console.log('got nick');
         console.log(data);
+        if(data.nick === $scope.nick) {
+            $scope.nick = data.args[0];
+        }
         var idx = $scope.users.indexOf(data.nick);
         $scope.users.splice(idx, 1, data.args[0]);
         $scope.addServerMessage(data.nick + ' is now known as ' + data.args[0]);
@@ -97,21 +103,32 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
 
     var customCommandHandlers = {
         op: op,
-        nick: nick,
         part: part
     };
 
     function part() {
         command.send(['part', $scope.channelName]);
     }
-    function nick(args) {
-        command.send(['nick', args[1]]);
-    }
 
     function op(args) {
         command.send(['mode', $scope.channelName, '+o', args[1]]);
     }
 
+
+    $scope.editNick = function() {
+        $scope.editingNick = true;
+        focus('editNick');
+    };
+
+    $scope.ownNickAreaSubmit = function() {
+        console.log('called it');
+        console.log($scope.nick);
+        console.log($rootScope.vars.nickname);
+        if($scope.nick !== $rootScope.vars.nickname) {
+            command.send(['nick', $scope.nick]);
+        }
+        $scope.editingNick = false;
+    };
 
     this.privmsg = function() {
         var message = $scope.message;
@@ -139,24 +156,4 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             $scope.addMessage(message, $rootScope.vars.nickname);
         }
     };
-
-    this.first = true;
-    this.clicked=function() {
-        if(this.first) {
-            $scope.message = '';
-            this.first = false;
-        }
-    };
-
-    /*
-    var bottomScroll = true;
-    $scope.lastElementScroll=function(elementId) {
-        if(bottomScroll) {
-            $scope.msgDiv.scrollTop = $scope.msgDiv.scrollHeight;
-        }
-    };
-
-    $scope.$on('msgRepeatFinished', function(event) {
-    });
-    */
 }]);
