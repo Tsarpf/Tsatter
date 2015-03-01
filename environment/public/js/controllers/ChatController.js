@@ -3,6 +3,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     $scope.messages = [];
     $scope.users = [];
     $scope.msg = "Enter message";
+    $scope.glued = true;
 
     //we have to do this in a timeout so that the directive is initialized
     $timeout(function(){

@@ -1,4 +1,4 @@
-var app = angular.module('tsatter', ['ngAnimate', 'ui.bootstrap', 'akoenig.deckgrid', 'ngSanitize']);
+var app = angular.module('tsatter', ['ngAnimate', 'ui.bootstrap', 'akoenig.deckgrid', 'ngSanitize', 'luegg.directives']);
 
 app.directive('tsUserHeader', function() {
     return {
