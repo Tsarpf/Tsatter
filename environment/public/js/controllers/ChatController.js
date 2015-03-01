@@ -3,8 +3,6 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     $scope.users = [];
     $scope.glued = true;
     $scope.nick = '';
-    $scope.ownNickAreaType = 'button';
-
     $scope.editingNick = false;
 
     //we have to do this in a timeout so that the directive is initialized
