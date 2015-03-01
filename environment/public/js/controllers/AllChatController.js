@@ -61,6 +61,16 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
         $scope.userChannels.splice($scope.userChannels.indexOf(data.args[0]), 1);
     });
 
+    $scope.$on('QUIT', function(event, data) {
+        console.log('got quit');
+        var channels = socket.getChannels();
+        for(var channel in channels) {
+            if(channels.hasOwnProperty(channel)) {
+                $scope.$broadcast(channels[channel], data);
+            }
+        }
+    });
+
     $rootScope.vars = {
         loggedIn: false,
         nickname: 'anon'

@@ -47,7 +47,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
 
     $scope.privmsg = function(data) {
         console.log(data);
-        addMessage(data.args[1], data.nick);
+        $scope.addMessage(data.args[1], data.nick);
     };
 
     $scope.nick = function(data) {
@@ -58,13 +58,23 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         $scope.addServerMessage(data.nick + ' is now known as ' + data.args[0]);
     };
 
+    $scope.quit = function(data) {
+        console.log('got quit');
+        var idx = $scope.users.indexOf(data.nick);
+        if(idx < 0) return;
+        $scope.users.splice(idx, 1);
+        $scope.addServerMessage(data.nick + ' quit');
+    };
+
     $scope.handler = {
         PRIVMSG: $scope.privmsg,
         JOIN: $scope.join,
         NAMES: $scope.names,
         PART: $scope.part,
+        QUIT: $scope.quit,
         NICK: $scope.nick
     };
+
 
     $scope.addServerMessage = function(message) {
         $scope.addMessage(message, 'server');
