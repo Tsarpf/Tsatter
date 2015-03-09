@@ -6,7 +6,12 @@ angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 
     $scope.results = [];
     $scope.loaded = false;
     $scope.getContent = function() {
-        $http.get('/activity/').
+        $http.get('/activity/', {
+           params: {
+               from: 0,
+               to: 50
+           }
+        }).
             success(function(data, status, headers, config) {
                 $scope.results = data;
             }).

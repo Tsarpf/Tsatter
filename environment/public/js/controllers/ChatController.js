@@ -1,4 +1,4 @@
-angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$scope', 'socket', '$rootScope', 'command', 'focus', function($timeout, $anchorScroll, $location, $scope, socket, $rootScope, command, focus) {
+angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$scope', 'socket', '$rootScope', 'command', 'focus', '$http', function($timeout, $anchorScroll, $location, $scope, socket, $rootScope, command, focus, $http) {
     $scope.messages = [];
     $scope.users = [];
     $scope.glued = true;
@@ -9,6 +9,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     $timeout(function(){
         joinChannel($scope.channelName);
         $scope.nick = $rootScope.vars.nickname;
+        $scope.getBacklog();
     });
 
     var joinChannel=function(channelName) {
@@ -32,6 +33,10 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         command.send('names ' + channelName);
 
     };
+
+
+
+
 
     $scope.part = function(data) {
         var idx = $scope.users.indexOf(data.nick);
@@ -80,23 +85,49 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         NICK: $scope.nick
     };
 
+    $scope.messagesIncrement = 30;
+    $scope.messagesTo = -1;
+    $scope.messagesFrom = $scope.messagesTo - $scope.messagesIncrement;
+    $scope.getBacklog = function() {
+        $http.get('/backlog/', {
+            params: {
+                channel: $scope.channelName,
+                from: $scope.messagesFrom,
+                to: $scope.messagesTo
+            }
+        }).
+            success(function(data, status, headers, config) {
+                console.log('oh hi, backlog');
+                console.log(data);
+
+                for(var i = 0; i < data.length; i++) {
+                    $scope.addMessage(data[i].message, data[i].nick, data[i].timestamp);
+                }
+                //$scope.messages = data;
+            }).
+            error(function(data, status, headers, config) {
+                console.log('error!');
+            });
+    };
 
     $scope.addServerMessage = function(message) {
         $scope.addMessage(message, 'server');
     };
 
-    $scope.addMessage = function(message, nick) {
-        $scope.messages.push({message: message, nick: nick, timestamp: getTimestamp()});
+    $scope.addMessage = function(message, nick, timestamp) {
+        $scope.messages.push({message: message, nick: nick, timestamp: getTimestamp(timestamp)});
     };
 
-    var getTimestamp = function() {
-        var date = new Date(Date.now());
-        return {
-            h: date.getHours(),
-            m: date.getMinutes(),
-            s: date.getSeconds(),
-            ms: date.getMilliseconds()
-        };
+    var getTimestamp = function(timestamp) {
+        var date;
+        if(!timestamp) {
+           date = new Date(Date.now());
+        }
+        else {
+            date = new Date(timestamp);
+            console.log(date);
+        }
+        return date;
     };
 
     var customCommandHandlers = {
@@ -153,7 +184,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         }
         else {
             console.log('send message');
-            var obj = {channel: $scope.channelName, message: message}
+            var obj = {channel: $scope.channelName, message: message};
             socket.emit('privmsg', obj);
             $scope.addMessage(message, $rootScope.vars.nickname);
         }

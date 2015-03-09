@@ -9,4 +9,4 @@ vagrant/d2*
 testenvironment/
 environment/public/libs
 environment/bower_components
-npm-debug.log
+npm-debug.log*
