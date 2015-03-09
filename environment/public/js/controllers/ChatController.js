@@ -34,10 +34,6 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
 
     };
 
-
-
-
-
     $scope.part = function(data) {
         var idx = $scope.users.indexOf(data.nick);
         if(idx < 0) return;
@@ -97,13 +93,9 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             }
         }).
             success(function(data, status, headers, config) {
-                console.log('oh hi, backlog');
-                console.log(data);
-
                 for(var i = 0; i < data.length; i++) {
                     $scope.addMessage(data[i].message, data[i].nick, data[i].timestamp);
                 }
-                //$scope.messages = data;
             }).
             error(function(data, status, headers, config) {
                 console.log('error!');
