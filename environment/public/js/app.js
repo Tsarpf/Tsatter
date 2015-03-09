@@ -32,7 +32,7 @@ app.directive('tsCardMessages', function() {
             var messagesObj = JSON.parse(messagesString);
             for (var idx in messagesObj) {
                 var messageObj = messagesObj[idx];
-                template += '<p><strong>' + messageObj.nick + ':</strong> ' +  messageObj.message + '</p>';
+                template += '<p class="discovery-message"><strong>' + messageObj.nick + ':</strong> ' +  messageObj.message + '</p>';
             }
         }
         return template;

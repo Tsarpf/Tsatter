@@ -19,6 +19,10 @@
     */
 }
 
+.discovery-message {
+    word-break: break-all;
+}
+
 .chat-summary {
     margin: 10px;
     outline: 2px solid orange;
