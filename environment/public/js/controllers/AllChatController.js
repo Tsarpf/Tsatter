@@ -53,6 +53,7 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
         for(var i = 0; i < $scope.userChannels.length; i++) {
             if($scope.userChannels[i].name === channel) {
                 console.log('existing channel');
+                $scope.userChannels[i].active = true;
                 return;
             }
         }
