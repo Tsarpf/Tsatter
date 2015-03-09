@@ -16,7 +16,7 @@ mkdir -p src/public/libs/js
 #cp bower_components/socket.io-client/socket.io.js src/public/libs/js/
 #cp bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js src/public/libs/js/
 
-#cp bower_components/jquery/dist/jquery.js src/public/libs/js/
+cp bower_components/jquery/dist/jquery.js src/public/libs/js/
 #cp bower_components/imagesloaded/imagesloaded.js src/public/libs/js/
 cp bower_components/angular-deckgrid/angular-deckgrid.js src/public/libs/js/
 
