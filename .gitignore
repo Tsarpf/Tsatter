@@ -10,3 +10,5 @@ testenvironment/
 environment/public/libs
 environment/bower_components
 npm-debug.log*
+environment/err.log
+environment/out.log

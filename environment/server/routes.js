@@ -68,7 +68,6 @@ module.exports = function(app) {
                 console.log(err);
             }
             else {
-                console.log(messages);
                 res.json(messages);
             }
         });
