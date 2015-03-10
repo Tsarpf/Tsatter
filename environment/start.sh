@@ -38,7 +38,7 @@ cp bower_components/angular-sanitize/angular-sanitize.js src/public/libs/js/
 
 cd src
 npm test
-forever start -l forever.log -o out.log -e err.log -c "npm start" ./
+forever start --minUptime 8000 -a -l forever.log -o out.log -e err.log -c "npm start" ./
 forever list
 echo "tail -f src/out.log to see what the server is doing"
 

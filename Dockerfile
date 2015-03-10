@@ -1,6 +1,6 @@
 FROM dockerfile/nodejs
 RUN apt-get install -y screen
-RUN npm install -g nodemon && npm install -g bower && npm install -g forever
+RUN npm install -g nodemon bower forever
 RUN useradd -ms /bin/bash nonroot
 ADD environment/package.json /home/nonroot/environment/
 WORKDIR /home/nonroot/environment
@@ -16,4 +16,4 @@ ADD environment/bower.json /home/nonroot/environment/
 RUN bower install
 EXPOSE 3000 3000
 ADD environment/start.sh /home/nonroot/environment/start.sh
-CMD bash -C 'start.sh'; bash;
+CMD bash -C 'start.sh'; tail -f src/out.log;
