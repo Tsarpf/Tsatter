@@ -13,14 +13,17 @@ block content
 
             tab(class="", ng-repeat="channel in userChannels" active="channel.active")
                 tab-heading
-                    {{channel.name}}
+                    span
+                        p {{channel.name}}
                     //button(type="button" ng-click="leaveChannel(channel.name)")
                     span(ng-click="leaveChannel(channel.name)" class="glyphicon glyphicon-remove quit-x-button")
 
                 .col-xs-12
                     ts-chat(channel-name="{{channel.name}}")
 
-            tab(class="", heading="+ Channel")
+            tab
+                tab-heading
+                    span(class="glyphicon glyphicon-plus")
                 form(ng-submit="joinChannel()")
                     input(type="text", ng-model="form.channel" size="50" placeholder="Channel name")
                     input(type="submit" value="Join")

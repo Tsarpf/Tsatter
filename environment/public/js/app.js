@@ -71,6 +71,8 @@ app.directive('tsChatMessage', function() {
 app.directive('tsMediaBar', function() {
     return {
         restrict: "E",
-        templateUrl: '/partials/mediabar'
+        templateUrl: '/partials/mediabar',
+        link: function(scope, element, attrs) {
+        }
     };
 });
