@@ -26,7 +26,7 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     };
     $scope.$on('rpl_welcome', function(event, data) {
         console.log('connected');
-        command.send('join #ses'); //Join default channel while developing
+        //command.send('join #ses'); //Join default channel while developing
         $rootScope.vars.nickname = data.nick;
     });
 

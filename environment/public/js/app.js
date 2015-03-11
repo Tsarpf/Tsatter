@@ -59,7 +59,7 @@ app.directive('tsDiscovery', function() {
     };
 });
 
-app.directive('tsChatMessage', function($compile) {
+app.directive('tsChatMessage', function() {
     return {
         restrict: "E",
         templateUrl: '/partials/chatmessage',
@@ -68,3 +68,9 @@ app.directive('tsChatMessage', function($compile) {
     };
 });
 
+app.directive('tsMediaBar', function() {
+    return {
+        restrict: "E",
+        templateUrl: '/partials/mediabar'
+    };
+});

@@ -1,9 +1,14 @@
 angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$scope', 'socket', '$rootScope', 'command', 'focus', '$http', function($timeout, $anchorScroll, $location, $scope, socket, $rootScope, command, focus, $http) {
     $scope.messages = [];
     $scope.users = [];
+    $scope.mediaList = [];
     $scope.glued = true;
+    $scope.mediaGlued = true;
     $scope.nick = '';
     $scope.editingNick = false;
+
+    //Not sure yet if this is really a robust solution. It seems a bit dangerous
+    $scope.mediaCount = 0;
 
     //we have to do this in a timeout so that the directive is initialized
     $timeout(function(){
@@ -47,12 +52,9 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         $scope.users.push(data.nick);
         $scope.addServerMessage(data.nick + ' joined the channel');
     };
-
     $scope.privmsg = function(data) {
-        console.log(data);
         $scope.addMessage(data.args[1], data.nick);
     };
-
     $scope.nick = function(data) {
         console.log('got nick');
         console.log(data);
@@ -63,7 +65,6 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         $scope.users.splice(idx, 1, data.args[0]);
         $scope.addServerMessage(data.nick + ' is now known as ' + data.args[0]);
     };
-
     $scope.quit = function(data) {
         console.log('got quit');
         var idx = $scope.users.indexOf(data.nick);
@@ -107,8 +108,18 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     };
 
     $scope.addMessage = function(message, nick, timestamp) {
+        var imageUrls = getImageUrls(getUrls(message));
+
+        for(var i = 0; i < imageUrls .length; i++) {
+            var num = $scope.mediaCount++;
+            $scope.mediaList.push({url: imageUrls[i], idx: num});
+            message = message.replace(imageUrls[i], '[' + num + ']');
+        }
+
         $scope.messages.push({message: message, nick: nick, timestamp: getTimestamp(timestamp)});
     };
+
+
 
     var getTimestamp = function(timestamp) {
         var date;
@@ -127,6 +138,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         part: part
     };
 
+    //Maybe make these a bit more obvious
     function part() {
         command.send(['part', $scope.channelName]);
     }
@@ -134,7 +146,6 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     function op(args) {
         command.send(['mode', $scope.channelName, '+o', args[1]]);
     }
-
 
     $scope.editNick = function() {
         $scope.editingNick = true;
@@ -181,4 +192,42 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             $scope.addMessage(message, $rootScope.vars.nickname);
         }
     };
+
+
+    //Maybe the rest of these should be in a service?
+    var urlRegex = /((((https?|ftp):\/\/)|www\.)(([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)|(([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(aero|asia|biz|cat|com|coop|info|int|jobs|mobi|museum|name|net|org|post|pro|tel|travel|xxx|edu|gov|mil|[a-zA-Z][a-zA-Z]))|([a-z]+[0-9]*))(:[0-9]+)?((\/|\?)[^ "]*[^ ,;\.:">)])?)|(spotify:[^ ]+:[^ ]+)/g;
+    var getUrls = function(message) {
+        return message.match(urlRegex);
+    };
+    var getImageUrls = function(urls) {
+        var resultUrls = [];
+        for(var idx in urls) {
+           var url = urls[idx];
+
+            if(endsWith(url.toLowerCase(), '.gifv') || endsWith(url.toLowerCase(), '.webm')) {
+                url = url.substring(0, url.length - '.gifv'.length);
+                url += ('.gif');
+                resultUrls.push(url);
+                continue;
+            }
+
+            for(var type in imageTypes) {
+                if(endsWith(url.toLowerCase(), imageTypes[type])) {
+                    resultUrls.push(url);
+                    break;
+                }
+            }
+        }
+
+        return resultUrls;
+    };
+    function endsWith(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
+    var imageTypes = [
+        '.jpg',
+        '.jpeg',
+        '.gif',
+        '.png'
+    ];
 }]);
