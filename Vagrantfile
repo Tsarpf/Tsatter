@@ -28,11 +28,12 @@ Vagrant.configure("2") do |config|
   config.vm.define "webapp" do |a|
     a.vm.synced_folder "environment/", "/home/nonroot/environment/src"
     a.vm.provider "docker" do |d|
-      d.name = "tsatter-web"
+      d.name = "webapp"
       d.build_dir = "."
       d.ports = ["3000:3000"]
       d.link("db:db_1")
       d.link("inspirk:ircserver")
+      d.cmd = ["tail", "-f", "/home/nonroot/environment/out.log"]
     end
   end
 

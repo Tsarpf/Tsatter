@@ -16,4 +16,5 @@ ADD environment/bower.json /home/nonroot/environment/
 RUN bower install
 EXPOSE 3000 3000
 ADD environment/start.sh /home/nonroot/environment/start.sh
-CMD bash -C 'start.sh'; tail -f src/out.log;
+ENTRYPOINT ["./start.sh"]
+CMD ["/bin/bash"]
