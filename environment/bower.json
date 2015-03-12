@@ -2,6 +2,7 @@
   "name": "Tsatter",
   "version": "0.0.1",
   "dependencies": {
+    "angular-infinite-scroll": "https://github.com/Tsarpf/ngInfiniteScroll.git",
     "bootstrap": "3.3.0",
     "angular": "1.3.0",
     "masonry": "~3.2.0",
