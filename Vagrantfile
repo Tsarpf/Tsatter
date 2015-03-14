@@ -34,7 +34,10 @@ Vagrant.configure("2") do |config|
       d.link("db:db_1")
       d.link("inspirk:ircserver")
       d.cmd = ["tail", "-f", "/home/nonroot/environment/out.log"]
+      d.has_ssh = true
     end
+    a.ssh.username = "nonroot"
+    a.ssh.private_key_path = "webapp_key"
   end
 
 end
