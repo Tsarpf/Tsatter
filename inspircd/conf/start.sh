@@ -1,5 +1,4 @@
-echo ses
-#/inspircd/bin/inspircd
+#!/bin/bash
 /inspircd/inspircd start --nofork
-#cat #sleep indefinitely
-echo sys
+echo "Executing: $@"
+exec "$@"
