@@ -1,5 +1,16 @@
 FROM dockerfile/nodejs
-RUN apt-get install -y screen
+
+# Setup environment
+ENV DEBIAN_FRONTEND noninteractive
+RUN locale-gen en_US.UTF-8 fi_FI.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL fi_FI.UTF-8
+
+# Install apt-dependencies
+RUN apt-get update && apt-get install -y screen openssh-server sudo
+
+# Install npm-dependencies
 RUN npm install -g nodemon bower forever
 RUN useradd -ms /bin/bash nonroot
 ADD environment/package.json /home/nonroot/environment/
