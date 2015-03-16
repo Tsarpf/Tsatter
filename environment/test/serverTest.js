@@ -18,7 +18,7 @@ if(!process.env.TRAVIS) {
         var cookies;
         var url = 'http://127.0.0.1:' + port;
 
-        this.timeout(5000);
+        this.timeout(20000);
 
         beforeEach(function (done) {
             var options = {

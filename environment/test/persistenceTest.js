@@ -125,8 +125,36 @@ describe('persistence handler', function() {
     });
 
     it('should return as many messages as are available if more are requested', function(done) {
-        persistenceHandler.getMessages(testChannel, 6, function(messages) {
+        persistenceHandler.getMessages(testChannel, 0, 6, function(err, messages) {
             messages.length.should.equal(4);
+            done();
+        })
+    });
+
+    it('shouldn\'t return more messages than what was requested', function(done) {
+        persistenceHandler.saveMessage(testChannel, testNick, testMessage, function() {
+            persistenceHandler.getMessages(testChannel, 0, 1, function (err, messages) {
+                messages.length.should.equal(1);
+                persistenceHandler.saveMessage(testChannel, testNick, testMessage, function() {
+                    persistenceHandler.getMessages(testChannel, 0, 3, function (err, messages) {
+                        messages.length.should.equal(3);
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
+    it('should return the correct number of messages when asking for a range', function(done) {
+        persistenceHandler.getMessages(testChannel, 3, 5, function(err, messages) {
+            messages.length.should.equal(2);
+            done();
+        })
+    });
+
+    it('should return the correct messages when asking for the last ones', function(done) {
+        persistenceHandler.getMessages(testChannel, 3, 5, function(err, messages) {
+            messages.length.should.equal(2);
             done();
         })
     });
@@ -137,20 +165,6 @@ describe('persistence handler', function() {
                 var maxMillisecondsSince = 100;
                 (Date.now() - doc.lastUpdated).should.be.below(maxMillisecondsSince);
                 done();
-            });
-        });
-    });
-
-    it('shouldn\'t return more messages than what was requested', function(done) {
-        persistenceHandler.saveMessage(testChannel, testNick, testMessage, function() {
-            persistenceHandler.getMessages(testChannel, 1, function (messages) {
-                messages.length.should.equal(1);
-                persistenceHandler.saveMessage(testChannel, testNick, testMessage, function() {
-                    persistenceHandler.getMessages(testChannel, 3, function (messages) {
-                        messages.length.should.equal(3);
-                        done();
-                    });
-                });
             });
         });
     });
@@ -180,6 +194,13 @@ describe('persistence handler', function() {
                 results[0].imageUrls.length.should.equal(1);
                 done();
             });
+        });
+    });
+
+    it('should return an empty array when asking for messages from an empty channel', function(done) {
+        persistenceHandler.getMessages('nonexistantchannel', 0, 1, function(err, results) {
+            results.length.should.equal(0);
+            done();
         });
     });
 

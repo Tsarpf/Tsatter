@@ -11,7 +11,6 @@
     "express-session": "*",
     "cookie-parser": "*",
     "mongoose": "*",
-    "mongoose-session-store": "*",
     "body-parser": "*",
     "supertest": "*",
     "jade": "*",

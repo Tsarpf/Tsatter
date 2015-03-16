@@ -78,7 +78,7 @@ var addListeners = function(io, irc, persistenceHandler) {
         client.addListener('quit', function (nick, reason, channels, messageObj) {
             console.log('got quit');
             console.log(messageObj);
-            //TODO: broadcast the nick to all channels
+            socket.send(messageObj);
         });
 
         client.addListener('kick', function (channel, nick, by, reason, messageObj) {

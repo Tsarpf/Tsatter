@@ -26,7 +26,7 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     };
     $scope.$on('rpl_welcome', function(event, data) {
         console.log('connected');
-        command.send('join #ses'); //Join default channel while developing
+        //command.send('join #ses'); //Join default channel while developing
         $rootScope.vars.nickname = data.nick;
     });
 
@@ -47,18 +47,47 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
         console.log('got join');
         console.log(data);
         var channel = data.args[0];
-        if($scope.userChannels.indexOf(channel) < 0) {
-            socket.listenChannel(channel);
-            $scope.userChannels.push(channel);
-        }
-        else {
-            console.log('got join for an existing channel?');
-        }
+        $scope.addChannel(channel);
     });
+    $scope.addChannel = function(channel) {
+        for(var i = 0; i < $scope.userChannels.length; i++) {
+            if($scope.userChannels[i].name === channel) {
+                console.log('existing channel');
+                $scope.userChannels[i].active = true;
+                return;
+            }
+        }
+        socket.listenChannel(channel);
+        $scope.userChannels.push({name: channel, active: true});
+    };
+
+    $scope.leaveChannel = function(channel) {
+        command.send(['part', channel]);
+    };
+
+    $scope.removeChannel = function(channel) {
+        console.log('hi');
+        console.log(channel);
+        for(var i = 0; i < $scope.userChannels.length; i++) {
+            if($scope.userChannels[i].name === channel) {
+                $scope.userChannels.splice(i,1);
+                break;
+            }
+        }
+    };
 
     $scope.$on('PART', function(event, data) {
-        console.log(data);
-        $scope.userChannels.splice($scope.userChannels.indexOf(data.args[0]), 1);
+        $scope.removeChannel(data.args[0]);
+    });
+
+    $scope.$on('QUIT', function(event, data) {
+        console.log('got quit');
+        var channels = socket.getChannels();
+        for(var channel in channels) {
+            if(channels.hasOwnProperty(channel)) {
+                $scope.$broadcast(channels[channel], data);
+            }
+        }
     });
 
     $rootScope.vars = {

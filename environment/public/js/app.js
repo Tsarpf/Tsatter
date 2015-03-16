@@ -1,4 +1,4 @@
-var app = angular.module('tsatter', ['ngAnimate', 'ui.bootstrap', 'akoenig.deckgrid', 'ngSanitize']);
+var app = angular.module('tsatter', ['ngAnimate', 'ui.bootstrap', 'akoenig.deckgrid', 'ngSanitize', 'luegg.directives']);
 
 app.directive('tsUserHeader', function() {
     return {
@@ -32,7 +32,7 @@ app.directive('tsCardMessages', function() {
             var messagesObj = JSON.parse(messagesString);
             for (var idx in messagesObj) {
                 var messageObj = messagesObj[idx];
-                template += '<p><strong>' + messageObj.nick + ':</strong> ' +  messageObj.message + '</p>';
+                template += '<p class="discovery-message"><strong>' + messageObj.nick + ':</strong> ' +  messageObj.message + '</p>';
             }
         }
         return template;
@@ -59,7 +59,7 @@ app.directive('tsDiscovery', function() {
     };
 });
 
-app.directive('tsChatMessage', function($compile) {
+app.directive('tsChatMessage', function() {
     return {
         restrict: "E",
         templateUrl: '/partials/chatmessage',
@@ -68,3 +68,11 @@ app.directive('tsChatMessage', function($compile) {
     };
 });
 
+app.directive('tsMediaBar', function() {
+    return {
+        restrict: "E",
+        templateUrl: '/partials/mediabar',
+        link: function(scope, element, attrs) {
+        }
+    };
+});

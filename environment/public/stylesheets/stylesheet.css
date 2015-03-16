@@ -13,6 +13,21 @@
     */
 }
 
+.quit-x-button {
+    /*
+    No idea how to style this
+    */
+}
+
+.discovery-message {
+    word-break: break-all;
+}
+
+.media-element {
+    max-width: 100%;
+    max-height: 100%;
+}
+
 .chat-summary {
     margin: 10px;
     outline: 2px solid orange;
@@ -56,11 +71,15 @@
     outline: 2px solid grey;
 }
 
+.own-nick-area {
+    height: 10%;
+}
+
 .users {
     height: 90%;
     min-height: 90%;
     outline: 1px solid orange;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .messages {
@@ -74,6 +93,7 @@
     height: 90%;
     min-height: 90%;
     outline: 1px solid orange;
+    overflow: auto;
 }
 
 .single-message {

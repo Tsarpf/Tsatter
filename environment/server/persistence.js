@@ -85,6 +85,7 @@ var saveMessage = function(channelName, nick, message, callback) {
     });
 };
 
+
 var getActiveChannels = function(from, to, callback) {
     if(!from && !to) {
         from = 0;
@@ -118,9 +119,20 @@ var getActiveChannels = function(from, to, callback) {
     });
 };
 
-var getMessages = function(channelName, messageCount, callback) {
+var getMessages = function(channelName, from, to, callback) {
     Channel.findOne({name: channelName}).exec(function(err, doc) {
-          callback(doc.messages.slice(-messageCount));
+        if(err || !doc) {
+            console.log(err);
+            console.log('no messages found');
+            return callback(err, []);
+        }
+        if(doc.messages.length > 0) {
+            if(to === -1) {to = undefined;} //hack or else it'll miss the last message...
+            callback(null, doc.messages.slice(from, to))
+        }
+        else {
+            callback(null, []);
+        }
     });
 };
 

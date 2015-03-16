@@ -12,23 +12,7 @@ html(ng-app="tsatter")
             block content
 
         // bower:js
-        script(src='../../public/libs/jquery/dist/jquery.js')
-        script(src='../../public/libs/bootstrap/dist/js/bootstrap.js')
-        script(src='../../public/libs/angular/angular.js')
-        script(src='../../public/libs/get-style-property/get-style-property.js')
-        script(src='../../public/libs/get-size/get-size.js')
-        script(src='../../public/libs/eventie/eventie.js')
-        script(src='../../public/libs/doc-ready/doc-ready.js')
-        script(src='../../public/libs/eventEmitter/EventEmitter.js')
-        script(src='../../public/libs/matches-selector/matches-selector.js')
-        script(src='../../public/libs/outlayer/item.js')
-        script(src='../../public/libs/outlayer/outlayer.js')
-        script(src='../../public/libs/masonry/masonry.js')
-        script(src='../../public/libs/angular-animate/angular-animate.js')
-        script(src='../../public/libs/angular-bootstrap/ui-bootstrap-tpls.js')
-        script(src='../../public/libs/angular-deckgrid/angular-deckgrid.js')
-        script(src='../../public/libs/angular-scroll-glue/src/scrollglue.js')
-        script(src='../../public/libs/angular-sanitize/angular-sanitize.js')
+
         // endbower
 
         script(src="/js/app.js")
@@ -38,3 +22,13 @@ html(ng-app="tsatter")
         script(src="/js/controllers/DiscoveryController.js")
         script(src="/js/services/socket.js")
         script(src="/js/services/command.js")
+
+        script(type='text/javascript').
+                  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                  ga('create', 'UA-60532058-1', 'auto');
+                  ga('send', 'pageview');
+
