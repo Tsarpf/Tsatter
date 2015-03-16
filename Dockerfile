@@ -11,7 +11,7 @@ ENV LC_ALL fi_FI.UTF-8
 RUN apt-get update && apt-get install -y screen openssh-server sudo
 
 # Install npm-dependencies
-RUN npm install -g nodemon bower forever
+RUN npm install -g nodemon bower forever grunt-cli
 ADD environment/package.json /home/nonroot/environment/
 WORKDIR /home/nonroot/environment
 RUN npm install
@@ -39,5 +39,6 @@ ADD environment/bower.json /home/nonroot/environment/
 RUN bower install
 EXPOSE 3000 3000
 ADD environment/start.sh /home/nonroot/environment/start.sh
+ADD environment/Gruntfile.js /home/nonroot/environment/Gruntfile.js
 ENTRYPOINT ["./start.sh"]
 CMD ["/bin/bash"]
