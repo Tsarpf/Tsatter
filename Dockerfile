@@ -40,5 +40,6 @@ RUN bower install
 EXPOSE 3000 3000
 ADD environment/start.sh /home/nonroot/environment/start.sh
 ADD environment/Gruntfile.js /home/nonroot/environment/Gruntfile.js
+ADD environment/.bowerrc /home/nonroot/environment/.bowerrc
 ENTRYPOINT ["./start.sh"]
 CMD ["/bin/bash"]

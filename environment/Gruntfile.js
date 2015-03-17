@@ -8,7 +8,7 @@ module.exports = function(grunt) {
         bower: {
             install: {
                 options: {
-                    targetDir: "./public/libs/",
+                    targetDir: "./src/public/libs/",
                     layout: "byComponent",
                     install: true,
                     verbose: true,
@@ -22,11 +22,10 @@ module.exports = function(grunt) {
         wiredep: {
             task: {
                 src: [
-                    './app/views/header.jade',
-                    './app/views/layout.jade'
+                    './src/app/views/header.jade',
+                    './src/app/views/layout.jade'
                 ],
                 options: {
-                    'directory':'./public/libs/'
                 }
             }
         }
