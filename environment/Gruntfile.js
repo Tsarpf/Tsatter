@@ -8,7 +8,7 @@ module.exports = function(grunt) {
         bower: {
             install: {
                 options: {
-                    targetDir: "./src/public/libs/",
+                    targetDir: './src/public/libs',
                     layout: "byComponent",
                     install: true,
                     verbose: true,
@@ -26,6 +26,7 @@ module.exports = function(grunt) {
                     './src/app/views/layout.jade'
                 ],
                 options: {
+                    directory: './src/public/libs'
                 }
             }
         }
