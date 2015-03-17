@@ -7,7 +7,6 @@ do
 done
 echo "$(date) - connected successfully"
 
-grunt
 grunt deps
 
 cd src

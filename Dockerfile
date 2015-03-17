@@ -36,10 +36,8 @@ DEZHiPGofQHGNFgwRS+q7ROXl14YSbhhbYf+W5x4H5WklRWALRE75A1dQ== rsa-key-20150313" >>
 RUN chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
 
 ADD environment/bower.json /home/nonroot/environment/
-RUN bower install
 EXPOSE 3000 3000
 ADD environment/start.sh /home/nonroot/environment/start.sh
 ADD environment/Gruntfile.js /home/nonroot/environment/Gruntfile.js
-ADD environment/.bowerrc /home/nonroot/environment/.bowerrc
 ENTRYPOINT ["./start.sh"]
 CMD ["/bin/bash"]
