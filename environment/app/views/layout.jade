@@ -11,7 +11,38 @@ html(ng-app="tsatter")
 
             block content
 
-            script(type='text/javascript').
+        // bower:js
+        script(src='/libs/jquery/dist/jquery.js')
+        script(src='/libs/bootstrap/dist/js/bootstrap.js')
+        script(src='/libs/angular/angular.js')
+        script(src='/libs/get-style-property/get-style-property.js')
+        script(src='/libs/get-size/get-size.js')
+        script(src='/libs/eventie/eventie.js')
+        script(src='/libs/doc-ready/doc-ready.js')
+        script(src='/libs/eventEmitter/EventEmitter.js')
+        script(src='/libs/matches-selector/matches-selector.js')
+        script(src='/libs/outlayer/item.js')
+        script(src='/libs/outlayer/outlayer.js')
+        script(src='/libs/masonry/masonry.js')
+        script(src='/libs/angular-animate/angular-animate.js')
+        script(src='/libs/socket.io-client/socket.io.js')
+        script(src='/libs/angular-bootstrap/ui-bootstrap-tpls.js')
+        script(src='/libs/angular-deckgrid/angular-deckgrid.js')
+        script(src='/libs/angular-scroll-glue/src/scrollglue.js')
+        script(src='/libs/angular-sanitize/angular-sanitize.js')
+        script(src='/libs/angular-infinite-scroll/build/ng-infinite-scroll.js')
+        // endbower
+
+        script(src="/js/app.js")
+        script(src="/js/controllers/ChatController.js")
+        script(src="/js/controllers/AllChatController.js")
+        script(src="/js/controllers/UserHeaderController.js")
+        script(src="/js/controllers/DiscoveryController.js")
+        script(src="/js/services/socket.js")
+        script(src="/js/services/command.js")
+        script(src="/js/services/focus.js")
+
+        script(type='text/javascript').
                   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
                   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

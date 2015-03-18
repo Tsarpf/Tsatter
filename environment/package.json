@@ -2,29 +2,30 @@
   "name": "Tsatter",
   "description": "Chat thingy",
   "dependencies": {
-    "mocha": "*",
-    "should": "*",
+    "body-parser": "*",
+    "cookie-parser": "*",
     "express": "*",
     "express-session": "*",
-    "cookie-parser": "*",
-    "mongoose": "*",
-    "body-parser": "*",
-    "supertest": "*",
-    "jade": "*",
-    "request": "*",
-    "passport": "*",
+    "grunt": "*",
+    "grunt-bower-task": "*",
+    "grunt-wiredep": "*",
     "irc": "*",
-    "passport.socketio": "*",
+    "jade": "*",
+    "mocha": "*",
+    "mongoose": "*",
+    "passport": "*",
     "passport-local-mongoose": "*",
-    "socket.io": "*",
+    "passport.socketio": "*",
+    "request": "*",
+    "should": "*",
+    "socket.io": "^1.3.5",
     "socket.io-client": "*",
+    "supertest": "*",
     "xmlhttprequest": "*"
   },
-
   "scripts": {
     "start": "nodemon run.js",
     "test": "../node_modules/.bin/mocha",
     "travistest": "./node_modules/.bin/mocha"
   }
-
 }
