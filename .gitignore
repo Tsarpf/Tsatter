@@ -13,3 +13,4 @@ npm-debug.log*
 environment/err.log
 environment/out.log
 >>>>>>> master
+mongodb/data
