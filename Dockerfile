@@ -36,9 +36,5 @@ DEZHiPGofQHGNFgwRS+q7ROXl14YSbhhbYf+W5x4H5WklRWALRE75A1dQ== rsa-key-20150313" >>
 RUN chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
 
 EXPOSE 3000 3000
-ADD environment/bower.json /home/nonroot/environment/
-ADD environment/.bowerrc /home/nonroot/environment/
-ADD environment/start.sh /home/nonroot/environment/start.sh
-ADD environment/Gruntfile.js /home/nonroot/environment/Gruntfile.js
-ENTRYPOINT ["./start.sh"]
+ENTRYPOINT ["./src/start.sh"]
 CMD ["/bin/bash"]

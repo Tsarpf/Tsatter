@@ -1,14 +1,15 @@
 module.exports = function(grunt) {
 
-    grunt.loadNpmTasks('grunt-bower-task');
-    grunt.loadNpmTasks('grunt-wiredep');
+    grunt.file.expand('../node_modules/grunt-*/tasks').forEach(grunt.loadTasks);
+    //grunt.loadNpmTasks('grunt-bower-task');
+    //grunt.loadNpmTasks('grunt-wiredep');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         bower: {
             install: {
                 options: {
-                    targetDir: './src/public/libs',
+                    targetDir: 'public/libs',
                     layout: "byComponent",
                     install: true,
                     verbose: true,
@@ -20,14 +21,15 @@ module.exports = function(grunt) {
             }
         },
         wiredep: {
+            options: {
+                    directory: 'public/libs/',
+                    ignorePath: '../../public' 
+            },
             task: {
                 src: [
-                    './src/app/views/header.jade',
-                    './src/app/views/layout.jade'
-                ],
-                options: {
-                    directory: './src/public/libs'
-                }
+                    'app/views/header.jade',
+                    'app/views/layout.jade'
+                ]
             }
         }
     });
