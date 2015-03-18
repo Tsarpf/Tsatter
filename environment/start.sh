@@ -7,9 +7,9 @@ do
 done
 echo "$(date) - connected successfully"
 
+cd src
 grunt deps
 
-cd src
 npm test
 forever start --minUptime 8000 -a -l ../forever.log -o ../out.log -e ../err.log -c "npm start" ./
 forever list
