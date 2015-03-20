@@ -5,7 +5,7 @@ var express = require('express'),
     passportSocketIo = require('passport.socketio'),
     session = require('express-session'),
     cookieParser = require('cookie-parser'),
-    MongooseSession = require('./custom-mongoose-session-store'),
+    MongooseSession = require('session-mongoose'),
     mongooseSessionStore = new MongooseSession({interval: 60000});
     app = express();
 
