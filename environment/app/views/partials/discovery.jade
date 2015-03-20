@@ -1,8 +1,8 @@
-button(type="button", ng-click="getContent()") Refresh
+button(class="btn btn-block btn-lg btn-info" type="button", ng-click="getContent()") Refresh
 div(deckgrid class="deckgrid row", source="results")
-    div(class="chat-summary")
+    div(class="chat-summary tile")
         p(class="centered-text chat-summary-messages") <strong>{{card.name}}</strong>
         img(src="{{card.imageUrls[0]}}", class="chat-summary-picture")
         ts-card-messages(messages="{{card.messages}}")
-        input(type="button", ng-click="mother.joinChannel(card.name)", value="Join")
+        input(class="btn btn-primary btn-large btn-block" type="button", ng-click="mother.joinChannel(card.name)", value="Join")
 

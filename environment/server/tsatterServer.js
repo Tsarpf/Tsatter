@@ -98,7 +98,7 @@ var runServer = function(options) {
 
     return {app: app, server: server, mongConn: mongooseConn};
 
-}
+};
 
 function checkSocketHandshakeCookie(cookieParser, key) {
     var f = function (socket, next) {

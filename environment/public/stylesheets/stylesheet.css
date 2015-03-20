@@ -30,10 +30,10 @@
 
 .chat-summary {
     margin: 10px;
-    outline: 2px solid orange;
     overflow: hidden;
     text-align: center;
     /*
+    outline: 2px solid orange;
     float: left;
     */
 }

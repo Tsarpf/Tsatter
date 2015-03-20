@@ -7,16 +7,6 @@ var app = angular.module('tsatter', [
     'infinite-scroll'
 ]);
 
-app.directive('tsUserHeader', function() {
-    return {
-        restrict: "E",
-        templateUrl: '/partials/userheader',
-        link: function(scope, element, attrs) {
-
-        }
-    };
-});
-
 app.directive('tsChat', function($timeout) {
     return {
         restrict: "E",
@@ -60,26 +50,20 @@ app.directive('tsCardMessages', function() {
 app.directive('tsDiscovery', function() {
     return {
         restrict: "E",
-        templateUrl: 'partials/discovery',
-        link: function(scope, element, attrs) {
-        }
+        templateUrl: 'partials/discovery'
     };
 });
 
 app.directive('tsChatMessage', function() {
     return {
         restrict: "E",
-        templateUrl: '/partials/chatmessage',
-        link: function(scope, element, attrs) {
-        }
+        templateUrl: '/partials/chatmessage'
     };
 });
 
 app.directive('tsMediaBar', function() {
     return {
         restrict: "E",
-        templateUrl: '/partials/mediabar',
-        link: function(scope, element, attrs) {
-        }
+        templateUrl: '/partials/mediabar'
     };
 });
