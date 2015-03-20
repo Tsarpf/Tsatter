@@ -5,8 +5,6 @@ var express = require('express'),
     passportSocketIo = require('passport.socketio'),
     session = require('express-session'),
     cookieParser = require('cookie-parser'),
-    MongooseSession = require('session-mongoose'),
-    mongooseSessionStore = new MongooseSession({interval: 60000});
     app = express();
 
 
@@ -49,26 +47,6 @@ var runServer = function(options) {
     var pub = __dirname + '/../public';
     app.use(express.static(pub));
     app.use(bodyParser.urlencoded({extended:true}));
-    app.use(cookieParser());
-    var key = 'express.sid';
-    var secret = 'hide and or load this from file when deploying to production';
-    var maxAge = new Date(Date.now() + 3600000);
-    app.use(session({
-        cookieParser: cookieParser,
-        key: key,
-        secret: secret,
-        maxAge: maxAge,
-        cookie: {
-            path: '/',
-            maxAge: maxAge
-        },
-        store: mongooseSessionStore,
-        resave: true,
-        saveUninitialized: true
-    }));
-    app.use(passport.initialize());
-    app.use(passport.session());
-
 
     //Use jade
     app.set('view engine', 'jade');
@@ -88,70 +66,15 @@ var runServer = function(options) {
 
     var persistenceHandler = require('./persistence');
 
-    io.use(checkSocketHandshakeCookie(cookieParser(secret), key));
-
     //routes
     require('./routes')(app);
 
     //everything sockets related
-    require('./sockets').initCons(io, passport, mongooseSessionStore, persistenceHandler);
+    require('./sockets').initCons(io, passport, persistenceHandler);
 
     return {app: app, server: server, mongConn: mongooseConn};
-
 };
 
-function checkSocketHandshakeCookie(cookieParser, key) {
-    var f = function (socket, next) {
-        cookieParser(socket.handshake, {}, function (err) {
-            if (err) {
-                console.log("error in parsing cookie");
-                return next(err);
-            }
-            var url = socket.request.url;
-            var urlCookie = url.indexOf('cookie') >= 0;
-            if (!socket.handshake.signedCookies && !urlCookie) {
-                console.log("no secureCookies|signedCookies found");
-                return next(new Error("no secureCookies found"));
-            }
-
-            var sid;
-            if (urlCookie) {
-                //TODO: find out just how slow this is
-                try {
-                    sid = url.substring(url.indexOf('=') + 1, url.indexOf('&'));
-                    sid = sid.substring(sid.indexOf('%3A') + 3, sid.indexOf('.'));
-                }
-                catch (err) {
-                    console.log(err);
-                }
-            }
-            else if (socket.handshake.signedCookies) {
-                sid = socket.handshake.signedCookies[key];
-            }
-
-            mongooseSessionStore.get(sid, function (err, session) {
-
-                if (!session) socket.session = {};
-                else socket.session = session;
-
-                socket.session.sid = sid;
-
-                if (!err && !session)
-                    console.log('session not found');
-
-                if (err) {
-                    console.log('failed connection to socket.io:', err);
-
-                }
-                else {
-                    //console.log('successful connection to socket.io');
-                }
-                next(err);
-            });
-        });
-    }
-    return f;
-}
 module.exports = function(options) {
     return runServer(options);
 }

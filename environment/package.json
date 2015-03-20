@@ -13,7 +13,6 @@
     "jade": "*",
     "mocha": "*",
     "mongoose": "*",
-    "mongoose-session": "Tsarpf/session-mongoose",
     "passport": "*",
     "passport-local-mongoose": "*",
     "passport.socketio": "*",
