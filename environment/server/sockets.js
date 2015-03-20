@@ -161,7 +161,7 @@ var addListeners = function(io, irc, persistenceHandler) {
     };
 };
 
-var initializeConnections = function(io, passportjs, persistenceHandler) {
+var initializeConnections = function(io, persistenceHandler) {
     io.on('connection', addListeners(io, irc, persistenceHandler));
 };
 

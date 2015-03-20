@@ -1,10 +1,7 @@
 var express = require('express'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
-    passport = require('passport'),
-    passportSocketIo = require('passport.socketio'),
     session = require('express-session'),
-    cookieParser = require('cookie-parser'),
     app = express();
 
 
@@ -36,14 +33,6 @@ var runServer = function(options) {
     mongoose.connection.on('connected', function(){
     });
 
-    var User = require('../app/models/user');
-    passport.use(User.createStrategy());
-
-
-    passport.serializeUser(User.serializeUser());
-    passport.deserializeUser(User.deserializeUser());
-
-
     var pub = __dirname + '/../public';
     app.use(express.static(pub));
     app.use(bodyParser.urlencoded({extended:true}));
@@ -70,7 +59,7 @@ var runServer = function(options) {
     require('./routes')(app);
 
     //everything sockets related
-    require('./sockets').initCons(io, passport, persistenceHandler);
+    require('./sockets').initCons(io, persistenceHandler);
 
     return {app: app, server: server, mongConn: mongooseConn};
 };
