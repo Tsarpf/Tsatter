@@ -3,11 +3,6 @@ var passport = require('passport'),
     User = require('../app/models/user');
 
 module.exports = function(app) {
-    app.get('/', function (req, res) {
-        res.render('index');
-    });
-
-
     app.post('/login', function(req, res, next) {
         passport.authenticate('local', function(err, user, info) {
             res.redirect('/');
@@ -71,5 +66,9 @@ module.exports = function(app) {
                 res.json(messages);
             }
         });
+    });
+
+    app.all('/*', function (req, res) {
+        res.render('index');
     });
 };

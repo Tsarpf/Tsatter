@@ -1,6 +1,6 @@
 angular.module('tsatter').controller('ChatController', [
     '$timeout',
-    '$anchorScroll',
+    '$document',
     '$location',
     '$scope',
     'socket',
@@ -8,7 +8,8 @@ angular.module('tsatter').controller('ChatController', [
     'command',
     'focus',
     '$http',
-    function($timeout, $anchorScroll, $location, $scope, socket, $rootScope, command, focus, $http) {
+    '$anchorScroll',
+    function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll) {
     $scope.messages = [];
     $scope.users = [];
     $scope.mediaList = [];
@@ -69,16 +70,21 @@ angular.module('tsatter').controller('ChatController', [
                 $scope.infiniteTopLocation = from;
             }
         }
+        else {
+            $scope.infiniteReachedBottom = true;
+        }
+
         $scope.getMessagesFromServer($scope.channelName, from, to,
         function(data, status, headers, config) {
             for (var i = 0; i < data.length; i++) {
                 $scope.addBackendMessage(data[i]);
             }
             $timeout(function() {
-                $anchorScroll();
+                var hash = $location.hash();
                 var str = '#' + hash;
                 //TODO: use ngClass and don't do dom manipulation from here
                 $(str).addClass('single-message-highlighted');
+                $anchorScroll();
             });
             if(data.length === 0 && $location.hash().length > 1) {
                 console.log('message not found. do a flash message here?');
@@ -105,6 +111,7 @@ angular.module('tsatter').controller('ChatController', [
 
         console.log('bottom at: ' + $scope.infiniteBottomLocation);
 
+        //div(class="single-message", id="{{channelName.substring(1)}}__{{message.idx}}")
 
         if($scope.infiniteReachedBottom) {
             console.log('already reached bottom');
@@ -122,16 +129,31 @@ angular.module('tsatter').controller('ChatController', [
                     $scope.infiniteReachedBottom = true;
                 }
 
+                var tm = function(idx) {
+                    return function() {
+                        idx -= 5;
+                        if(idx < 0) {idx = 0;}
+                        var id = $scope.channelName.substring(1) + '__' + idx;
+                        $scope.glued = false;
+                        $anchorScroll();
+                        $location.hash(id);
+                    }
+                };
+                $timeout(tm($scope.infiniteBottomLocation));
+
                 $scope.infiniteBottomLocation += data.length;
+                console.log('other idx: ' + $scope.infiniteBottomLocation);
 
                 for(var i = 0; i < data.length; i++) {
                     $scope.addBackendMessage(data[i]);
                 }
+
+
             }, errorLogger);
     };
     $scope.infiniteScrollUp = function() {
         //numbers go down since the oldest message has the smallest index 0
-        console.log('go up');
+        console.log('go up gfkjdsljdsfg');
 
         if($scope.infiniteReachedTop) {
             console.log('already reached top');
@@ -152,11 +174,14 @@ angular.module('tsatter').controller('ChatController', [
         }
 
         console.log('goin up yayfdasf');
-        console.log(top);
-        console.log(topAfterDecrement);
+
+        //var hash = $scope.channelName.substring(1) + '__' + top;
+        var hash = $scope.channelName.substring(1) + '__' + top;
 
         $scope.getMessagesFromServer($scope.channelName, topAfterDecrement, top,
             function(data, status, headers, config) {
+                $timeout(function() {
+                });
                 if(data.length === 0) {
                     $scope.infiniteReachedTop = true;
                     return;
@@ -198,7 +223,6 @@ angular.module('tsatter').controller('ChatController', [
         });
 
         command.send('names ' + channelName);
-
     };
 
     $scope.part = function(data) {
