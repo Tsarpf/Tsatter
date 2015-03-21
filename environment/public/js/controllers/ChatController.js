@@ -32,6 +32,14 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         $scope.getBacklog();
     });
 
+    $scope.currentlyHighlighted = {};
+    $scope.messageClicked = function(index) {
+        $scope.messages[index].class = 'single-message-highlighted';
+        if($scope.currentlyHighlighted) {
+            $scope.currentlyHighlighted.class = '';
+        }
+        $scope.currentlyHighlighted = $scope.messages[index];
+    };
     $scope.getMessagesFromServer = function(channel, from, to, success, error) {
         $http.get('/backlog/', {
             params: {
@@ -83,11 +91,16 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             }
             $timeout(function() {
                 var hash = $location.hash();
-                var str = '#' + hash;
-                //TODO: use ngClass and don't do dom manipulation from here
-                $(str).addClass('single-message-highlighted');
+                for(var i = 0; i < $scope.messages.length; i++) {
+                    if($scope.messages[i].idx == hash.split('__')[1]) {
+                        $scope.currentlyHighlighted = $scope.messages[i];
+                        $scope.currentlyHighlighted.class = 'single-message-highlighted';
+                        break;
+                    }
+                }
                 $anchorScroll();
             });
+
             if(data.length === 0 && $location.hash().length > 1) {
                 console.log('message not found. do a flash message here?');
                 $location.hash('');
@@ -298,11 +311,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         err_nicknameinuse:  $scope.nicknameinuse
     };
 
-    $scope.messagesIncrement = 30;
-    $scope.messagesTo = -1;
-    $scope.messagesFrom = $scope.messagesTo - $scope.messagesIncrement;
-
-
     $scope.addServerMessage = function(message) {
         $scope.addMessage(message, 'server');
     };
@@ -319,7 +327,8 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             message = message.replace(imageUrls[i], '[' + num + ']');
         }
 
-        var obj = {message: message, nick: nick, timestamp: getTimestamp(timestamp), idx: idx};
+
+        var obj = {message: message, nick: nick, timestamp: getTimestamp(timestamp), idx: idx, class: ''};
         if(top) {
             $scope.messages.unshift(obj);
         }

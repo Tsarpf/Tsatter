@@ -14,9 +14,7 @@
     "lr-infinite-scroll": "https://github.com/Tsarpf/lrInfiniteScroll.git",
     "flat-ui": "~2.2.2",
     "angular-scroll": "~0.6.5",
-    "angular-flash-messages": "~1.2.0",
-    "zeroclipboard": "~2.2.0",
-    "ng-clip": "~0.2.6"
+    "angular-flash-messages": "~1.2.0"
   },
   "overrides": {
     "socket.io-client": {
