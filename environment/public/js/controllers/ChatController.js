@@ -9,7 +9,7 @@ angular.module('tsatter').controller('ChatController', [
     'focus',
     '$http',
     '$anchorScroll',
-    function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll) {
+function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll) {
     $scope.messages = [];
     $scope.users = [];
     $scope.mediaList = [];
@@ -22,6 +22,8 @@ angular.module('tsatter').controller('ChatController', [
     $scope.infiniteStep = 30;
     $scope.infiniteReachedTop = false;
     $scope.infiniteReachedBottom = false;
+    $scope.origin = location.origin;
+
 
     //we have to do this in a timeout so that the directive is initialized
     $timeout(function(){
