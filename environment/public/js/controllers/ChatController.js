@@ -105,6 +105,7 @@ angular.module('tsatter').controller('ChatController', [
 
         }, errorLogger);
     };
+
     $scope.infiniteScrollDown = function() {
         //numbers go up since the last message has the highest index
         console.log('go down');
@@ -151,6 +152,7 @@ angular.module('tsatter').controller('ChatController', [
 
             }, errorLogger);
     };
+
     $scope.infiniteScrollUp = function() {
         //numbers go down since the oldest message has the smallest index 0
         console.log('go up gfkjdsljdsfg');
@@ -173,15 +175,8 @@ angular.module('tsatter').controller('ChatController', [
             $scope.infiniteReachedTop = true;
         }
 
-        console.log('goin up yayfdasf');
-
-        //var hash = $scope.channelName.substring(1) + '__' + top;
-        var hash = $scope.channelName.substring(1) + '__' + top;
-
         $scope.getMessagesFromServer($scope.channelName, topAfterDecrement, top,
             function(data, status, headers, config) {
-                $timeout(function() {
-                });
                 if(data.length === 0) {
                     $scope.infiniteReachedTop = true;
                     return;
@@ -191,6 +186,18 @@ angular.module('tsatter').controller('ChatController', [
                     $scope.infiniteReachedTop  = true;
                 }
 
+                var tm = function(idx) {
+                    return function() {
+                        //idx += 5;
+                        //if(idx < 0) {idx = 0;}
+                        var id = $scope.channelName.substring(1) + '__' + idx;
+                        $scope.glued = false;
+                        $anchorScroll();
+                        $location.hash(id);
+                    }
+                };
+                $timeout(tm($scope.infiniteTopLocation));
+                console.log('other idx: ' + $scope.infiniteTopLocation);
                 $scope.infiniteTopLocation -= data.length;
                 if($scope.infiniteTopLocation < 0) {
                     $scope.infiniteTopLocation = 0;
@@ -312,7 +319,7 @@ angular.module('tsatter').controller('ChatController', [
 
         var obj = {message: message, nick: nick, timestamp: getTimestamp(timestamp), idx: idx};
         if(top) {
-           $scope.messages.unshift(obj);
+            $scope.messages.unshift(obj);
         }
         else {
             $scope.messages.push(obj);
