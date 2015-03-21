@@ -1,4 +1,4 @@
-div(class="single-message", ng-attr-id="{{channelName}}#{{$message.idx}}")
+div(class="single-message", id="{{channelName.substring(1)}}__{{message.idx}}")
     p
         <small>{{message.timestamp | date:'dd/MM/yy HH:mm:ss'}}</small> <strong>[{{message.nick}}]</strong>
         <span ng-bind-html="message.message | linky:'_blank'"> </span>

@@ -60,6 +60,7 @@
     overflow: hidden;
 }
 
+
 .tscontainer {
     top: 0px;
     right: 0px;
@@ -99,6 +100,11 @@
 
 .single-message {
     word-break: break-word;
+}
+
+.single-message-highlighted {
+    word-break: break-word;
+    background-color: rgb(255, 224, 178);
 }
 
 .centered-text {

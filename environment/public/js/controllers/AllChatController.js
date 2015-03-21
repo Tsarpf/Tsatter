@@ -26,7 +26,7 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     };
 
     $scope.openLink = function(hash) {
-        var channelName = hash.split('=')[0];
+        var channelName = hash.split('__')[0];
         command.send('join #' + channelName);
     };
     $scope.$on('rpl_welcome', function(event, data) {

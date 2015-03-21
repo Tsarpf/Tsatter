@@ -8,7 +8,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     $scope.editingNick = false;
     $scope.infiniteBottomLocation = Number.MAX_VALUE;
     $scope.infiniteTopLocation = 0;
-    $scope.infiniteStep = 15;
+    $scope.infiniteStep = 30;
     $scope.infiniteReachedTop = false;
     $scope.infiniteReachedBottom = false;
 
@@ -40,20 +40,21 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         var to = -1;
         if(hash) {
             console.log('got hash: ' + hash);
-            var targetChannel = '#' + hash.split('=')[0];
+            var targetChannel = '#' + hash.split('__')[0];
             if(targetChannel === $scope.channelName) {
-                var target = parseInt(hash.split('=')[1]);
+                var target = parseInt(hash.split('__')[1]);
 
                 to = parseInt(target + $scope.infiniteStep / 2);
                 from = parseInt(target - $scope.infiniteStep / 2);
 
-                //If we're close than infiniteStep/2 to 0, get more messages after the targeted message
+                //If we're closer than infiniteStep/2 to 0, get more messages after the targeted message
                 if(from <= 0) {
                     to += (-from);
                     from = 0;
                     $scope.infiniteReachedTop = true;
                 }
 
+                $scope.glued = false;
                 $scope.infiniteBottomLocation = to;
                 $scope.infiniteTopLocation = from;
             }
@@ -63,6 +64,13 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             for (var i = 0; i < data.length; i++) {
                 $scope.addBackendMessage(data[i]);
             }
+            $timeout(function() {
+                $anchorScroll();
+                var str = '#' + hash;
+                console.log('ebin!!!: ' + str);
+                //TODO: use ngClass and don't do dom manipulation from here
+                $(str).addClass('single-message-highlighted');
+            });
             $scope.infiniteBottomLocation = data[i - 1].idx;
             $scope.infiniteTopLocation = data[0].idx;
 

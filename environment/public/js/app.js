@@ -4,6 +4,7 @@ var app = angular.module('tsatter', [
     'akoenig.deckgrid',
     'ngSanitize',
     'luegg.directives',
+    'duScroll',
     'lrInfiniteScroll'
 ]);
 
