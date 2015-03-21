@@ -35,7 +35,30 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     };
 
     $scope.getBacklog = function() {
-        $scope.getMessagesFromServer($scope.channelName, -$scope.infiniteStep - 1, -1,
+        var hash = $location.hash();
+        var from = -$scope.infiniteStep - 1;
+        var to = -1;
+        if(hash) {
+            console.log('got hash: ' + hash);
+            var targetChannel = '#' + hash.split('=')[0];
+            if(targetChannel === $scope.channelName) {
+                var target = parseInt(hash.split('=')[1]);
+
+                to = parseInt(target + $scope.infiniteStep / 2);
+                from = parseInt(target - $scope.infiniteStep / 2);
+
+                //If we're close than infiniteStep/2 to 0, get more messages after the targeted message
+                if(from <= 0) {
+                    to += (-from);
+                    from = 0;
+                    $scope.infiniteReachedTop = true;
+                }
+
+                $scope.infiniteBottomLocation = to;
+                $scope.infiniteTopLocation = from;
+            }
+        }
+        $scope.getMessagesFromServer($scope.channelName, from, to,
         function(data, status, headers, config) {
             for (var i = 0; i < data.length; i++) {
                 $scope.addBackendMessage(data[i]);
@@ -117,6 +140,9 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
                 }
 
                 $scope.infiniteTopLocation -= data.length;
+                if($scope.infiniteTopLocation < 0) {
+                    $scope.infiniteTopLocation = 0;
+                }
 
                 for(var i = data.length - 1; i >= 0; i--) {
                     $scope.addBackendMessage(data[i], true);

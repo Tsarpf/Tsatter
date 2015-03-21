@@ -1,8 +1,5 @@
-//Sigh. Animations break scroll glue...
-//div(class="animate-enter single-message", ng-animate, ng-attr-id="{{channelName}}msg{{$index}}")
-div(class="single-message", ng-attr-id="{{channelName}}msg{{$index}}")
+div(class="single-message", ng-attr-id="{{channelName}}#{{$message.idx}}")
     p
-        //<small>{{message.timestamp | date:'medium'}}</small> <strong>[{{message.nick}}]</strong>
         <small>{{message.timestamp | date:'dd/MM/yy HH:mm:ss'}}</small> <strong>[{{message.nick}}]</strong>
         <span ng-bind-html="message.message | linky:'_blank'"> </span>
 

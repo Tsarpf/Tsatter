@@ -1,4 +1,4 @@
-angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootScope', '$scope', 'socket', 'command', function($timeout, $rootScope, $scope, socket, command) {
+angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootScope', '$scope', 'socket', 'command', '$location', function($timeout, $rootScope, $scope, socket, command, $location) {
     $scope.form = {
         channel: ''
     };
@@ -24,9 +24,23 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
         command.send('join ' + channel);
         $scope.form.channel = '';
     };
+
+    $scope.openLink = function(hash) {
+        var channelName = hash.split('=')[0];
+        command.send('join #' + channelName);
+    };
     $scope.$on('rpl_welcome', function(event, data) {
         console.log('connected');
+
         //command.send('join #ses'); //Join default channel while developing
+
+        var hash = $location.hash();
+        console.log('ebin hash');
+        console.log(hash);
+        if(hash) {
+            $scope.openLink(hash);
+        }
+
         $rootScope.vars.nickname = data.nick;
     });
 
