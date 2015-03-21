@@ -86,6 +86,9 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
         $scope.getMessagesFromServer($scope.channelName, from, to,
         function(data, status, headers, config) {
+            console.log(data);
+            console.log(from);
+            console.log(to);
             for (var i = 0; i < data.length; i++) {
                 $scope.addBackendMessage(data[i]);
             }
