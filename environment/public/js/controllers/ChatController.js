@@ -184,7 +184,7 @@ angular.module('tsatter').controller('ChatController', [
     var joinChannel=function(channelName) {
         console.log('join:');
         console.log(channelName);
-        $scope.addServerMessage('Welcome to the channel ' + channelName);
+        //$scope.addServerMessage('Welcome to the channel ' + channelName);
 
         $scope.$on(channelName, function(event, data) {
             if($scope.handler.hasOwnProperty(data.command)) {
@@ -205,17 +205,23 @@ angular.module('tsatter').controller('ChatController', [
         var idx = $scope.users.indexOf(data.nick);
         if(idx < 0) return;
         $scope.users.splice(idx, 1);
-        $scope.addServerMessage(data.nick + ' left the channel');
+        if($scope.infiniteReachedBottom) {
+            $scope.addServerMessage(data.nick + ' left the channel');
+        }
     };
     $scope.names = function(data) {
         $scope.users = Object.keys(data.nicks);
     };
     $scope.join = function(data) {
         $scope.users.push(data.nick);
-        $scope.addServerMessage(data.nick + ' joined the channel');
+        if($scope.infiniteReachedBottom) {
+            $scope.addServerMessage(data.nick + ' joined the channel');
+        }
     };
     $scope.privmsg = function(data) {
-        $scope.addMessage(data.args[1], data.nick);
+        if($scope.infiniteReachedBottom) {
+            $scope.addMessage(data.args[1], data.nick);
+        }
     };
     $scope.nick = function(data) {
         console.log('got nick');
@@ -225,20 +231,28 @@ angular.module('tsatter').controller('ChatController', [
         }
         var idx = $scope.users.indexOf(data.nick);
         $scope.users.splice(idx, 1, data.args[0]);
-        $scope.addServerMessage(data.nick + ' is now known as ' + data.args[0]);
+        if($scope.infiniteReachedBottom) {
+            $scope.addServerMessage(data.nick + ' is now known as ' + data.args[0]);
+        }
     };
     $scope.quit = function(data) {
         console.log('got quit');
         var idx = $scope.users.indexOf(data.nick);
         if(idx < 0) return;
         $scope.users.splice(idx, 1);
-        $scope.addServerMessage(data.nick + ' quit');
+        if($scope.infiniteReachedBottom) {
+            $scope.addServerMessage(data.nick + ' quit');
+        }
     };
     $scope.errnick = function(data) {
-        $scope.addServerMessage(data.args[data.args.length - 1]);
+        if($scope.infiniteReachedBottom) {
+            $scope.addServerMessage(data.args[data.args.length - 1]);
+        }
     };
     $scope.nicknameinuse = function(data) {
-        $scope.addServerMessage(data.args[data.args.length - 1]);
+        if($scope.infiniteReachedBottom) {
+            $scope.addServerMessage(data.args[data.args.length - 1]);
+        }
     };
     $scope.handler = {
         PRIVMSG: $scope.privmsg,

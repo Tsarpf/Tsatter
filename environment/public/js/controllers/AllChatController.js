@@ -35,8 +35,6 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
         //command.send('join #ses'); //Join default channel while developing
 
         var hash = $location.hash();
-        console.log('ebin hash');
-        console.log(hash);
         if(hash) {
             $scope.openLink(hash);
         }
