@@ -8,7 +8,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     $scope.editingNick = false;
     $scope.infiniteBottomLocation = Number.MAX_VALUE;
     $scope.infiniteTopLocation = 0;
-    $scope.infiniteStep = 20;
+    $scope.infiniteStep = 15;
     $scope.infiniteReachedTop = false;
     $scope.infiniteReachedBottom = false;
 
