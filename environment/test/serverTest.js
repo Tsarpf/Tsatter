@@ -4,7 +4,6 @@ var should = require('should'),
     client = require('socket.io-client'),
     request = require('request'),
     requestSuper = require('supertest'),
-    setCookie = require('./setSocketHandshakeCookies'),
     Channel = require('../app/models/channel'),
     agent = requestSuper.agent(server.app);
 

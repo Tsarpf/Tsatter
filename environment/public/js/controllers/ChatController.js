@@ -8,6 +8,9 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     $scope.editingNick = false;
     $scope.infiniteBottomLocation = Number.MAX_VALUE;
     $scope.infiniteTopLocation = 0;
+    $scope.infiniteStep = 20;
+    $scope.infiniteReachedTop = false;
+    $scope.infiniteReachedBottom = false;
 
     //we have to do this in a timeout so that the directive is initialized
     $timeout(function(){
@@ -28,29 +31,84 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             error(error);
     };
     var errorLogger = function(data, status, headers, config) {
-            console.log('error!');
+        console.log('error!');
     };
 
     $scope.getBacklog = function() {
         $scope.getMessagesFromServer($scope.channelName, -31, -1, //Last 30 messages
         function(data, status, headers, config) {
             for (var i = 0; i < data.length; i++) {
-                $scope.addMessage(data[i].message, data[i].nick, data[i].timestamp);
+                $scope.addBackendMessage(data[i]);
             }
+            $scope.infiniteBottomLocation = data[i].idx;
+            $scope.infiniteTopLocation = data[0].idx;
         }, errorLogger);
     };
     $scope.infiniteScrollDown = function() {
         //numbers go up since the last message has the highest index
         console.log('go down');
+
+        if($scope.infiniteReachedBottom) {
+            console.log('already reached bottom');
+            return;
+        }
+
+        $scope.getMessagesFromServer($scope.channelName, $scope.infiniteBottomLocation, $scope.infiniteBottomLocation + $scope.infiniteStep,
+            function(data, status, headers, config) {
+                if(data.length === 0) {
+                    $scope.infiniteReachedBottom = true;
+                    return;
+                }
+
+                if(data.length < $scope.infiniteStep - 1) {
+                    $scope.infiniteReachedBottom = true;
+                }
+
+                for(var i = 0; i < data.length; i++) {
+                    $scope.addBackendMessage(data[i]);
+                }
+            }, errorLogger);
     };
     $scope.infiniteScrollUp = function() {
         //numbers go down since the oldest message has the smallest index 0
         console.log('go up');
+
+        if($scope.infiniteReachedTop) {
+            console.log('already reached top');
+            return;
+        }
+
+        if($scope.infiniteTopLocation === 0) {
+            $scope.infiniteReachedTop = true;
+            return;
+        }
+
+        var top = $scope.infiniteTopLocation;
+        var topAfterDecrement = top - $scope.infiniteStep;
+        if(topAfterDecrement < 0) {
+            topAfterDecrement = 0;
+            $scope.infiniteReachedTop = true;
+        }
+        $scope.getMessagesFromServer($scope.channelName, top, topAfterDecrement,
+            function(data, status, headers, config) {
+                if(data.length === 0) {
+                    $scope.infiniteReachedTop = true;
+                    return;
+                }
+
+                if(data.length < $scope.infiniteStep - 1) {
+                    $scope.infiniteReachedTop  = true;
+                }
+
+                for(var i = data.length - 1; i >= 0; i--) {
+                    $scope.addBackendMessage(data[i], true);
+                }
+            }, errorLogger);
+
     };
 
     //Not sure yet if this is really a robust solution. It seems a bit dangerous
     $scope.mediaCount = 0;
-
 
     var joinChannel=function(channelName) {
         console.log('join:');
@@ -131,7 +189,10 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         $scope.addMessage(message, 'server');
     };
 
-    $scope.addMessage = function(message, nick, timestamp) {
+    $scope.addBackendMessage = function(message, top) {
+        $scope.addMessage(message.message, message.nick, message.timestamp, message.idx, top);
+    };
+    $scope.addMessage = function(message, nick, timestamp, idx, top) {
         var imageUrls = getImageUrls(getUrls(message));
 
         for(var i = 0; i < imageUrls .length; i++) {
@@ -140,7 +201,13 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             message = message.replace(imageUrls[i], '[' + num + ']');
         }
 
-        $scope.messages.push({message: message, nick: nick, timestamp: getTimestamp(timestamp)});
+        var obj = {message: message, nick: nick, timestamp: getTimestamp(timestamp), idx: idx};
+        if(top) {
+           $scope.messages.unshift(obj);
+        }
+        else {
+            $scope.messages.push(obj);
+        }
     };
 
     var getTimestamp = function(timestamp) {
