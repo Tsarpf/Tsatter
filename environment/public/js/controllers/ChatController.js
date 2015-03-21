@@ -35,18 +35,26 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     };
 
     $scope.getBacklog = function() {
-        $scope.getMessagesFromServer($scope.channelName, -31, -1, //Last 30 messages
+        $scope.getMessagesFromServer($scope.channelName, -$scope.infiniteStep - 1, -1,
         function(data, status, headers, config) {
             for (var i = 0; i < data.length; i++) {
                 $scope.addBackendMessage(data[i]);
             }
-            $scope.infiniteBottomLocation = data[i].idx;
+            $scope.infiniteBottomLocation = data[i - 1].idx;
             $scope.infiniteTopLocation = data[0].idx;
+
+            if(data.length < $scope.infiniteStep - 1) {
+                $scope.infiniteReachedTop = true;
+                $scope.infiniteReachedBottom = true;
+            }
         }, errorLogger);
     };
     $scope.infiniteScrollDown = function() {
         //numbers go up since the last message has the highest index
         console.log('go down');
+
+        console.log('bottom at: ' + $scope.infiniteBottomLocation);
+
 
         if($scope.infiniteReachedBottom) {
             console.log('already reached bottom');
@@ -63,6 +71,8 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
                 if(data.length < $scope.infiniteStep - 1) {
                     $scope.infiniteReachedBottom = true;
                 }
+
+                $scope.infiniteBottomLocation += data.length;
 
                 for(var i = 0; i < data.length; i++) {
                     $scope.addBackendMessage(data[i]);
@@ -85,11 +95,17 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
 
         var top = $scope.infiniteTopLocation;
         var topAfterDecrement = top - $scope.infiniteStep;
+
         if(topAfterDecrement < 0) {
             topAfterDecrement = 0;
             $scope.infiniteReachedTop = true;
         }
-        $scope.getMessagesFromServer($scope.channelName, top, topAfterDecrement,
+
+        console.log('goin up yayfdasf');
+        console.log(top);
+        console.log(topAfterDecrement);
+
+        $scope.getMessagesFromServer($scope.channelName, topAfterDecrement, top,
             function(data, status, headers, config) {
                 if(data.length === 0) {
                     $scope.infiniteReachedTop = true;
@@ -99,6 +115,8 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
                 if(data.length < $scope.infiniteStep - 1) {
                     $scope.infiniteReachedTop  = true;
                 }
+
+                $scope.infiniteTopLocation -= data.length;
 
                 for(var i = data.length - 1; i >= 0; i--) {
                     $scope.addBackendMessage(data[i], true);
