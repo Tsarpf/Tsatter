@@ -85,7 +85,6 @@ var saveMessage = function(channelName, nick, message, callback) {
     });
 };
 
-
 var getActiveChannels = function(from, to, callback) {
     if(!from && !to) {
         from = 0;
@@ -127,8 +126,8 @@ var getMessages = function(channelName, from, to, callback) {
             return callback(err, []);
         }
         if(doc.messages.length > 0) {
-            if(to === -1) {to = undefined;} //hack or else it'll miss the last message...
-            callback(null, doc.messages.slice(from, to))
+            var arr = getSendableMessageArray(doc.messages, from, to);
+            callback(null, arr);
         }
         else {
             callback(null, []);
@@ -136,6 +135,25 @@ var getMessages = function(channelName, from, to, callback) {
     });
 };
 
+
+var getSendableMessageArray = function(messages, from, to) {
+    var messageArray = [];
+    if(from < 0) {
+        from = messages.length + from;
+    }
+    if(to < 0) {
+        to = messages.length + to;
+    }
+    for (var i = from; i < to && i < messages.length; i++) {
+        messageArray.push({
+            nick: messages[i].nick,
+            message: messages[i].message,
+            timestamp: messages[i].timestamp,
+            idx: i
+        });
+    }
+    return messageArray;
+};
 
 module.exports = {
     saveMessage: saveMessage,

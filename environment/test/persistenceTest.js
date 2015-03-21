@@ -204,6 +204,15 @@ describe('persistence handler', function() {
         });
     });
 
+    it('should give correct idx\'s for channel messages', function(done) {
+        persistenceHandler.getMessages(testChannel, 1, 6, function(err, messages) {
+            messages.length.should.equal(5);
+            messages[0].idx.should.equal(1);
+            messages[4].idx.should.equal(5);
+            done();
+        })
+    });
+
 });
 
 
