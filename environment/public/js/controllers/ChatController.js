@@ -6,9 +6,8 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     $scope.mediaGlued = true;
     $scope.nick = '';
     $scope.editingNick = false;
-
-    //Not sure yet if this is really a robust solution. It seems a bit dangerous
-    $scope.mediaCount = 0;
+    $scope.infiniteBottomLocation = Number.MAX_VALUE;
+    $scope.infiniteTopLocation = 0;
 
     //we have to do this in a timeout so that the directive is initialized
     $timeout(function(){
@@ -17,6 +16,42 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         $scope.getBacklog();
     });
 
+    $scope.getMessagesFromServer = function(channel, from, to, success, error) {
+        $http.get('/backlog/', {
+            params: {
+                channel: channel,
+                from: from,
+                to: to
+            }
+        }).
+            success(success).
+            error(error);
+    };
+    var errorLogger = function(data, status, headers, config) {
+            console.log('error!');
+    };
+
+    $scope.getBacklog = function() {
+        $scope.getMessagesFromServer($scope.channelName, -31, -1, //Last 30 messages
+        function(data, status, headers, config) {
+            for (var i = 0; i < data.length; i++) {
+                $scope.addMessage(data[i].message, data[i].nick, data[i].timestamp);
+            }
+        }, errorLogger);
+    };
+    $scope.infiniteScrollDown = function() {
+        //numbers go up since the last message has the highest index
+        console.log('go down');
+    };
+    $scope.infiniteScrollUp = function() {
+        //numbers go down since the oldest message has the smallest index 0
+        console.log('go up');
+    };
+
+    //Not sure yet if this is really a robust solution. It seems a bit dangerous
+    $scope.mediaCount = 0;
+
+
     var joinChannel=function(channelName) {
         console.log('join:');
         console.log(channelName);
@@ -24,8 +59,6 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
 
         $scope.$on(channelName, function(event, data) {
             if($scope.handler.hasOwnProperty(data.command)) {
-                console.log('command called:');
-                console.log(data.command);
                 $scope.handler[data.command](data);
             }
             else {
@@ -72,36 +105,23 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         $scope.users.splice(idx, 1);
         $scope.addServerMessage(data.nick + ' quit');
     };
-
+    $scope.errnick = function(data) {
+        $scope.addServerMessage(data.args[data.args.length - 1]);
+    };
     $scope.handler = {
         PRIVMSG: $scope.privmsg,
         JOIN: $scope.join,
         NAMES: $scope.names,
         PART: $scope.part,
         QUIT: $scope.quit,
-        NICK: $scope.nick
+        NICK: $scope.nick,
+        err_erroneusnickname: $scope.errnick //its erroneous not erroneus :(
     };
 
     $scope.messagesIncrement = 30;
     $scope.messagesTo = -1;
     $scope.messagesFrom = $scope.messagesTo - $scope.messagesIncrement;
-    $scope.getBacklog = function() {
-        $http.get('/backlog/', {
-            params: {
-                channel: $scope.channelName,
-                from: $scope.messagesFrom,
-                to: $scope.messagesTo
-            }
-        }).
-            success(function(data, status, headers, config) {
-                for(var i = 0; i < data.length; i++) {
-                    $scope.addMessage(data[i].message, data[i].nick, data[i].timestamp);
-                }
-            }).
-            error(function(data, status, headers, config) {
-                console.log('error!');
-            });
-    };
+
 
     $scope.addServerMessage = function(message) {
         $scope.addMessage(message, 'server');
@@ -119,8 +139,6 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         $scope.messages.push({message: message, nick: nick, timestamp: getTimestamp(timestamp)});
     };
 
-
-
     var getTimestamp = function(timestamp) {
         var date;
         if(!timestamp) {
@@ -128,7 +146,6 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         }
         else {
             date = new Date(timestamp);
-            console.log(date);
         }
         return date;
     };
@@ -164,6 +181,7 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             command.send(['nick', $scope.nick]);
         }
         $scope.editingNick = false;
+        $scope.nick = $rootScope.vars.nickname;
     };
 
     this.privmsg = function() {

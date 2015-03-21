@@ -4,7 +4,7 @@ var app = angular.module('tsatter', [
     'akoenig.deckgrid',
     'ngSanitize',
     'luegg.directives',
-    'infinite-scroll'
+    'lrInfiniteScroll'
 ]);
 
 app.directive('tsChat', function($timeout) {
@@ -12,8 +12,6 @@ app.directive('tsChat', function($timeout) {
         restrict: "E",
         templateUrl: '/partials/chat',
         link: function(scope, element, attrs) {
-            console.log("le attribute:");
-            console.log(attrs.channelName);
             scope.channelName = attrs.channelName;
             $timeout(function() {
                 scope.msgDiv = document.getElementById(attrs.channelName);

@@ -5,7 +5,7 @@ span(ng-controller="ChatController as chatCtrl", class="chat vspace col-xs-12")
         .users.col-xs-1
             p(ng-repeat="user in users") {{user}}
 
-        div(class="messages col-xs-7" scroll-glue="glued")
+        div(class="messages col-xs-7" scroll-glue="glued" lr-infinite-scroll="infiniteScrollDown" lr-infinite-scroll-up="infiniteScrollUp")
 
             ts-chat-message(ng-repeat="message in messages")
                 

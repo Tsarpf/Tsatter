@@ -28,9 +28,10 @@ var addListeners = function(io, irc, persistenceHandler) {
             //console.log(message);
         });
 
-        client.addListener('error', function (message) {
+        client.addListener('error', function (messageObj) {
             console.log('error:');
-            console.log(message);
+            console.log(messageObj);
+            socket.send(messageObj);
         });
 
         client.on('names', function (channel, nicks) {
@@ -92,6 +93,7 @@ var addListeners = function(io, irc, persistenceHandler) {
                 username = newNick;
             }
             console.log('nick');
+            console.log(messageObj);
             socket.send(messageObj);
         });
 
@@ -109,7 +111,6 @@ var addListeners = function(io, irc, persistenceHandler) {
             console.log(messageObj);
             socket.emit(channel, messageObj);
         });
-
 
         client.connect(function () {
             console.log('connected');

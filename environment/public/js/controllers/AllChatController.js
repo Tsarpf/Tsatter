@@ -30,8 +30,19 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
         $rootScope.vars.nickname = data.nick;
     });
 
+    $scope.$on('err_erroneusnickname', function(event, data) { //its erroneous not erroneus :(
+        console.log('sinep');
+        console.log(data);
+        for(var i = 0; i < $scope.userChannels.length; i++) {
+            if($scope.userChannels[i].active === true) {
+                $scope.$broadcast($scope.userChannels[i].name, data);
+            }
+        }
+    });
+
     $scope.$on('NICK', function(event, data) {
         console.log('got nick change');
+        console.log(data.nick + ' ' + $rootScope.vars.nickname);
         if(data.nick === $rootScope.vars.nickname) {
             $rootScope.vars.nickname = data.args[0];
         }
@@ -52,7 +63,6 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     $scope.addChannel = function(channel) {
         for(var i = 0; i < $scope.userChannels.length; i++) {
             if($scope.userChannels[i].name === channel) {
-                console.log('existing channel');
                 $scope.userChannels[i].active = true;
                 return;
             }
@@ -66,7 +76,7 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     };
 
     $scope.removeChannel = function(channel) {
-        console.log('hi');
+        console.log('remove channel');
         console.log(channel);
         for(var i = 0; i < $scope.userChannels.length; i++) {
             if($scope.userChannels[i].name === channel) {

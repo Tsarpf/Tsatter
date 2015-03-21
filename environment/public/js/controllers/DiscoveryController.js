@@ -20,7 +20,6 @@ angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 
     };
 
     $scope.joinChannel = function(channel) {
-        console.log('called it!');
         command.send('join ' + channel);
         $scope.$emit('JOIN', {args: [channel]});
     };
