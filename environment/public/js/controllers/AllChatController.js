@@ -31,14 +31,20 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     });
 
     $scope.$on('err_erroneusnickname', function(event, data) { //its erroneous not erroneus :(
-        console.log('sinep');
-        console.log(data);
+        $scope.sendToCurrentChannel(data);
+    });
+
+    $scope.$on('err_nicknameinuse', function(event, data) {
+        $scope.sendToCurrentChannel(data);
+    });
+
+    $scope.sendToCurrentChannel = function(data) {
         for(var i = 0; i < $scope.userChannels.length; i++) {
             if($scope.userChannels[i].active === true) {
                 $scope.$broadcast($scope.userChannels[i].name, data);
             }
         }
-    });
+    };
 
     $scope.$on('NICK', function(event, data) {
         console.log('got nick change');

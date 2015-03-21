@@ -25,7 +25,10 @@ var addListeners = function(io, irc, persistenceHandler) {
         var client = new irc.Client(ircServerAddress, username, connObj);
 
         client.addListener('raw', function (message) {
-            //console.log(message);
+            if(message.commandType === 'error') {
+                console.log(message);
+                socket.send(message);
+            }
         });
 
         client.addListener('error', function (messageObj) {

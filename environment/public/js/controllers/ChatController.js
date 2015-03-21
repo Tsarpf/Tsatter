@@ -108,6 +108,9 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
     $scope.errnick = function(data) {
         $scope.addServerMessage(data.args[data.args.length - 1]);
     };
+    $scope.nicknameinuse = function(data) {
+        $scope.addServerMessage(data.args[data.args.length - 1]);
+    };
     $scope.handler = {
         PRIVMSG: $scope.privmsg,
         JOIN: $scope.join,
@@ -115,7 +118,8 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
         PART: $scope.part,
         QUIT: $scope.quit,
         NICK: $scope.nick,
-        err_erroneusnickname: $scope.errnick //its erroneous not erroneus :(
+        err_erroneusnickname: $scope.errnick, //its erroneous not erroneus :(
+        err_nicknameinuse:  $scope.nicknameinuse
     };
 
     $scope.messagesIncrement = 30;
