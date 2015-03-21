@@ -1,4 +1,14 @@
-angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScroll', '$location', '$scope', 'socket', '$rootScope', 'command', 'focus', '$http', function($timeout, $anchorScroll, $location, $scope, socket, $rootScope, command, focus, $http) {
+angular.module('tsatter').controller('ChatController', [
+    '$timeout',
+    '$anchorScroll',
+    '$location',
+    '$scope',
+    'socket',
+    '$rootScope',
+    'command',
+    'focus',
+    '$http',
+    function($timeout, $anchorScroll, $location, $scope, socket, $rootScope, command, focus, $http) {
     $scope.messages = [];
     $scope.users = [];
     $scope.mediaList = [];
@@ -67,17 +77,26 @@ angular.module('tsatter').controller('ChatController', ['$timeout', '$anchorScro
             $timeout(function() {
                 $anchorScroll();
                 var str = '#' + hash;
-                console.log('ebin!!!: ' + str);
                 //TODO: use ngClass and don't do dom manipulation from here
                 $(str).addClass('single-message-highlighted');
             });
-            $scope.infiniteBottomLocation = data[i - 1].idx;
-            $scope.infiniteTopLocation = data[0].idx;
+            if(data.length === 0 && $location.hash().length > 1) {
+                console.log('message not found. do a flash message here?');
+                $location.hash('');
+                $scope.getBacklog();
+                $scope.glued = true;
+            }
+
+            if(data.length > 0) {
+                $scope.infiniteBottomLocation = data[i - 1].idx;
+                $scope.infiniteTopLocation = data[0].idx;
+            }
 
             if(data.length < $scope.infiniteStep - 1) {
                 $scope.infiniteReachedTop = true;
                 $scope.infiniteReachedBottom = true;
             }
+
         }, errorLogger);
     };
     $scope.infiniteScrollDown = function() {
