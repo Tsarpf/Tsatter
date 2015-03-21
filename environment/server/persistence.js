@@ -144,6 +144,13 @@ var getSendableMessageArray = function(messages, from, to) {
     if(to < 0) {
         to = messages.length + to;
     }
+
+    if(to < 0) {
+        return []
+    }
+    if(from < 0) {
+       from = 0;
+    }
     for (var i = from; i < to && i < messages.length; i++) {
         messageArray.push({
             nick: messages[i].nick,
