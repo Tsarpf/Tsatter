@@ -27,7 +27,7 @@ app.directive('tsCardMessages', function() {
             var messagesObj = JSON.parse(messagesString);
             for (var idx in messagesObj) {
                 var messageObj = messagesObj[idx];
-                template += '<p class="discovery-message"><strong>' + messageObj.nick + ':</strong> ' +  messageObj.message + '</p>';
+                template += '<p class="discovery-message"><strong>' + messageObj.nick + ':</strong> ' +  cleanHTML(messageObj.message) + '</p>';
             }
         }
         return template;
@@ -44,6 +44,17 @@ app.directive('tsCardMessages', function() {
         }
     };
 });
+
+var cleanHTML = function(htmldes) {
+    return htmldes.replace(/[<>&\n]/g, function(x) {
+        return {
+            '<': '&lt;',
+            '>': '&gt;',
+            '&': '&amp;',
+            '\n': '<br />'
+        }[x];
+    });
+};
 
 app.directive('tsDiscovery', function() {
     return {
