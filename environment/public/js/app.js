@@ -6,6 +6,7 @@ var app = angular.module('tsatter', [
     'luegg.directives',
     'duScroll',
     'flash',
+    'angular-images-loaded',
     'lrInfiniteScroll'
 ]);
 

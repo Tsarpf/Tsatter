@@ -127,7 +127,6 @@ var getMessages = function(channelName, from, to, callback) {
         }
         if(doc.messages.length > 0) {
             var arr = getSendableMessageArray(doc.messages, from, to);
-            console.log(arr);
             callback(null, arr);
         }
         else {

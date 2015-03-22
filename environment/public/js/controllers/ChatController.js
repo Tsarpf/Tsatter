@@ -329,7 +329,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             message = message.replace(imageUrls[i], '[' + num + ']');
         }
 
-
         var obj = {message: message, nick: nick, timestamp: getTimestamp(timestamp), idx: idx, class: ''};
         if(top) {
             $scope.messages.unshift(obj);
@@ -407,6 +406,21 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         }
     };
 
+    $scope.imgLoadedEvents = {
+        always: function(instance) {
+            // Do stuff
+            console.log('always');
+            console.log($scope.mediaGlued);
+
+            //reset glue in hopes of autoscrolling to the end
+            $scope.mediaGlued = !$scope.mediaGlued;
+            $scope.mediaGlued = !$scope.mediaGlued;
+        },
+        fail: function(instance) {
+            console.log('fail');
+            // Do stuff
+        }
+    };
 
     //Maybe the rest of these should be in a service?
     var urlRegex = /((((https?|ftp):\/\/)|www\.)(([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)|(([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(aero|asia|biz|cat|com|coop|info|int|jobs|mobi|museum|name|net|org|post|pro|tel|travel|xxx|edu|gov|mil|[a-zA-Z][a-zA-Z]))|([a-z]+[0-9]*))(:[0-9]+)?((\/|\?)[^ "]*[^ ,;\.:">)])?)|(spotify:[^ ]+:[^ ]+)/g;

@@ -3,6 +3,6 @@
 
 
 div(class="media-bar")
-    div(ng-repeat="media in mediaList" class="")
+    div(ng-repeat="media in mediaList" images-loaded="imgLoadedEvents")
         p [{{media.idx}}]
         img(src="{{media.url}}" class="media-element")
