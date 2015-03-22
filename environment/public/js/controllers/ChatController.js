@@ -9,7 +9,8 @@ angular.module('tsatter').controller('ChatController', [
     'focus',
     '$http',
     '$anchorScroll',
-function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll) {
+    '$q',
+function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll, $q) {
     $scope.messages = [];
     $scope.users = [];
     $scope.mediaList = [];
@@ -320,20 +321,32 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         $scope.addMessage(message.message, message.nick, message.timestamp, message.idx, top);
     };
     $scope.addMessage = function(message, nick, timestamp, idx, top) {
-        var imageUrls = getImageUrls(getUrls(message));
-
-        for(var i = 0; i < imageUrls .length; i++) {
-            var num = $scope.mediaCount++;
-            $scope.mediaList.push({url: imageUrls[i], idx: num});
-            message = message.replace(imageUrls[i], '[' + num + ']');
-        }
-
         var obj = {message: message, nick: nick, timestamp: getTimestamp(timestamp), idx: idx, class: ''};
         if(top) {
             $scope.messages.unshift(obj);
         }
         else {
             $scope.messages.push(obj);
+        }
+
+        var urls = getUrls(message);
+        if(!urls) {
+            return;
+        }
+        for(var j = 0; j < urls.length; j++) {
+           isImage(urls[j], obj).then(function(args) {
+               var wasImage = args[0];
+               if(!wasImage) {
+                   return;
+               }
+
+               var src = args[1];
+               var obj = args[2];
+
+               var num = $scope.mediaCount++;
+               $scope.mediaList.push({url: src, idx: num});
+               obj.message = obj.message.replace(src, '[' + num + ']');
+           });
         }
     };
 
@@ -417,40 +430,27 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         }
     };
 
+    //http://stackoverflow.com/questions/22423057/angular-js-isimage-check-if-its-image-by-url
+    //Awesome.
+    function isImage(src, obj) {
+
+        var deferred = $q.defer();
+
+        var image = new Image();
+        image.onerror = function() {
+            deferred.resolve([false]);
+        };
+        image.onload = function() {
+            deferred.resolve([true, src, obj]);
+        };
+        image.src = src;
+
+        return deferred.promise;
+    }
+
     //Maybe the rest of these should be in a service?
     var urlRegex = /((((https?|ftp):\/\/)|www\.)(([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)|(([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(aero|asia|biz|cat|com|coop|info|int|jobs|mobi|museum|name|net|org|post|pro|tel|travel|xxx|edu|gov|mil|[a-zA-Z][a-zA-Z]))|([a-z]+[0-9]*))(:[0-9]+)?((\/|\?)[^ "]*[^ ,;\.:">)])?)|(spotify:[^ ]+:[^ ]+)/g;
     var getUrls = function(message) {
         return message.match(urlRegex);
     };
-    var getImageUrls = function(urls) {
-        var resultUrls = [];
-        for(var idx in urls) {
-           var url = urls[idx];
-
-            if(endsWith(url.toLowerCase(), '.gifv') || endsWith(url.toLowerCase(), '.webm')) {
-                url = url.substring(0, url.length - '.gifv'.length);
-                url += ('.gif');
-                resultUrls.push(url);
-                continue;
-            }
-
-            for(var type in imageTypes) {
-                if(endsWith(url.toLowerCase(), imageTypes[type])) {
-                    resultUrls.push(url);
-                    break;
-                }
-            }
-        }
-
-        return resultUrls;
-    };
-    function endsWith(str, suffix) {
-        return str.indexOf(suffix, str.length - suffix.length) !== -1;
-    }
-    var imageTypes = [
-        '.jpg',
-        '.jpeg',
-        '.gif',
-        '.png'
-    ];
 }]);

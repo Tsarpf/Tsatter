@@ -1,4 +1,4 @@
-button(class="btn btn-block btn-lg btn-info vspace" type="button", ng-click="getContent()") Refresh
+button(class="btn btn-block btn-lg btn-info vspace" type="button", ng-click="refresh()" lr-infinite-scroll="infiniteScrollDown" scroll-threshold="100") Refresh
 div(deckgrid class="deckgrid row", source="results")
     div(class="chat-summary tile form-group")
         p(class="centered-text chat-summary-messages") <strong>{{card.name}}</strong>
