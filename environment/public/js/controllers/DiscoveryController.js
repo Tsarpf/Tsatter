@@ -5,7 +5,7 @@
 angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 'command', function($scope, $http, command) {
     $scope.results = [];
     $scope.loaded = false;
-    $scope.infiniteSize = 20;
+    $scope.infiniteSize = 12;
     $scope.bottomLocation = 0;
     $scope.getContent = function(from, to, success) {
         $http.get('/activity/', {
