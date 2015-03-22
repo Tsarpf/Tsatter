@@ -18,5 +18,5 @@ span(ng-controller="ChatController as chatCtrl", class="chat vspace col-xs-12")
         input(ng-show="!editingNick" type="button" value="{{nick}}" class="col-xs-1 own-nick-area" ng-click="editNick()")
         input(ng-show="editingNick" focus-on="editNick" ng-blur="stopEditingNick()" type="text" class="col-xs-1 own-nick-area" ng-model="nick" ng-click="ownNickAreaClicked()" ng-keyup="$event.keyCode == 13 && ownNickAreaSubmit()")
 
-        input(ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg()", ng-model="message", type="text", class="newMessage col-xs-7")
+        input(ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg()", ng-model="message", type="text", class="newMessage col-xs-7" autofocus)
 
