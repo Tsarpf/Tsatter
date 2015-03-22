@@ -35,8 +35,6 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     };
 
     $scope.$on('rpl_welcome', function(event, data) {
-        console.log('connected');
-
         //command.send('join #ses'); //Join default channel while developing
 
         var hash = $location.hash();
@@ -64,8 +62,6 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     };
 
     $scope.$on('NICK', function(event, data) {
-        console.log('got nick change');
-        console.log(data.nick + ' ' + $rootScope.vars.nickname);
         if(data.nick === $rootScope.vars.nickname) {
             $rootScope.vars.nickname = data.args[0];
         }
@@ -78,8 +74,6 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     });
 
     $scope.$on('JOIN', function(event, data) {
-        console.log('got join');
-        console.log(data);
         var channel = data.args[0];
         $scope.addChannel(channel);
     });

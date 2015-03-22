@@ -124,14 +124,14 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
     $scope.infiniteScrollDown = function() {
         //numbers go up since the last message has the highest index
-        console.log('go down');
+        //console.log('go down');
 
-        console.log('bottom at: ' + $scope.infiniteBottomLocation);
+        //console.log('bottom at: ' + $scope.infiniteBottomLocation);
 
         //div(class="single-message", id="{{channelName.substring(1)}}__{{message.idx}}")
 
         if($scope.infiniteReachedBottom) {
-            console.log('already reached bottom');
+            //console.log('already reached bottom');
             return;
         }
 
@@ -159,7 +159,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
                 $timeout(tm($scope.infiniteBottomLocation));
 
                 $scope.infiniteBottomLocation += data.length;
-                console.log('other idx: ' + $scope.infiniteBottomLocation);
+                //console.log('other idx: ' + $scope.infiniteBottomLocation);
 
                 for(var i = 0; i < data.length; i++) {
                     $scope.addBackendMessage(data[i]);
@@ -267,8 +267,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         }
     };
     $scope.nick = function(data) {
-        console.log('got nick');
-        console.log(data);
         if(data.nick === $scope.nick) {
             $scope.nick = data.args[0];
         }
@@ -298,7 +296,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         }
     };
     $scope.activate = function(data) {
-        console.log($scope.channelName + ' activated');
         $timeout(function() {
             focus('showChannel');
         });
@@ -377,9 +374,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     };
 
     $scope.ownNickAreaSubmit = function() {
-        console.log('called it');
-        console.log($scope.nick);
-        console.log($rootScope.vars.nickname);
         if($scope.nick !== $rootScope.vars.nickname) {
             command.send(['nick', $scope.nick]);
         }
@@ -407,7 +401,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             }
         }
         else {
-            console.log('send message');
             var obj = {channel: $scope.channelName, message: message};
             socket.emit('privmsg', obj);
             $scope.addMessage(message, $rootScope.vars.nickname);
