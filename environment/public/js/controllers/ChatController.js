@@ -19,7 +19,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.editingNick = false;
     $scope.infiniteBottomLocation = Number.MAX_VALUE;
     $scope.infiniteTopLocation = 0;
-    $scope.infiniteStep = 30;
+    $scope.infiniteStep = 20;
     $scope.infiniteReachedTop = false;
     $scope.infiniteReachedBottom = false;
     $scope.origin = location.origin;
@@ -104,7 +104,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
             if(data.length === 0 && $location.hash().length > 1) {
                 console.log('message not found. do a flash message here?');
-                $location.hash('');
                 $scope.getBacklog();
                 $scope.glued = true;
             }
@@ -148,7 +147,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
                 var tm = function(idx) {
                     return function() {
-                        idx -= 5;
+                        idx -= 10;
                         if(idx < 0) {idx = 0;}
                         var id = $scope.channelName.substring(1) + '__' + idx;
                         $scope.glued = false;
@@ -408,10 +407,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
     $scope.imgLoadedEvents = {
         always: function(instance) {
-            // Do stuff
-            console.log('always');
-            console.log($scope.mediaGlued);
-
             //reset glue in hopes of autoscrolling to the end
             $scope.mediaGlued = !$scope.mediaGlued;
             $scope.mediaGlued = !$scope.mediaGlued;
