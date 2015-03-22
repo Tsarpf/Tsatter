@@ -44,6 +44,9 @@ angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 
         $scope.getContent(0, $scope.infiniteSize, function(data, status, headers, config) {
             $scope.results = data;
             $scope.bottomLocation += data.length;
+            if(data.length < to - from - 1) {
+                $scope.reachedBottom = true;
+            }
         });
     };
 
