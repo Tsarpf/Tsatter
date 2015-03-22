@@ -15,7 +15,8 @@
     "flat-ui": "~2.2.2",
     "angular-scroll": "~0.6.5",
     "angular-flash-messages": "~1.2.0",
-    "angular-images-loaded": "~0.0.5"
+    "angular-images-loaded": "~0.0.5",
+    "ngInfiniteScroll": "~1.2.0"
   },
   "overrides": {
     "socket.io-client": {

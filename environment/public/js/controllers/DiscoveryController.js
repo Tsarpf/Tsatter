@@ -7,6 +7,7 @@ angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 
     $scope.loaded = false;
     $scope.infiniteSize = 12;
     $scope.bottomLocation = 0;
+    $scope.reachedBottom = false;
     $scope.getContent = function(from, to, success) {
         $http.get('/activity/', {
            params: {
@@ -20,16 +21,25 @@ angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 
         });
     };
 
-    $scope.infiniteDown = function() {
+    $scope.infiniteScrollDown = function() {
+        console.log('moi');
+        if($scope.reachedBottom) {
+            return;
+        }
         var from = $scope.bottomLocation;
         var to = from + $scope.infiniteSize;
         $scope.getContent(from, to, function(data, status, headers, config) {
             $scope.results = $scope.results.concat(data);
             $scope.bottomLocation += data.length;
+            if(data.length < to - from - 1) {
+                $scope.reachedBottom = true;
+            }
         });
     };
 
     $scope.refresh = function() {
+        console.log('refresh');
+        $scope.reachedBottom = false;
         $scope.bottomLocation = 0;
         $scope.getContent(0, $scope.infiniteSize, function(data, status, headers, config) {
             $scope.results = data;

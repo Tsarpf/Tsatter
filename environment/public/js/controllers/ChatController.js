@@ -394,6 +394,9 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
     this.privmsg = function() {
         var message = $scope.message;
+        if(typeof message === 'undefined') {
+           return;
+        }
         $scope.message = '';
 
         //If a command

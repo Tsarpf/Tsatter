@@ -7,7 +7,8 @@ var app = angular.module('tsatter', [
     'duScroll',
     'flash',
     'angular-images-loaded',
-    'lrInfiniteScroll'
+    'lrInfiniteScroll',
+    'infinite-scroll'
 ]);
 
 app.directive('tsChat', function($timeout) {
