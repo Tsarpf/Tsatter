@@ -77,6 +77,8 @@
 
 .own-nick-area {
     height: 10%;
+    -webkit-transition: none;
+    transition: none;
 }
 
 .users {
@@ -139,6 +141,7 @@
 .new-channel {
     width: 25em;
 }
+/*
 @-webkit-keyframes enter {
     from {
         opacity: 0;
@@ -169,6 +172,7 @@
         left: 0px;
     }
 }
+*/
 
 body {
     /*background-color: #e6e6e6;*/
