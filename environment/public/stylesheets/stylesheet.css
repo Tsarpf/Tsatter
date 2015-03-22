@@ -29,9 +29,10 @@
 }
 
 .chat-summary {
-    margin: 10px;
+    margin: 5px;
     overflow: hidden;
     text-align: center;
+    outline: 20px #d6d6d6;
     /*
     outline: 2px solid orange;
     float: left;
@@ -53,13 +54,14 @@
 
 .deckgrid .column {
     float: left;
+    background-color: #e6e6e6;
+    padding: 5px;
 }
 
 .deckgrid .column-1-4 {
     width: 25%;
     overflow: hidden;
 }
-
 
 .tscontainer {
     top: 0px;
@@ -70,7 +72,7 @@
     min-height: 100%;
     width: 100%;
     min-width: 100%;
-    outline: 2px solid grey;
+    /*outline: 2px solid grey;*/
 }
 
 .own-nick-area {
@@ -80,7 +82,7 @@
 .users {
     height: 90%;
     min-height: 90%;
-    outline: 1px solid orange;
+    /*outline: 1px solid orange;*/
     overflow: auto;
 }
 
@@ -88,13 +90,13 @@
     height: 90%;
     min-height: 90%;
     overflow: auto;
-    outline: 1px solid orange;
+    /*outline: 1px solid orange;*/
 }
 
 .tsmedia {
     height: 90%;
     min-height: 90%;
-    outline: 1px solid orange;
+    /*outline: 1px solid orange;*/
     overflow: auto;
 }
 
@@ -118,7 +120,7 @@
     min-height: 20%;
     */
     height: 50px;
-    outline: 1px solid orange;
+    /*outline: 1px solid orange;*/
 }
 
 .sendButton {
@@ -166,6 +168,10 @@
         height: 30px;
         left: 0px;
     }
+}
+
+body {
+    /*background-color: #e6e6e6;*/
 }
 
 h1 {
