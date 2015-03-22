@@ -41,7 +41,9 @@ angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 
         console.log('refresh');
         $scope.reachedBottom = false;
         $scope.bottomLocation = 0;
-        $scope.getContent(0, $scope.infiniteSize, function(data, status, headers, config) {
+        var from = 0;
+        var to = $scope.infiniteSize;
+        $scope.getContent(from, to, function(data, status, headers, config) {
             $scope.results = data;
             $scope.bottomLocation += data.length;
             if(data.length < to - from - 1) {
