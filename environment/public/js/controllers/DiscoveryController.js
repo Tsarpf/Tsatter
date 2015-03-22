@@ -2,12 +2,13 @@
  * Created by Tsarpf on 2/14/15.
  */
 
-angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 'command', function($scope, $http, command) {
+angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 'command', '$timeout',  function($scope, $http, command, $timeout) {
     $scope.results = [];
     $scope.loaded = false;
-    $scope.infiniteSize = 12;
+    $scope.infiniteSize = 13;
     $scope.bottomLocation = 0;
     $scope.reachedBottom = false;
+    $scope.loading = false;
     $scope.getContent = function(from, to, success) {
         $http.get('/activity/', {
            params: {
@@ -18,14 +19,15 @@ angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 
         success(success).
         error(function(data, status, headers, config) {
             console.log('error!');
+            $scope.loading = false;
         });
     };
 
     $scope.infiniteScrollDown = function() {
-        console.log('moi');
-        if($scope.reachedBottom) {
+        if($scope.reachedBottom || $scope.loading) {
             return;
         }
+        $scope.loading = true;
         var from = $scope.bottomLocation;
         var to = from + $scope.infiniteSize;
         $scope.getContent(from, to, function(data, status, headers, config) {
@@ -34,21 +36,29 @@ angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 
             if(data.length < to - from - 1) {
                 $scope.reachedBottom = true;
             }
+            $timeout(function() {
+                $scope.loading = false;
+            });
         });
     };
 
     $scope.refresh = function() {
-        console.log('refresh');
+        $scope.loading = true;
         $scope.reachedBottom = false;
         $scope.bottomLocation = 0;
         var from = 0;
         var to = $scope.infiniteSize;
+        console.log(from);
+        console.log(to);
         $scope.getContent(from, to, function(data, status, headers, config) {
             $scope.results = data;
             $scope.bottomLocation += data.length;
             if(data.length < to - from - 1) {
                 $scope.reachedBottom = true;
             }
+            $timeout(function() {
+                $scope.loading = false;
+            });
         });
     };
 

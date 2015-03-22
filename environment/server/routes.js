@@ -17,8 +17,6 @@ module.exports = function(app) {
     app.get('/activity/', function(req, res, next) {
         var from = parseInt(req.query.from);
         var to = parseInt(req.query.to);
-        console.log(from);
-        console.log(to);
         if(isNaN(from) || isNaN(to)) {
             res.writeHead(400, {error: 'invalid from/to field(s)'});
             return res.end();
