@@ -29,6 +29,7 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
         var channelName = hash.split('__')[0];
         command.send('join #' + channelName);
     };
+
     $scope.$on('rpl_welcome', function(event, data) {
         console.log('connected');
 

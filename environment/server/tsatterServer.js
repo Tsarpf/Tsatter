@@ -2,6 +2,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     session = require('express-session'),
+    https = require('https'),
     app = express();
 
 
@@ -44,6 +45,8 @@ var runServer = function(options) {
     //Always use pretty html.
     app.locals.pretty = true;
 
+    //var httpsServer = https.createServer(credentials, app);
+    //httpsServer.listen(443);
 
     var server = app.listen(port, function() {
         console.log('port: ' + server.address().port);
@@ -62,6 +65,7 @@ var runServer = function(options) {
     require('./sockets').initCons(io, persistenceHandler);
 
     return {app: app, server: server, mongConn: mongooseConn};
+    //return {app: app, server: httpsServer, mongConn: mongooseConn};
 };
 
 module.exports = function(options) {
