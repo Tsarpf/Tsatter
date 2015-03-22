@@ -25,6 +25,10 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
         $scope.form.channel = '';
     };
 
+    $scope.clickTab = function(name) {
+        $scope.$broadcast(name, {command: 'activate'});
+    };
+
     $scope.openLink = function(hash) {
         var channelName = hash.split('__')[0];
         command.send('join #' + channelName);

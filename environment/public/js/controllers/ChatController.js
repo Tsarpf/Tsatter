@@ -30,6 +30,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         joinChannel($scope.channelName);
         $scope.nick = $rootScope.vars.nickname;
         $scope.getBacklog();
+        focus('showChannel');
     });
 
     $scope.currentlyHighlighted = {};
@@ -86,9 +87,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
         $scope.getMessagesFromServer($scope.channelName, from, to,
         function(data, status, headers, config) {
-            console.log(data);
-            console.log(from);
-            console.log(to);
             for (var i = 0; i < data.length; i++) {
                 $scope.addBackendMessage(data[i]);
             }
@@ -232,10 +230,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.mediaCount = 0;
 
     var joinChannel=function(channelName) {
-        console.log('join:');
-        console.log(channelName);
-        //$scope.addServerMessage('Welcome to the channel ' + channelName);
-
         $scope.$on(channelName, function(event, data) {
             if($scope.handler.hasOwnProperty(data.command)) {
                 $scope.handler[data.command](data);
@@ -303,6 +297,13 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             $scope.addServerMessage(data.args[data.args.length - 1]);
         }
     };
+    $scope.activate = function(data) {
+        console.log($scope.channelName + ' activated');
+        $timeout(function() {
+            focus('showChannel');
+        });
+    };
+
     $scope.handler = {
         PRIVMSG: $scope.privmsg,
         JOIN: $scope.join,
@@ -311,7 +312,8 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         QUIT: $scope.quit,
         NICK: $scope.nick,
         err_erroneusnickname: $scope.errnick, //its erroneous not erroneus :(
-        err_nicknameinuse:  $scope.nicknameinuse
+        err_nicknameinuse:  $scope.nicknameinuse,
+        activate: $scope.activate
     };
 
     $scope.addServerMessage = function(message) {

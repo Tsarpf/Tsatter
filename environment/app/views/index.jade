@@ -13,7 +13,7 @@ block content
             tab(class="", heading="Discover")
                 ts-discovery(ng-controller="DiscoveryController as discoCtrl")
 
-            tab(class="", ng-repeat="channel in userChannels" active="channel.active")
+            tab(class="", ng-repeat="channel in userChannels" active="channel.active" ng-click="clickTab(channel.name)")
                 tab-heading
                     {{channel.name}}
                     //button(type="button" ng-click="leaveChannel(channel.name)")
