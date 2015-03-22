@@ -8,11 +8,11 @@ angular.module('tsatter').factory('socket', function($rootScope) {
     });
 
     socket.on('disconnect', function() {
-        alert('Disconnected!');
+        //alert('Disconnected!');
         location.reload();
     });
     socket.on('reconnect', function() {
-        alert('Disconnected!');
+        //alert('Disconnected!');
         location.reload();
     });
 

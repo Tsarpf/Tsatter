@@ -48,8 +48,6 @@ angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 
         $scope.bottomLocation = 0;
         var from = 0;
         var to = $scope.infiniteSize;
-        console.log(from);
-        console.log(to);
         $scope.getContent(from, to, function(data, status, headers, config) {
             $scope.results = data;
             $scope.bottomLocation += data.length;
