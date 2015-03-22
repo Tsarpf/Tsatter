@@ -42,6 +42,10 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
             $scope.openLink(hash);
         }
 
+        if($location.absUrl().indexOf('#') < 0) {
+            $location.hash('!');
+        }
+
         $rootScope.vars.nickname = data.nick;
     });
 

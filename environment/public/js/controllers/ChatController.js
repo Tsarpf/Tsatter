@@ -151,8 +151,8 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
                         if(idx < 0) {idx = 0;}
                         var id = $scope.channelName.substring(1) + '__' + idx;
                         $scope.glued = false;
-                        $anchorScroll();
                         $location.hash(id);
+                        $anchorScroll();
                     }
                 };
                 $timeout(tm($scope.infiniteBottomLocation));
@@ -207,8 +207,8 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
                         //if(idx < 0) {idx = 0;}
                         var id = $scope.channelName.substring(1) + '__' + idx;
                         $scope.glued = false;
-                        $anchorScroll();
                         $location.hash(id);
+                        $anchorScroll();
                     }
                 };
                 $timeout(tm($scope.infiniteTopLocation));
