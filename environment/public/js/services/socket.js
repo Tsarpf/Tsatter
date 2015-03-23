@@ -1,4 +1,4 @@
-angular.module('tsatter').factory('socket', function($rootScope) {
+angular.module('tsatter').factory('socket', ['$rootScope', function($rootScope) {
     var address = location.host;
     var socket = io(address);
     socket.on('message', function(message) {
@@ -45,4 +45,4 @@ angular.module('tsatter').factory('socket', function($rootScope) {
             socket.send(object);
         }
     };
-});
+}]);

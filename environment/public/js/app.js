@@ -11,7 +11,7 @@ var app = angular.module('tsatter', [
     'infinite-scroll'
 ]);
 
-app.directive('tsChat', function($timeout) {
+app.directive('tsChat', ['$timeout', function($timeout) {
     return {
         restrict: "E",
         templateUrl: '/partials/chat',
@@ -22,7 +22,7 @@ app.directive('tsChat', function($timeout) {
             });
         }
     };
-});
+}]);
 
 app.directive('tsCardMessages', function() {
     var getTemplate = function(messagesString) {
