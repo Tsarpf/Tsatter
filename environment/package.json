@@ -7,8 +7,6 @@
     "express": "*",
     "express-session": "*",
     "grunt": "*",
-    "grunt-bower-task": "*",
-    "grunt-wiredep": "*",
     "irc": "*",
     "jade": "*",
     "mocha": "*",
@@ -27,5 +25,17 @@
     "start": "nodemon run.js",
     "test": "../node_modules/.bin/mocha",
     "travistest": "./node_modules/.bin/mocha"
+  },
+  "devDependencies": {
+    "grunt-bower-task": "*",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-cssmin": "^0.12.2",
+    "grunt-contrib-uglify": "^0.8.0",
+    "grunt-filerev": "^2.2.0",
+    "grunt-usemin": "^3.0.0",
+    "grunt-wiredep": "*",
+    "usemin-patterns": "^0.1.4"
   }
 }
