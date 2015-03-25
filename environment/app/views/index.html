@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html ng-app="tsatter">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>tsatter - next gen image board</title>
+
+    // bower:css
+
+    // endbower
+
+    <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet.css">
+</head>
+<body>
+<div class="container">
+
+    <h1> Tsatter </h1>
+
+    <h6> next gen image board </h6>
+
+    <div ng-controller="AllChatController as allCtrl">
+
+        <tabset type="'tabs'">
+
+            <tab>
+
+                <ts-discovery ng-controller="DiscoveryController as discoCtrl" ></ts-discovery>
+
+            </tab>
+
+            <tab ng-repeat="channel in userChannels" active="channel.active" ng-click="clickTab(channel.name)">
+                <tab-heading>
+                    {{channel.name}}
+                    <span ng-click="leaveChannel(channel.name)" class="glyphicon glyphicon-remove quit-x-button">
+                    </span>
+                </tab-heading>
+
+                <div class="col-xs-12">
+
+                    <ts-chat channel-name="{{channel.name}}"> </ts-chat>
+
+                </div>
+
+            </tab>
+
+            <tab>
+                <tab-heading>
+                    <span class="glyphicon glyphicon-plus"> </span>
+                </tab-heading>
+
+                <form ng-submit="joinChannel()">
+                    <input type="text" ng-model="form.channel" size="50" placeholder="Channel name">
+                    <input type="submit" value="Join">
+                </form>
+            </tab>
+
+        </tabset>
+
+    </div>
+
+</div>
+
+
+// bower:js
+
+// endbower
+
+
+<script src="/js/app.js"></script>
+<script src="/js/controllers/ChatController.js"></script>
+<script src="/js/controllers/AllChatController.js"></script>
+<script src="/js/controllers/UserHeaderController.js"></script>
+<script src="/js/controllers/DiscoveryController.js"></script>
+<script src="/js/services/socket.js"></script>
+<script src="/js/services/command.js"></script>
+<script src="/js/services/focus.js"></script>
+
+<script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-60532058-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+
+
