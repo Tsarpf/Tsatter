@@ -10,7 +10,7 @@
     "irc": "*",
     "jade": "*",
     "mocha": "*",
-    "mongoose": "*",
+    "mongoose": "3.8",
     "passport": "*",
     "passport-local-mongoose": "*",
     "passport.socketio": "*",
