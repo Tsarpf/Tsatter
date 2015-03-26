@@ -11,7 +11,7 @@ module.exports = function(app) {
 
     app.get('/partials/:name', function(req, res){
         var name = req.params.name;
-        res.render('partials/' + name);
+        res.render('partials/' + name + '.html');
     });
 
     app.get('/activity/', function(req, res, next) {
@@ -69,6 +69,6 @@ module.exports = function(app) {
     });
 
     app.all('/*', function (req, res) {
-        res.render('index');
+        res.render('index.html');
     });
 };

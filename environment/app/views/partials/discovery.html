@@ -1,0 +1,20 @@
+<div infinite-scroll="infiniteScrollDown()" infinite-scroll-distance="0" infinite-scroll-immediate-check="false">
+
+    <button class="btn btn-block btn-lg btn-info vspace" type="button" ng-click="refresh()">  Refresh </button>
+
+    <div deckgrid class="deckgrid row" source="results">
+
+        <div class="chat-summary tile">
+            <p class="centered-text chat-summary-messages">
+                <strong>{{card.name}}</strong>
+            </p>
+
+            <img src="{{card.imageUrls[0]}}", class="chat-summary-picture">
+            <ts-card-messages messages="{{card.messages}}"></ts-card-messages>
+            <input class="btn btn-primary btn-large btn-block" type="button" ng-click="mother.joinChannel(card.name)" value="Join">
+        </div>
+    </div>
+
+</div>
+
+<p> Suggestions etc. welcome. Contact by email: admin at tsatter.com</p>

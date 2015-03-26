@@ -27,8 +27,7 @@ module.exports = function(grunt) {
             },
             task: {
                 src: [
-                    'app/views/header.jade',
-                    'app/views/layout.jade'
+                    'app/views/index.html'
                 ]
             }
         }
