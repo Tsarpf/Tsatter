@@ -54,7 +54,7 @@ module.exports = function(grunt) {
         copy:{
             app: {
                 expand: true,
-                src: ['app/**/*.js', 'app/**/*.jade'],
+                src: ['app/**/*.js', 'app/**/*.html'],
                 dest: 'dist/'
             },
             server: {
