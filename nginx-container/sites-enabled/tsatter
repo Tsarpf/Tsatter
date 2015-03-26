@@ -1,11 +1,13 @@
 server {
 	listen 80;
-	root /var/www/dist/;
-	index index.html;
-
 	server_name localhost;
 
-	location / {
-		try_files $uri $uri/ /index.html;
-	}
+    root /var/www/dist/;
+    index app/views/index.html;
+
+
+
+    location /partials/ {
+	    alias /var/www/dist/app/views/partials/;
+    }
 }
