@@ -1,7 +1,7 @@
 /**
  * Created by Tsarpf on 2/13/15.
  */
-angular.module('tsatter').factory('command', function($rootScope, socket) {
+angular.module('tsatter').factory('command', ['$rootScope', 'socket', function($rootScope, socket) {
     return {
         send: function(message) {
             if(typeof message === 'string') {
@@ -11,4 +11,4 @@ angular.module('tsatter').factory('command', function($rootScope, socket) {
             socket.send({command: message});
         }
     }
-});
+}]);
