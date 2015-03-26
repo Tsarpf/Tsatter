@@ -14,7 +14,7 @@ var app = angular.module('tsatter', [
 app.directive('tsChat', ['$timeout', function($timeout) {
     return {
         restrict: "E",
-        templateUrl: '/partials/chat',
+        templateUrl: '/partials/chat.html',
         link: function(scope, element, attrs) {
             scope.channelName = attrs.channelName;
             $timeout(function() {
@@ -63,20 +63,20 @@ var cleanHTML = function(htmldes) {
 app.directive('tsDiscovery', function() {
     return {
         restrict: "E",
-        templateUrl: 'partials/discovery'
+        templateUrl: 'partials/discovery.html'
     };
 });
 
 app.directive('tsChatMessage', function() {
     return {
         restrict: "E",
-        templateUrl: '/partials/chatmessage'
+        templateUrl: '/partials/chatmessage.html'
     };
 });
 
 app.directive('tsMediaBar', function() {
     return {
         restrict: "E",
-        templateUrl: '/partials/mediabar'
+        templateUrl: '/partials/mediabar.html'
     };
 });
