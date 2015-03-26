@@ -35,29 +35,13 @@ module.exports = function(grunt) {
 
 
         useminPrepare: {
-            jade: ['dist/app/views/*.jade'],
+            html: ['dist/app/views/index.html'],
             options: {
-                dest: 'dist',
-                patterns: {
-                    jade: require('usemin-patterns').jade
-                }
+                dest: 'dist'
             }
         },
         usemin:{
-            jade: ['dist/app/views/*.jade'],
-            options: {
-                patterns: {
-                    jade: require('usemin-patterns').jade
-                },
-                blockReplacements: {
-                    css: function (block) {
-                        return "link(rel='stylesheet', href='" + block.dest.replace('public/', '') + "')";
-                    },
-                    js: function (block) {
-                        return "script(src='" + block.dest.replace('public/', '') + "')";
-                    }
-                }
-            }
+            html: ['dist/app/views/index.html']
         },
         filerev: {
             stylesheets: {
