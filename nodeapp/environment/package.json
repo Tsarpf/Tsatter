@@ -8,7 +8,7 @@
     "express-session": "*",
     "grunt": "*",
     "irc": "*",
-    "jade": "*",
+    "ejs": "*",
     "mocha": "*",
     "mongoose": "3.8",
     "passport": "*",
