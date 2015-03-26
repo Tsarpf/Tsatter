@@ -14,5 +14,8 @@ npm test
 forever start --minUptime 8000 -a -l ../forever.log -o ../out.log -e ../err.log -c "npm start" ./
 forever list
 echo "tail -f src/out.log to see what the server is doing"
-echo "Executing: $@"
-exec "$@"
+#echo "Executing: $@"
+#exec "$@"
+grunt build
+
+
