@@ -3,6 +3,7 @@ var express = require('express'),
     mongoose = require('mongoose'),
     session = require('express-session'),
     https = require('https'),
+    ejs = require('ejs'),
     app = express();
 
 
@@ -39,8 +40,10 @@ var runServer = function(options) {
     app.use(bodyParser.urlencoded({extended:true}));
 
     //Use jade
-    app.set('view engine', 'jade');
+    //app.set('view engine', 'html');
     app.set('views', __dirname + '/../app/views');
+    app.engine('html', require('ejs').renderFile);
+
 
     //Always use pretty html.
     app.locals.pretty = true;
