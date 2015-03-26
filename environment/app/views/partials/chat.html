@@ -10,11 +10,11 @@
                 
             
         <div class="tsmedia col-xs-4" scroll-glue="mediaGlued">
-            ts-media-bar
+            <ts-media-bar></ts-media-bar>
         </div>
 
         <input ng-show="!editingNick" type="button" value="{{nick}}" class="col-xs-1 own-nick-area btn default" ng-click="editNick()">
         <input ng-show="editingNick" focus-on="editNick" ng-blur="stopEditingNick()" type="text" class="col-xs-1 own-nick-area" ng-model="nick" ng-click="ownNickAreaClicked()" ng-keyup="$event.keyCode == 13 && ownNickAreaSubmit()">
-        <input ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg(>" ng-model="message" type="text" class="newMessage col-xs-7" focus-on="showChannel">
+        <input ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg()" ng-model="message" type="text" class="newMessage col-xs-7" focus-on="showChannel">
     </div>
  </span>

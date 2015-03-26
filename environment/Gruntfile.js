@@ -27,7 +27,7 @@ module.exports = function(grunt) {
             },
             task: {
                 src: [
-                    'app/views/index.html',
+                    'app/views/index.html'
                 ]
             }
         }

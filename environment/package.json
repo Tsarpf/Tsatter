@@ -10,7 +10,7 @@
     "grunt-bower-task": "*",
     "grunt-wiredep": "*",
     "irc": "*",
-    "jade": "*",
+    "ejs": "*",
     "mocha": "*",
     "mongoose": "*",
     "passport": "*",
