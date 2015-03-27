@@ -81,11 +81,19 @@ module.exports = function(grunt) {
         },
         clean: {
             dist: ['dist/*']
+        },
+        watch: {
+            everything: {
+                files: ['public/**', 'app/views/**'],
+                tasks: ['build']
+            }
         }
 
     });
 
     grunt.registerTask('deps',['bower','wiredep']);
+
+    grunt.registerTask('watchStatic', ['watch']);
 
     grunt.registerTask('build', [
         'clean:dist',
