@@ -3,17 +3,6 @@ var passport = require('passport'),
     User = require('../app/models/user');
 
 module.exports = function(app) {
-    app.post('/login', function(req, res, next) {
-        passport.authenticate('local', function(err, user, info) {
-            res.redirect('/');
-        })(req,res,next);
-    });
-
-    app.get('/partials/:name', function(req, res){
-        var name = req.params.name;
-        res.render('partials/' + name + '.html');
-    });
-
     app.get('/activity/', function(req, res, next) {
         var from = parseInt(req.query.from);
         var to = parseInt(req.query.to);
@@ -66,9 +55,5 @@ module.exports = function(app) {
                 res.json(messages);
             }
         });
-    });
-
-    app.all('/*', function (req, res) {
-        res.render('index.html');
     });
 };
