@@ -40,7 +40,7 @@ module.exports = function(grunt) {
                 dest: 'dist'
             }
         },
-        usemin:{
+        usemin: {
             html: ['dist/app/views/index.html']
         },
         filerev: {
@@ -51,7 +51,19 @@ module.exports = function(grunt) {
                 src: 'dist/js/*.js'
             }
         },
-        copy:{
+        copy: {
+            bootstrapFonts: {
+                expand: true,
+                cwd: 'public/libs/bootstrap/fonts/',
+                src: ['**'],
+                dest: 'dist/public/fonts/'
+            },
+            flatFonts: {
+                expand: true,
+                cwd: 'public/libs/flat-ui/fonts/',
+                src: ['**'],
+                dest: 'dist/public/fonts/'
+            },
             app: {
                 expand: true,
                 src: ['app/**/*.js', 'app/**/*.html'],
@@ -68,7 +80,7 @@ module.exports = function(grunt) {
             }
         },
         clean: {
-            dist: ['dist']
+            dist: ['dist/*']
         }
 
     });

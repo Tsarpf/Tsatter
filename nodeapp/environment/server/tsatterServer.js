@@ -18,7 +18,6 @@ var runServer = function(options) {
     var mongooseConn;
     var connect = function() {
         var options = {server: {socketOptions: {keepAlive: 1}}};
-        //mongooseConn = mongoose.createConnection("mongodb://localhost/", options);
         if(process.env.TRAVIS) {
             //travis yay
             mongooseConn = mongoose.connect("mongodb://localhost/", options);
