@@ -65,5 +65,7 @@ angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 
         $scope.$emit('JOIN', {args: [channel]});
     };
 
-    $scope.refresh();
+    $timeout(function() {
+        $scope.refresh();
+    });
 }]);
