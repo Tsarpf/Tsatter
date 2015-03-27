@@ -106,14 +106,3 @@ if(!process.env.TRAVIS) {
 
     });
 }
-
-describe('File serving', function() {
-    it('should load a page containing tsatter when requesting index', function(done) {
-        agent
-        .get('/')
-        .expect('Content-Type', /html/)
-        .expect(/tsatter/)
-        .expect(200)
-        .end(done)
-    });
-});
