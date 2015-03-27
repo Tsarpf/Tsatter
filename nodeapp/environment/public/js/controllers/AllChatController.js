@@ -1,8 +1,9 @@
-angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootScope', '$scope', 'socket', 'command', '$location', function($timeout, $rootScope, $scope, socket, command, $location) {
+angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootScope', '$scope', 'socket', 'command', '$location', 'focus', function($timeout, $rootScope, $scope, socket, command, $location, focus) {
     $scope.form = {
         channel: ''
     };
     $scope.userChannels = [];
+    $scope.discoState = {active: true};
 
     $scope.joinChannel = function() {
         var channel = $scope.form.channel;
@@ -105,6 +106,9 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
                 break;
             }
         }
+        $timeout(function() {
+            $scope.discoState.active = true;
+        });
     };
 
     $scope.$on('PART', function(event, data) {
