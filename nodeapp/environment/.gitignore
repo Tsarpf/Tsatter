@@ -3,3 +3,4 @@ npm-debug.log
 .tmp/
 dist/*
 public/libs
+server-out.log
