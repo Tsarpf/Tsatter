@@ -1,16 +1,14 @@
 <span ng-controller="ChatController as chatCtrl" class="chat vspace col-xs-12">
     <div class="row tscontainer">
         <div class="users col-xs-1">
-            <p ng-repeat="mod in mods"> <b> {{mod}} </b> </p>
-            <p ng-repeat="nonmod in nonmods"> <small>{{nonmod}} </small> </p>
+            <ts-user-bar></ts-user-bar>
         </div>
 
-        <div
-                class="messages col-xs-7"
-                scroll-glue="glued"
-                lr-infinite-scroll="infiniteScrollDown"
-                lr-infinite-scroll-up="infiniteScrollUp"
-                scroll-threshold="100">
+        <div class="messages col-xs-7"
+            scroll-glue="glued"
+            lr-infinite-scroll="infiniteScrollDown"
+            lr-infinite-scroll-up="infiniteScrollUp"
+            scroll-threshold="100">
 
             <ts-chat-message ng-repeat="message in messages"> </ts-chat-message>
         </div>
