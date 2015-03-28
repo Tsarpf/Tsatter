@@ -15,7 +15,7 @@ Tsatter
 - install docker
 - run setup.sh
 - edit files in the environment folder, changes are automatically synced to the container and the server within the container restarted (using nodemon or forever)
-- node serves non-minified assets to port 3000, use that to immediately see changes working.
+- node serves non-minified assets to port 3000, use that to immediately see changes.
 - Node also builds the whole website for nginx every time a change to the front-end code is made. The build will be served by nginx to port 80 as soon as it's ready. (Might 404 while building)
 
 ####About:
