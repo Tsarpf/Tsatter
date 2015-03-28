@@ -393,9 +393,21 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         return date;
     };
 
+    $scope.clickKick = function(nick) {
+       kick(['kick', nick]);
+    };
+    $scope.clickMod = function(nick) {
+        op(['op', nick]);
+    };
+    $scope.clickUnMod = function(nick) {
+        deop(['deop', nick]);
+    };
+
     var customCommandHandlers = {
         op: op,
-        part: part
+        deop: deop,
+        part: part,
+        kick: kick
     };
 
     //Maybe make these a bit more obvious
@@ -403,8 +415,16 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         command.send(['part', $scope.channelName]);
     }
 
+    function kick(args) {
+        command.send(['kick', $scope.channelName, args[1]]);
+    }
+
     function op(args) {
         command.send(['mode', $scope.channelName, '+o', args[1]]);
+    }
+
+    function deop(args) {
+        command.send(['mode', $scope.channelName, '-o', args[1]]);
     }
 
     $scope.editNick = function() {

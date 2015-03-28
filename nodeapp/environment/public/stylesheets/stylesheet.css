@@ -9,6 +9,13 @@
     font-size: smaller;
 }
 
+.user-controls {
+    list-style: none;
+    margin: 0;
+    padding-left: 10px;
+
+}
+
 .clickable-element {
     cursor: pointer;
 }
