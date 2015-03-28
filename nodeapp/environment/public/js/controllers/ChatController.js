@@ -230,7 +230,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             }
             else {
                 console.log('no handler for:');
-                console.log(event);
                 console.log(data);
             }
         });
@@ -295,6 +294,29 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         $scope.removeNick(data.args[1]);
         $scope.addServerMessage(msg);
     };
+    $scope.mode = function(data) {
+        console.log(data);
+        switch(data.args[1]) {
+            case '+o':
+                var idx = $scope.nonmods.indexOf(data.args[2]);
+                if(idx >= 0) {
+                    $scope.nonmods.splice(idx, 1);
+                    $scope.mods.push(data.args[2]);
+                }
+                $scope.addServerMessage(data.nick + ' made ' + data.args[2] + ' a moderator');
+                break;
+            case '-o':
+                idx = $scope.mods.indexOf(data.args[2]);
+                if(idx >= 0) {
+                    $scope.mods.splice(idx, 1);
+                    $scope.nonmods.push(data.args[2]);
+                }
+                $scope.addServerMessage(data.nick + ' removed operator rights from ' + data.args[2]);
+                break;
+            default:
+                break;
+        }
+    };
     $scope.handler = {
         PRIVMSG: $scope.privmsg,
         JOIN: $scope.join,
@@ -303,6 +325,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         QUIT: $scope.quit,
         NICK: $scope.nick,
         KICK: $scope.kick,
+        MODE: $scope.mode,
         err_erroneusnickname: $scope.errnick, //its erroneous not erroneus :(
         err_nicknameinuse:  $scope.nicknameinuse,
         activate: $scope.activate
