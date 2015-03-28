@@ -12,8 +12,7 @@ angular.module('tsatter').controller('ChatController', [
     '$q',
 function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll, $q) {
     $scope.messages = [];
-    $scope.mods = [];
-    $scope.nonmods = [];
+    $scope.users = {};
     $scope.mediaList = [];
     $scope.glued = true;
     $scope.mediaGlued = true;
@@ -242,22 +241,33 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         $scope.addServerMessage(data.nick + ' left the channel');
     };
     $scope.names = function(data) {
-        $scope.mods = [];
-        $scope.nonmods = [];
+        $scope.users = {};
         var nicks = Object.keys(data.nicks);
         for(var i = 0; i < nicks.length; i++) {
-            var status = data.nicks[nicks[i]];
-            console.log(nicks[i] + ' ' + status);
-            if(status === '@') {
-                $scope.mods.push(nicks[i]);
+            var nick = nicks[i];
+            var status = data.nicks[nick];
+            if(status === '@') {
+                status = 'op-user';
+            }
+            else if(status === 'v') {
+                status = 'voice-user';
             }
             else {
-                $scope.nonmods.push(nicks[i]);
+                status = 'normal-user';
             }
+            $scope.users[nick] = {
+                nick: nick,
+                status: status,
+                showControl : false
+            };
         }
     };
     $scope.join = function(data) {
-        $scope.nonmods.push(data.nick);
+        $scope.users[data.nick] = {
+            nick: data.nick,
+            status: 'normal-user',
+            showControl: false
+        };
         $scope.addServerMessage(data.nick + ' joined the channel');
     };
     $scope.privmsg = function(data) {
@@ -298,19 +308,11 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         console.log(data);
         switch(data.args[1]) {
             case '+o':
-                var idx = $scope.nonmods.indexOf(data.args[2]);
-                if(idx >= 0) {
-                    $scope.nonmods.splice(idx, 1);
-                    $scope.mods.push(data.args[2]);
-                }
+                $scope.users[data.args[2]].status = 'op-user';
                 $scope.addServerMessage(data.nick + ' made ' + data.args[2] + ' a moderator');
                 break;
             case '-o':
-                idx = $scope.mods.indexOf(data.args[2]);
-                if(idx >= 0) {
-                    $scope.mods.splice(idx, 1);
-                    $scope.nonmods.push(data.args[2]);
-                }
+                $scope.users[data.args[2]].status = 'normal-user';
                 $scope.addServerMessage(data.nick + ' removed operator rights from ' + data.args[2]);
                 break;
             default:
@@ -332,32 +334,13 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     };
 
     $scope.replaceNick = function(nick, newNick) {
-        //Eww y u so ugly
-        var idx = $scope.nonmods.indexOf(nick);
-        if(idx >= 0) {
-            $scope.nonmods.splice(idx, 1, newNick);
-        }
-        else {
-            idx = $scope.mods.indexOf(nick);
-            if(idx >= 0) {
-                $scope.mods.splice(idx, 1, newNick);
-            }
-        }
+        $scope.users[newNick] = nick;
+        $scope.users[newNick].nick = nick;
+        delete $scope.users[nick];
     };
 
     $scope.removeNick = function(nick) {
-        for(var i = 0; i < $scope.nonmods.length; i++) {
-            if($scope.nonmods[i] === nick) {
-                $scope.nonmods.splice(i, 1);
-                return;
-            }
-        }
-        for(i = 0; i < $scope.mods.length; i++) {
-            if($scope.mods[i] === nick) {
-                $scope.mods.splice(i, 1);
-                return;
-            }
-        }
+        delete $scope.users[nick];
     };
 
     $scope.addServerMessage = function(message) {

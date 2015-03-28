@@ -74,6 +74,13 @@ app.directive('tsChatMessage', function() {
     };
 });
 
+app.directive('tsUserControls', function() {
+    return {
+        restrict: "E",
+        templateUrl: 'partials/usercontrols.html'
+    };
+});
+
 app.directive('tsUserBar', function() {
     return {
         restrict: "E",
