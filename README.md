@@ -5,7 +5,8 @@ Tsatter
 ####Probably running the newest version here: http://tsatter.com
 ####You can also join the same channels by connecting to tsatter.com using your favorite IRC-client
 
-###Development/deployment works best on Linux. On Windows there's an outdated vagrant configuration that needs some work and on MacOSX it might need a bit of toying with super user privileges etc.
+
+#####Development/deployment works best on Linux. On Windows there's an outdated vagrant configuration that needs some work and on MacOSX it might need a bit of toying with super user privileges etc.
 
 ###How to deploy
 - install docker
