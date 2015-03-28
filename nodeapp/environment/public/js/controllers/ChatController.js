@@ -123,13 +123,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     };
 
     $scope.infiniteScrollDown = function() {
-        //numbers go up since the last message has the highest index
-        //console.log('go down');
-
-        //console.log('bottom at: ' + $scope.infiniteBottomLocation);
-
-        //div(class="single-message", id="{{channelName.substring(1)}}__{{message.idx}}")
-
         if($scope.infiniteReachedBottom) {
             //console.log('already reached bottom');
             return;
@@ -248,23 +241,17 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         var idx = $scope.users.indexOf(data.nick);
         if(idx < 0) return;
         $scope.users.splice(idx, 1);
-        if($scope.infiniteReachedBottom) {
-            $scope.addServerMessage(data.nick + ' left the channel');
-        }
+        $scope.addServerMessage(data.nick + ' left the channel');
     };
     $scope.names = function(data) {
         $scope.users = Object.keys(data.nicks);
     };
     $scope.join = function(data) {
         $scope.users.push(data.nick);
-        if($scope.infiniteReachedBottom) {
-            $scope.addServerMessage(data.nick + ' joined the channel');
-        }
+        $scope.addServerMessage(data.nick + ' joined the channel');
     };
     $scope.privmsg = function(data) {
-        if($scope.infiniteReachedBottom) {
-            $scope.addMessage(data.args[1], data.nick);
-        }
+        $scope.addMessage(data.args[1], data.nick);
     };
     $scope.nick = function(data) {
         if(data.nick === $scope.nick) {
@@ -272,35 +259,33 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         }
         var idx = $scope.users.indexOf(data.nick);
         $scope.users.splice(idx, 1, data.args[0]);
-        if($scope.infiniteReachedBottom) {
-            $scope.addServerMessage(data.nick + ' is now known as ' + data.args[0]);
-        }
+        $scope.addServerMessage(data.nick + ' is now known as ' + data.args[0]);
     };
     $scope.quit = function(data) {
         console.log('got quit');
         var idx = $scope.users.indexOf(data.nick);
         if(idx < 0) return;
         $scope.users.splice(idx, 1);
-        if($scope.infiniteReachedBottom) {
-            $scope.addServerMessage(data.nick + ' quit');
-        }
+        $scope.addServerMessage(data.nick + ' quit');
     };
     $scope.errnick = function(data) {
-        if($scope.infiniteReachedBottom) {
-            $scope.addServerMessage(data.args[data.args.length - 1]);
-        }
+        $scope.addServerMessage(data.args[data.args.length - 1]);
     };
     $scope.nicknameinuse = function(data) {
-        if($scope.infiniteReachedBottom) {
-            $scope.addServerMessage(data.args[data.args.length - 1]);
-        }
+        $scope.addServerMessage(data.args[data.args.length - 1]);
     };
     $scope.activate = function(data) {
         $timeout(function() {
             focus('showChannel');
         });
     };
-
+    $scope.kick = function(data) {
+        var msg = data.args[1] + ' was kicked by ' + data.nick;
+        if(data.args[2]) {
+            msg += ', reason: "' + data.args[2] + '"';
+        }
+        $scope.addServerMessage(msg);
+    };
     $scope.handler = {
         PRIVMSG: $scope.privmsg,
         JOIN: $scope.join,
@@ -308,13 +293,16 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         PART: $scope.part,
         QUIT: $scope.quit,
         NICK: $scope.nick,
+        KICK: $scope.kick,
         err_erroneusnickname: $scope.errnick, //its erroneous not erroneus :(
         err_nicknameinuse:  $scope.nicknameinuse,
         activate: $scope.activate
     };
 
     $scope.addServerMessage = function(message) {
-        $scope.addMessage(message, 'server');
+        if($scope.infiniteReachedBottom) {
+            $scope.addMessage(message, 'server');
+        }
     };
 
     $scope.addBackendMessage = function(message, top) {
