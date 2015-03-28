@@ -1,9 +1,10 @@
-angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootScope', '$scope', 'socket', 'command', '$location', 'focus', function($timeout, $rootScope, $scope, socket, command, $location, focus) {
+angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootScope', '$scope', 'socket', 'command', '$location', 'flash', function($timeout, $rootScope, $scope, socket, command, $location, flash) {
     $scope.form = {
         channel: ''
     };
     $scope.userChannels = [];
     $scope.discoState = {active: true};
+    $scope.adBlock = false;
 
     $scope.joinChannel = function() {
         var channel = $scope.form.channel;
@@ -133,4 +134,22 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
         loggedIn: false,
         nickname: 'anon'
     };
+
+    function adBlockNotDetected() {
+        $scope.adBlock = false;
+    }
+    function adBlockDetected() {
+        $scope.adBlock = true;
+    }
+    if(typeof fuckAdBlock === 'undefined') {
+        adBlockDetected();
+    } else {
+        fuckAdBlock.onDetected(adBlockDetected);
+        fuckAdBlock.onNotDetected(adBlockNotDetected);
+        // and|or
+        fuckAdBlock.on(true, adBlockDetected);
+        fuckAdBlock.on(false, adBlockNotDetected);
+        // and|or
+        fuckAdBlock.on(true, adBlockDetected).onNotDetected(adBlockNotDetected);
+    }
 }]);
