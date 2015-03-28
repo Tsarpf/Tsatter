@@ -1,5 +1,30 @@
+<!--
 <p ng-repeat="user in users" class="{{user.status}} clickable-element" ng-click="user.showControl = !user.showControl">
     {{user.nick}}
     <ts-user-controls ng-show="users[nick].status === 'op-user' && user.showControl"></ts-user-controls>
 </p>
+-->
+
+<div class="clickable-element" ng-repeat="user in users" ng-click="user.showControl = !user.showControl">
+    <!-- the piece of shit caret won't inline <span style="display:inline-block" class="caret"></span> <span style="display:inline-block"> {{user.nick}} </span>-->
+    <span class="clickable-element {{user.status}}">
+        {{user.nick}}
+    </span>
+    <ul class="user-controls" ng-show="users[nick].status === 'op-user' && user.showControl" >
+        <li ng-click="clickKick(user.nick)">
+            kick
+        </li>
+        <li ng-click="clickMod(user.nick)" ng-show="user.status !== 'op-user'">
+            mod
+        </li>
+        <li ng-click="clickUnMod(user.nick)" ng-show="user.status === 'op-user'" class="clickable-element">
+            unmod
+        </li>
+        <!--
+        <li > <a class="clickable-element"> kick</a></li>
+        <li ng-show="user.status !== 'op-user'"> <a class="clickable-element"> mod </a></li>
+        <li ng-show="user.status === 'op-user'"> <a class="clickable-element"> unmod</a></li>
+        -->
+    </ul>
+</div>
 
