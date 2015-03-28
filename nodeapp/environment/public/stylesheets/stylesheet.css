@@ -168,6 +168,7 @@ body {
 }
 
 .leaderboard-ad {
+    padding-top: 45px;
     float: right;
 }
 
@@ -180,5 +181,6 @@ h6 {
     margin-top: 0;
     margin-bottom: 30px;
     color: orange;
+    float: left;
 }
 
