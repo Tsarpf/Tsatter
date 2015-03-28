@@ -12,7 +12,8 @@ angular.module('tsatter').controller('ChatController', [
     '$q',
 function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll, $q) {
     $scope.messages = [];
-    $scope.users = [];
+    $scope.mods = [];
+    $scope.nonmods = [];
     $scope.mediaList = [];
     $scope.glued = true;
     $scope.mediaGlued = true;
@@ -238,16 +239,26 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     };
 
     $scope.part = function(data) {
-        var idx = $scope.users.indexOf(data.nick);
-        if(idx < 0) return;
-        $scope.users.splice(idx, 1);
+        $scope.removeNick(data.nick);
         $scope.addServerMessage(data.nick + ' left the channel');
     };
     $scope.names = function(data) {
-        $scope.users = Object.keys(data.nicks);
+        $scope.mods = [];
+        $scope.nonmods = [];
+        var nicks = Object.keys(data.nicks);
+        for(var i = 0; i < nicks.length; i++) {
+            var status = data.nicks[nicks[i]];
+            console.log(nicks[i] + ' ' + status);
+            if(status === '@') {
+                $scope.mods.push(nicks[i]);
+            }
+            else {
+                $scope.nonmods.push(nicks[i]);
+            }
+        }
     };
     $scope.join = function(data) {
-        $scope.users.push(data.nick);
+        $scope.nonmods.push(data.nick);
         $scope.addServerMessage(data.nick + ' joined the channel');
     };
     $scope.privmsg = function(data) {
@@ -257,15 +268,23 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         if(data.nick === $scope.nick) {
             $scope.nick = data.args[0];
         }
-        var idx = $scope.users.indexOf(data.nick);
-        $scope.users.splice(idx, 1, data.args[0]);
+
+        //Eww y u so ugly
+        var idx = $scope.nonmods.indexOf(data.nick);
+        if(idx >= 0) {
+            $scope.nonmods.splice(idx, 1, data.args[0]);
+        }
+        else {
+            idx = $scope.mods.indexOf(data.nick);
+            if(idx >= 0) {
+                $scope.mods.splice(idx, 1, data.args[0]);
+            }
+        }
         $scope.addServerMessage(data.nick + ' is now known as ' + data.args[0]);
     };
     $scope.quit = function(data) {
         console.log('got quit');
-        var idx = $scope.users.indexOf(data.nick);
-        if(idx < 0) return;
-        $scope.users.splice(idx, 1);
+        $scope.removeNick(data.nick);
         $scope.addServerMessage(data.nick + ' quit');
     };
     $scope.errnick = function(data) {
@@ -284,6 +303,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         if(data.args[2]) {
             msg += ', reason: "' + data.args[2] + '"';
         }
+        $scope.removeNick(data.args[1]);
         $scope.addServerMessage(msg);
     };
     $scope.handler = {
@@ -297,6 +317,21 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         err_erroneusnickname: $scope.errnick, //its erroneous not erroneus :(
         err_nicknameinuse:  $scope.nicknameinuse,
         activate: $scope.activate
+    };
+
+    $scope.removeNick = function(nick) {
+        for(var i = 0; i < $scope.nonmods.length; i++) {
+            if($scope.nonmods[i] === nick) {
+                $scope.nonmods.splice(i, 1);
+                return;
+            }
+        }
+        for(i = 0; i < $scope.mods.length; i++) {
+            if($scope.mods[i] === nick) {
+                $scope.mods.splice(i, 1);
+                return;
+            }
+        }
     };
 
     $scope.addServerMessage = function(message) {

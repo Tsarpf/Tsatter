@@ -1,7 +1,8 @@
 <span ng-controller="ChatController as chatCtrl" class="chat vspace col-xs-12">
     <div class="row tscontainer">
         <div class="users col-xs-1">
-            <p ng-repeat="user in users"> {{user}} </p>
+            <p ng-repeat="mod in mods"> <b> {{mod}} </b> </p>
+            <p ng-repeat="nonmod in nonmods"> <small>{{nonmod}} </small> </p>
         </div>
 
         <div
