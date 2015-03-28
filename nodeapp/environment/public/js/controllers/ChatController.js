@@ -322,8 +322,8 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     };
 
     $scope.replaceNick = function(nick, newNick) {
-        $scope.users[newNick] = nick;
-        $scope.users[newNick].nick = nick;
+        $scope.users[newNick] = $scope.users[nick];
+        $scope.users[newNick].nick = newNick;
         delete $scope.users[nick];
     };
 
