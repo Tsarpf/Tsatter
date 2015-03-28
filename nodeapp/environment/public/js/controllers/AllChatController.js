@@ -114,6 +114,10 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     $scope.$on('PART', function(event, data) {
         $scope.removeChannel(data.args[0]);
     });
+    $scope.$on('KICK', function(event, data) {
+        console.log(data);
+        $scope.removeChannel(data.args[0]);
+    });
 
     $scope.$on('QUIT', function(event, data) {
         console.log('got quit');
