@@ -268,18 +268,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         if(data.nick === $scope.nick) {
             $scope.nick = data.args[0];
         }
-
-        //Eww y u so ugly
-        var idx = $scope.nonmods.indexOf(data.nick);
-        if(idx >= 0) {
-            $scope.nonmods.splice(idx, 1, data.args[0]);
-        }
-        else {
-            idx = $scope.mods.indexOf(data.nick);
-            if(idx >= 0) {
-                $scope.mods.splice(idx, 1, data.args[0]);
-            }
-        }
+        $scope.replaceNick(data.nick, data.args[0]);
         $scope.addServerMessage(data.nick + ' is now known as ' + data.args[0]);
     };
     $scope.quit = function(data) {
@@ -317,6 +306,20 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         err_erroneusnickname: $scope.errnick, //its erroneous not erroneus :(
         err_nicknameinuse:  $scope.nicknameinuse,
         activate: $scope.activate
+    };
+
+    $scope.replaceNick = function(nick, newNick) {
+        //Eww y u so ugly
+        var idx = $scope.nonmods.indexOf(nick);
+        if(idx >= 0) {
+            $scope.nonmods.splice(idx, 1, newNick);
+        }
+        else {
+            idx = $scope.mods.indexOf(nick);
+            if(idx >= 0) {
+                $scope.mods.splice(idx, 1, newNick);
+            }
+        }
     };
 
     $scope.removeNick = function(nick) {
