@@ -5,6 +5,8 @@ Tsatter
 ####Probably running the newest version here: http://tsatter.com
 ####You can also join the same channels by connecting to tsatter.com using your favorite IRC-client
 
+###Development/deployment works best on Linux. On Windows there's an outdated vagrant configuration that needs some work and on MacOSX it might need a bit of toying with super user privileges etc.
+
 ###How to deploy
 - install docker
 - run setup.sh
@@ -16,7 +18,7 @@ Tsatter
 - run setup.sh
 - edit files in the environment folder, changes are automatically synced to the container and the server within the container restarted (using nodemon or forever)
 - node serves non-minified assets to port 3000, use that to immediately see changes.
-- Node also builds the whole website for nginx every time a change to the front-end code is made. The build will be served by nginx to port 80 as soon as it's ready. (Might 404 while building)
+- Node also builds the whole website for nginx every time a change to the front-end code is made. The build will be served by nginx at port 80 as soon as it's ready. (Might 404 while building)
 
 ####About:
 A  'next generation image board' that combines image boards and chatting (for example, IRC). Key technologies: MEAN-stack, Grunt, Bower, Nginx, Docker, Inspircd.
