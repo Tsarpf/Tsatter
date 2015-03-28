@@ -298,9 +298,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     };
     $scope.kick = function(data) {
         var msg = data.args[1] + ' was kicked by ' + data.nick;
-        if(data.args[2]) {
-            msg += ', reason: "' + data.args[2] + '"';
-        }
         $scope.removeNick(data.args[1]);
         $scope.addServerMessage(msg);
     };
