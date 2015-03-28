@@ -1,2 +1,5 @@
-<p ng-repeat="mod in mods"> <b> {{mod}} </b> </p>
-<p ng-repeat="nonmod in nonmods"> <small>{{nonmod}} </small> </p>
+<p ng-repeat="user in users" class="{{user.status}} clickable-element" ng-click="user.showControl = !user.showControl">
+    {{user.nick}}
+    <ts-user-controls ng-show="users[nick].status === 'op-user' && user.showControl"></ts-user-controls>
+</p>
+

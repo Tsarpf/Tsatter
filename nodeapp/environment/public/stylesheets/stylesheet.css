@@ -2,6 +2,17 @@
 
 .vspace { margin-top: 15px; }
 
+.op-user {
+    font-weight: bold;
+}
+.normal-user {
+    font-size: smaller;
+}
+
+.clickable-element {
+    cursor: pointer;
+}
+
 .loginfield{
     display: inline;
 }
