@@ -153,7 +153,11 @@
     animation: enter 250ms cubic-bezier(0.445, 0.050, 0.550, 0.950);
     display: block;
     position: relative;
-} 
+}
+
+.ad-block-info {
+    background-color: #F1C40F;
+}
 
 .new-channel {
     width: 25em;
@@ -169,9 +173,12 @@ body {
 
 h1 {
     color: orange;
+    margin-bottom: 5px;
     float: left;
 }
 h6 {
+    margin-top: 0;
+    margin-bottom: 30px;
     color: orange;
 }
 
