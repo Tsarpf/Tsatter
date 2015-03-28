@@ -172,15 +172,17 @@ body {
     float: right;
 }
 
+.site-headers {
+    float: left;
+}
+
 h1 {
     color: orange;
     margin-bottom: 5px;
-    float: left;
 }
 h6 {
     margin-top: 0;
     margin-bottom: 30px;
     color: orange;
-    float: left;
 }
 
