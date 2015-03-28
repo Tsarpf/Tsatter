@@ -20,7 +20,9 @@ angular.module('tsatter').factory('socket', ['$rootScope', function($rootScope) 
 
     return {
         listenChannel: function(channel) {
-            channels.push(channel);
+            if(channels.indexOf(channel) < 0) {
+                channels.push(channel);
+            }
             socket.on(channel, function(data) {
                 $rootScope.$apply(function() {
                     $rootScope.$broadcast(channel, data);
