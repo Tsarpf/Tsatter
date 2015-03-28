@@ -62,7 +62,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         var from = -$scope.infiniteStep - 1;
         var to = -1;
         if(hash) {
-            console.log('got hash: ' + hash);
             var targetChannel = '#' + hash.split('__')[0];
             if(targetChannel === $scope.channelName) {
                 var target = parseInt(hash.split('__')[1]);
@@ -104,7 +103,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             });
 
             if(data.length === 0 && $location.hash().length > 1) {
-                console.log('message not found. do a flash message here?');
+               //message not found. do a flash message here?
                 $scope.getBacklog();
                 $scope.glued = true;
             }
@@ -124,7 +123,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
     $scope.infiniteScrollDown = function() {
         if($scope.infiniteReachedBottom) {
-            //console.log('already reached bottom');
             return;
         }
 
@@ -152,7 +150,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
                 $timeout(tm($scope.infiniteBottomLocation));
 
                 $scope.infiniteBottomLocation += data.length;
-                //console.log('other idx: ' + $scope.infiniteBottomLocation);
 
                 for(var i = 0; i < data.length; i++) {
                     $scope.addBackendMessage(data[i]);
@@ -164,10 +161,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
     $scope.infiniteScrollUp = function() {
         //numbers go down since the oldest message has the smallest index 0
-        console.log('go up gfkjdsljdsfg');
-
         if($scope.infiniteReachedTop) {
-            console.log('already reached top');
             return;
         }
 
@@ -206,7 +200,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
                     }
                 };
                 $timeout(tm($scope.infiniteTopLocation));
-                console.log('other idx: ' + $scope.infiniteTopLocation);
                 $scope.infiniteTopLocation -= data.length;
                 if($scope.infiniteTopLocation < 0) {
                     $scope.infiniteTopLocation = 0;
@@ -281,7 +274,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         $scope.addServerMessage(data.nick + ' is now known as ' + data.args[0]);
     };
     $scope.quit = function(data) {
-        console.log('got quit');
         $scope.removeNick(data.nick);
         $scope.addServerMessage(data.nick + ' quit');
     };
@@ -302,7 +294,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         $scope.addServerMessage(msg);
     };
     $scope.mode = function(data) {
-        console.log(data);
         switch(data.args[1]) {
             case '+o':
                 $scope.users[data.args[2]].status = 'op-user';
@@ -349,6 +340,11 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.addBackendMessage = function(message, top) {
         $scope.addMessage(message.message, message.nick, message.timestamp, message.idx, top);
     };
+
+    function spliceSlice(str, index, count, add) {
+        return str.slice(0, index) + (add || "") + str.slice(index + count);
+    }
+
     $scope.addMessage = function(message, nick, timestamp, idx, top) {
         var obj = {message: message, nick: nick, timestamp: getTimestamp(timestamp), idx: idx, class: ''};
         if(top) {
@@ -374,7 +370,9 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
                var num = $scope.mediaCount++;
                $scope.mediaList.push({url: src, idx: num});
-               obj.message = obj.message.replace(src, '[' + num + ']');
+               var idx = obj.message.indexOf(src);
+               obj.message = spliceSlice(obj.message, idx, 0, ' [' + num + '] ');
+               //obj.message = obj.message.replace(src, '[' + num + ']');
            });
         }
     };
@@ -477,8 +475,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             $scope.mediaGlued = !$scope.mediaGlued;
         },
         fail: function(instance) {
-            console.log('fail');
-            // Do stuff
         }
     };
 
