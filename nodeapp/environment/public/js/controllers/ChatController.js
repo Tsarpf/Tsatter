@@ -405,7 +405,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
                var num = $scope.mediaCount++;
                $scope.mediaList.push({url: src, idx: num});
                var idx = obj.message.indexOf(src);
-               obj.message = spliceSlice(obj.message, idx, 0, ' [' + num + '] ');
+               obj.message = spliceSlice(obj.message, idx + src.length, 0, ' [' + num + '] ');
                //obj.message = obj.message.replace(src, '[' + num + ']');
            });
         }
