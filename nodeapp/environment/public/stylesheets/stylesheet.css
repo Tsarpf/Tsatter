@@ -112,6 +112,10 @@
     /*outline: 1px solid orange;*/
 }
 
+.help-box {
+    margin-top: 45px;
+}
+
 .tsmedia {
     height: 90%;
     min-height: 90%;
