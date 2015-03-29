@@ -54,6 +54,8 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             error(error);
     };
     var errorLogger = function(data, status, headers, config) {
+        $scope.infiniteReachedBottom = true;
+        $scope.infiniteReachedTop = true;
         console.log('error!');
     };
 
@@ -66,19 +68,21 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             if(targetChannel === $scope.channelName) {
                 var target = parseInt(hash.split('__')[1]);
 
-                to = parseInt(target + $scope.infiniteStep / 2);
-                from = parseInt(target - $scope.infiniteStep / 2);
+                if(hash.split('__')[1]) {
+                    to = parseInt(target + $scope.infiniteStep / 2);
+                    from = parseInt(target - $scope.infiniteStep / 2);
 
-                //If we're closer than infiniteStep/2 to 0, get more messages after the targeted message
-                if(from <= 0) {
-                    to += (-from);
-                    from = 0;
-                    $scope.infiniteReachedTop = true;
+                    //If we're closer than infiniteStep/2 to 0, get more messages after the targeted message
+                    if(from <= 0) {
+                        to += (-from);
+                        from = 0;
+                        $scope.infiniteReachedTop = true;
+                    }
+
+                    $scope.glued = false;
+                    $scope.infiniteBottomLocation = to;
+                    $scope.infiniteTopLocation = from;
                 }
-
-                $scope.glued = false;
-                $scope.infiniteBottomLocation = to;
-                $scope.infiniteTopLocation = from;
             }
         }
         else {
@@ -104,6 +108,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
             if(data.length === 0 && $location.hash().length > 1) {
                //message not found. do a flash message here?
+                $location.hash('');
                 $scope.getBacklog();
                 $scope.glued = true;
             }
