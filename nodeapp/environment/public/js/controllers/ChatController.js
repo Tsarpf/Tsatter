@@ -353,7 +353,19 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         return str.slice(0, index) + (add || "") + str.slice(index + count);
     }
 
+    function getIdx() {
+        for(var i = $scope.messages.length - 1; i >= 0; i--) {
+            if(typeof $scope.messages[i].idx !== 'undefined') {
+                return $scope.messages[i].idx + 1;
+            }
+        }
+        return 0;
+    }
+
     $scope.addMessage = function(message, nick, timestamp, idx, top) {
+        if(!idx ) {
+            idx = getIdx();
+        }
         var obj = {message: message, nick: nick, timestamp: getTimestamp(timestamp), idx: idx, class: ''};
         if(top) {
             if($scope.messages[0]) {
