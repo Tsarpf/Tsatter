@@ -6,9 +6,14 @@ function nextAnon() {
     return 'anon' + (count++);
 }
 
+var connected = 0;
+
 var addListeners = function(io, irc, persistenceHandler) {
     return function (socket) {
-        console.log('got connection');
+        connected++;
+        console.log('new connection, currently connected: ' + connected);
+
+
         var username;
         if (socket.session && socket.session.username) {
             username = socket.session.username;
@@ -59,7 +64,7 @@ var addListeners = function(io, irc, persistenceHandler) {
         });
 
         client.addListener('registered', function (messageObj) {
-            console.log(messageObj);
+            //console.log(messageObj);
             messageObj.nick = username;
             socket.send(messageObj);
         });
@@ -121,7 +126,7 @@ var addListeners = function(io, irc, persistenceHandler) {
         });
 
         client.connect(function () {
-            console.log('connected');
+            //console.log('connected');
         });
 
         socket.on('join', function (msg) {
@@ -162,7 +167,9 @@ var addListeners = function(io, irc, persistenceHandler) {
         });
 
         socket.on('disconnect', function (test) {
+            connected--;
             console.log('disconnect ' + test);
+            console.log('currenctly connected: ' + connected);
             client.disconnect('socket disconnected');
         });
 
