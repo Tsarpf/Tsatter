@@ -351,17 +351,21 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.addMessage = function(message, nick, timestamp, idx, top) {
         var obj = {message: message, nick: nick, timestamp: getTimestamp(timestamp), idx: idx, class: ''};
         if(top) {
-            if($scope.messages[0].idx) {
-                if($scope.messages[0].idx === idx) {
-                    return;
+            if($scope.messages[0]) {
+                if ($scope.messages[0].idx) {
+                    if ($scope.messages[0].idx === idx) {
+                        return;
+                    }
                 }
             }
             $scope.messages.unshift(obj);
         }
         else {
-            if($scope.messages[$scope.messages.length - 1].idx) {
-                if($scope.messages[$scope.messages.length - 1].idx === idx) {
-                    return;
+            if ($scope.messages[$scope.messages.length - 1]) {
+                if ($scope.messages[$scope.messages.length - 1].idx) {
+                    if ($scope.messages[$scope.messages.length - 1].idx === idx) {
+                        return;
+                    }
                 }
             }
             $scope.messages.push(obj);
