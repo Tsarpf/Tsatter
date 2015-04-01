@@ -15,7 +15,7 @@ npm test
 
 grunt build
 
-forever start --minUptime 8000 -a -l ../forever.log -o ./server-out.log -e ../err.log -c "npm start" ./
+forever start --minUptime 8000 -a -l ./forever.log -o ./server-out.log -e ./err.log -c "npm start" ./
 forever list
 
 grunt watchStatic

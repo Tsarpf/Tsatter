@@ -2,7 +2,8 @@ module.exports = (function() {
     var fs = require('fs');
     var request = require('request');
     var key = fs.readFileSync(__dirname + '/bing-api-key.txt', {encoding: 'utf8'});
-    console.log(key);
+    key = key.replace('\n','');
+    console.log('key is: "' + key + '"');
     var bingUrl = 'https://:' + key + '@api.datamarket.azure.com/Bing/Search/v1/Image?$format=json&Query=';
     var cache = {};
     var search = function(parameter, callback) {
