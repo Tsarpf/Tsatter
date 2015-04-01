@@ -36,9 +36,11 @@
 
         <input
                 ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg()"
+                ng-keydown="messageKeyDown($event.keyCode)"
                 ng-model="message"
                 type="text"
                 class="newMessage col-xs-7"
-                focus-on="showChannel">
+                focus-on="showChannel"
+                ng-change="messageFieldChanged()">
     </div>
  </span>

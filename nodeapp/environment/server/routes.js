@@ -57,6 +57,11 @@ module.exports = function(app) {
         });
     });
 
+    app.get('/search/', function(req, res, next) {
+        var results = imageSearch.search('');
+        res.json(results);
+    });
+
     app.get('/partials/:name', function(req, res){
         var name = req.params.name;
         res.render('partials/' + name);

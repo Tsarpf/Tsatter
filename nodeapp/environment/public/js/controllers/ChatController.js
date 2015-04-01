@@ -10,7 +10,8 @@ angular.module('tsatter').controller('ChatController', [
     '$http',
     '$anchorScroll',
     '$q',
-function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll, $q) {
+    'imageSearch',
+function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll, $q, imageSearch) {
     $scope.messages = [];
     $scope.users = {};
     $scope.mediaList = [];
@@ -24,6 +25,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.infiniteReachedTop = false;
     $scope.infiniteReachedBottom = false;
     $scope.origin = location.origin;
+    $scope.searching = false;
 
 
     //we have to do this in a timeout so that the directive is initialized
@@ -33,6 +35,13 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         $scope.getBacklog();
         focus('showChannel');
     });
+
+
+
+    var lastCharacter = '';
+    $scope.messageKeyDown = function(key) {
+        console.log('pressed key: ' + key);
+    };
 
     $scope.currentlyHighlighted = {};
     $scope.messageClicked = function(index) {

@@ -1,6 +1,3 @@
-/**
- * Created by tsarpf on 4/1/15.
- */
 
 module.exports = (function() {
     var search = function(parameter) {
@@ -8,7 +5,7 @@ module.exports = (function() {
             'http://www.vastavalo.fi/albums/userpics/14528/normal_2499_MG_4011.jpg',
             'http://www.helsinki.fi/ajankohtaista/uutisarkisto/images/teksti_mammi.jpg',
             'http://media-cache-ak0.pinimg.com/736x/26/60/04/26600417c16ecd4b52c2e9cb7e2e8e40.jpg',
-            'http://www.arlaingman.fi/Global/Reseptit/Teemat/P%c3%a4%c3%a4si%c3%a4inen/P%c3%a4%c3%a4si%c3%a4inen%20thumbnail%20290x181.jpg'
+            'http://www.arlaingman.fi/Global/Reseptit/Teemat/P%c3%a4%c3%a4si%c3%a4inen/P%c3%a4%c3%a4si%c3%a4inen%20thumbnail%20290x181.jpg',
             'http://i131.photobucket.com/albums/p317/jaro143/IMG_9704.jpg',
             'http://static.iltalehti.fi/ruoka/karitsaSSP_h1.jpg',
             'http://www.dlc.fi/%7Eetkirja/mammi.jpg',
