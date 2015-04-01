@@ -10,7 +10,8 @@ angular.module('tsatter').controller('ChatController', [
     '$http',
     '$anchorScroll',
     '$q',
-function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll, $q) {
+    'imageSearch',
+function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll, $q, imageSearch) {
     $scope.messages = [];
     $scope.users = {};
     $scope.mediaList = [];
@@ -24,6 +25,10 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.infiniteReachedTop = false;
     $scope.infiniteReachedBottom = false;
     $scope.origin = location.origin;
+    $scope.searching = false;
+    $scope.searchResults = [];
+    $scope.waitingForSearchResults = false;
+    $scope.cursorPos = 0;
 
 
     //we have to do this in a timeout so that the directive is initialized
@@ -31,8 +36,93 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         joinChannel($scope.channelName);
         $scope.nick = $rootScope.vars.nickname;
         $scope.getBacklog();
-        focus('showChannel');
+        focus('chatInput');
     });
+
+    var lastMessage = '';
+    var searchStartingCharacter = '@';
+    $scope.messageChanged = function() {
+        var length = $scope.message.length;
+        if(length === 1 && $scope.message[0] === searchStartingCharacter) {
+            $scope.cursorPos = 0;
+            $scope.startSearching();
+        }
+        //To optimize performance a bit, first check if length difference is only 1
+        //and if the character that was changed was the last one (because it usually is)
+        else if (length === lastMessage.length + 1 && $scope.message[length - 1] !== lastMessage[length - 2]) {
+            //if the last character that was the only thing changed isn't searchStartingCharacter, just skip to end
+           if($scope.message[length - 1] === searchStartingCharacter) {
+               $scope.cursorPos = length - 1;
+               $scope.startSearching();
+           }
+        }
+        else if(length < lastMessage.length) {
+            //Removed character, just skip to end
+        }
+        else {
+            //Resort to checking the whole string
+            var found = false;
+            for(var i = 0; i < length && i < lastMessage.length; i++) {
+                if($scope.message[i] !== lastMessage[i] && $scope.message[i] === searchStartingCharacter) {
+                    $scope.cursorPos = i;
+                    $scope.startSearching();
+                    found = true;
+                    break;
+                }
+            }
+
+            //If not found yet, check rest of string
+            //We have to do this because spaces do not trigger messageChanged
+            for(;i < length && !found; i++) {
+                if($scope.message[i] === searchStartingCharacter) {
+                    $scope.cursorPos = i;
+                    $scope.startSearching();
+                    break;
+                }
+            }
+        }
+        lastMessage = $scope.message;
+    };
+
+    $scope.escPressedInSearch = function() {
+        $scope.stopSearching();
+    };
+
+    $scope.stopSearching = function() {
+        $scope.searching = false;
+        focus('chatInput');
+    };
+
+    $scope.startSearching = function() {
+        $scope.message = $scope.message.slice(0, $scope.cursorPos) + $scope.message.slice($scope.cursorPos + 1);
+        $scope.searchTerm = '';
+        $scope.searching = true;
+        focus('searchInput');
+    };
+
+    $scope.searchResultClicked = function(idx) {
+        $scope.message = $scope.message.slice(0, $scope.cursorPos) +
+            $scope.searchResults[idx].src + ' ' +
+            $scope.message.slice($scope.cursorPos);
+
+        $scope.stopSearching();
+    };
+
+    $scope.search = function() {
+        $scope.waitingForSearchResults = true;
+        var term = $scope.searchTerm;
+        $scope.searchTerm = '';
+        $scope.searchResults = [];
+        imageSearch.search(term, function(err, data) {
+            $scope.waitingForSearchResults = false;
+
+            if(err) {
+                console.log(err);
+                return;
+            }
+            $scope.searchResults = data;
+        });
+    };
 
     $scope.currentlyHighlighted = {};
     $scope.messageClicked = function(index) {
@@ -290,7 +380,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     };
     $scope.activate = function(data) {
         $timeout(function() {
-            focus('showChannel');
+            focus('chatInput');
         });
     };
     $scope.kick = function(data) {

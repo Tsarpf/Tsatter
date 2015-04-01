@@ -5,6 +5,7 @@
         </div>
 
         <div class="messages col-xs-7"
+            ng-show="!searching"
             scroll-glue="glued"
             lr-infinite-scroll="infiniteScrollDown"
             lr-infinite-scroll-up="infiniteScrollUp"
@@ -12,7 +13,18 @@
 
             <ts-chat-message ng-repeat="message in messages"> </ts-chat-message>
         </div>
-                
+        <div class="messages col-xs-7"
+             ng-show="searching">
+            <p> Click an image to link it to your message </p>
+            <img class="loading-gif" src="https://i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" ng-show="waitingForSearchResults">
+            <div deckgrid class="deckgrid row" source="searchResults">
+                <div class="chat-summary tile clickable-element" ng-click="mother.searchResultClicked(card.$index)">
+                    <img ng-src="{{card.src}}" class="chat-summary-picture">
+                </div>
+            </div>
+
+         </div>
+
         <div class="tsmedia col-xs-4" scroll-glue="mediaGlued">
             <ts-media-bar></ts-media-bar>
         </div>
@@ -35,10 +47,28 @@
                ng-keyup="$event.keyCode == 13 && ownNickAreaSubmit()">
 
         <input
+                ng-show="!searching"
                 ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg()"
+                ng-change="messageChanged()"
                 ng-model="message"
+                placeholder="Type '@' to search and link pictures"
                 type="text"
-                class="newMessage col-xs-7"
-                focus-on="showChannel">
+                class="new-message col-xs-7"
+                focus-on="chatInput">
+
+        <div class="input-group col-xs-7" ng-show="searching">
+            <span class="input-group-addon">
+                <span class="fui-search">
+                </span>
+            </span>
+            <input
+                    type="text"
+                    class="new-message form-control"
+                    placeholder="Esc to stop searching -- Enter to search"
+                    ng-model="searchTerm"
+                    ng-keydown="$event.keyCode == 27 && escPressedInSearch()"
+                    ng-keyup="$event.keyCode == 13 && search()"
+                    focus-on="searchInput">
+        </div>
     </div>
  </span>

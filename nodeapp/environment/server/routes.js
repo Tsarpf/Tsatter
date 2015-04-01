@@ -1,5 +1,5 @@
-var passport = require('passport'),
-    persistenceHandler = require('./persistence'),
+var persistenceHandler = require('./persistence'),
+    imageSearch = require('./imageSearch'),
     User = require('../app/models/user');
 
 module.exports = function(app) {
@@ -36,12 +36,10 @@ module.exports = function(app) {
         from = parseInt(from);
         to = parseInt(to);
         if(from > to) {
-            console.log('säh');
             res.writeHead(400, {error: 'invalid from/to field(s)'});
             return res.end();
         }
         else if ((to - from) > 50) {
-            console.log('asdfgadgf');
             res.writeHead(403, {error: 'Too many messages requested'});
             return res.end();
         }
@@ -54,6 +52,25 @@ module.exports = function(app) {
             else {
                 res.json(messages);
             }
+        });
+    });
+
+    app.get('/search/', function(req, res, next) {
+        var searchTerm = req.query.searchTerm;
+        console.log('searched: ' + searchTerm);
+        imageSearch.search(searchTerm, function(err, results) {
+            if(err) {
+                console.log(err);
+                return res.json(err);
+            }
+            var obj = JSON.parse(results);
+            var resObj = [];
+            for(var i = 0; i < obj.d.results.length; i++) {
+               resObj.push({
+                   src: obj.d.results[i].MediaUrl
+               });
+            }
+            res.json(resObj);
         });
     });
 

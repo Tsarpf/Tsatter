@@ -4,11 +4,11 @@
   "dependencies": {
     "body-parser": "*",
     "cookie-parser": "*",
+    "ejs": "*",
     "express": "*",
     "express-session": "*",
     "grunt": "*",
     "irc": "*",
-    "ejs": "*",
     "mocha": "*",
     "mongoose": "3.8",
     "passport": "*",

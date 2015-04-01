@@ -31,11 +31,12 @@
     */
 }
 
-.quit-x-button {
-    /*
-    No idea how to style this
-    */
+.loading-gif {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
+
 
 .discovery-message {
     word-wrap: break-word;
@@ -137,12 +138,12 @@
 }
 
 /*message entry line */
-.newMessage {
+.new-message {
     /*
     height: 20%;
     min-height: 20%;
     */
-    height: 50px;
+    height: 60px;
     /*outline: 1px solid orange;*/
 }
 
@@ -178,6 +179,12 @@ body {
 
 .site-headers {
     float: left;
+}
+
+.quit-x-button {
+    /*
+    No idea how to style this
+    */
 }
 
 h1 {
