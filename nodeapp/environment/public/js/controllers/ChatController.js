@@ -26,6 +26,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.infiniteReachedBottom = false;
     $scope.origin = location.origin;
     $scope.searching = false;
+    $scope.searchResults = [];
 
 
     //we have to do this in a timeout so that the directive is initialized
@@ -41,8 +42,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         focus('chatInput');
     };
 
-
-    var lastCharacter = '';
     var lastMessage = '';
     var searchStartingCharacter = '@';
     $scope.messageChanged = function(key) {
@@ -104,6 +103,15 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         var term = $scope.searchTerm;
         $scope.searchTerm = '';
         console.log(term);
+        imageSearch.search(term, function(err, data) {
+            if(err) {
+                console.log(err);
+                return;
+            }
+
+            console.log(data);
+            $scope.searchResults = data;
+        });
     };
 
     $scope.currentlyHighlighted = {};

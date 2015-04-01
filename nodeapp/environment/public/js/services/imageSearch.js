@@ -7,10 +7,10 @@ angular.module('tsatter').factory('imageSearch', ['$http', function($http) {
                 }
             }).
                 success(function (data, status, headers, config) {
-                    callback(null, parameter, data);
+                    callback(null, data);
                 }).
                 error(function(data, status, headers,config) {
-                    callback('adkfjlafg', parameter);
+                    callback('adkfjlafg');
                 });
         }
     }

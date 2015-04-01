@@ -58,6 +58,8 @@ module.exports = function(app) {
     });
 
     app.get('/search/', function(req, res, next) {
+        var searchTerm = req.query.searchTerm;
+        console.log(searchTerm);
         var results = imageSearch.search('');
         res.json(results);
     });
