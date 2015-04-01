@@ -16,6 +16,8 @@
 
         <div class="messages col-xs-7"
              ng-show="searching">
+            <p> Click an image to link it to your message </p>
+            <img class="loading-gif" src="https://i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" ng-show="waitingForSearchResults">
             <div deckgrid class="deckgrid row" source="searchResults">
                 <div class="chat-summary tile clickable-element" ng-click="mother.searchResultClicked(card.$index)">
                     <img ng-src="{{card.src}}" class="chat-summary-picture">
@@ -50,7 +52,7 @@
                 ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg()"
                 ng-change="messageChanged()"
                 ng-model="message"
-                placeholder="Type '@' to search for pictures"
+                placeholder="Type '@' to search and link pictures"
                 type="text"
                 class="new-message col-xs-7"
                 focus-on="chatInput">

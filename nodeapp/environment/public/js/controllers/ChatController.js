@@ -27,6 +27,8 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.origin = location.origin;
     $scope.searching = false;
     $scope.searchResults = [];
+    $scope.waitingForSearchResults = false;
+    $scope.cursorPos = 0;
 
 
     //we have to do this in a timeout so that the directive is initialized
@@ -37,33 +39,20 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         focus('chatInput');
     });
 
-    $scope.escPressedInSearch = function() {
-        $scope.searching = false;
-        focus('chatInput');
-    };
-
     var lastMessage = '';
     var searchStartingCharacter = '@';
-    $scope.messageChanged = function(key) {
-        if(key) {
-            console.log(key);
-            return;
-        }
+    $scope.messageChanged = function() {
         var length = $scope.message.length;
-        console.log('scope message last: ' + $scope.message[length - 1]);
-        console.log('last message last: ' + lastMessage[length - 2]);
-        console.log('whole message: "' + $scope.message + '"');
         if(length === 1 && $scope.message[0] === searchStartingCharacter) {
-           $scope.startSearching();
+            $scope.cursorPos = 0;
+            $scope.startSearching();
         }
         //To optimize performance a bit, first check if length difference is only 1
         //and if the character that was changed was the last one (because it usually is)
         else if (length === lastMessage.length + 1 && $scope.message[length - 1] !== lastMessage[length - 2]) {
-            console.log('ebin ebi nbienbirn');
-            console.log($scope.message[length - 1]);
             //if the last character that was the only thing changed isn't searchStartingCharacter, just skip to end
            if($scope.message[length - 1] === searchStartingCharacter) {
-               console.log('kebin');
+               $scope.cursorPos = length - 1;
                $scope.startSearching();
            }
         }
@@ -75,6 +64,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             var found = false;
             for(var i = 0; i < length && i < lastMessage.length; i++) {
                 if($scope.message[i] !== lastMessage[i] && $scope.message[i] === searchStartingCharacter) {
+                    $scope.cursorPos = i;
                     $scope.startSearching();
                     found = true;
                     break;
@@ -85,6 +75,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             //We have to do this because spaces do not trigger messageChanged
             for(;i < length && !found; i++) {
                 if($scope.message[i] === searchStartingCharacter) {
+                    $scope.cursorPos = i;
                     $scope.startSearching();
                     break;
                 }
@@ -93,28 +84,42 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         lastMessage = $scope.message;
     };
 
+    $scope.escPressedInSearch = function() {
+        $scope.stopSearching();
+    };
+
+    $scope.stopSearching = function() {
+        $scope.searching = false;
+        focus('chatInput');
+    };
+
     $scope.startSearching = function() {
+        $scope.message = $scope.message.slice(0, $scope.cursorPos) + $scope.message.slice($scope.cursorPos + 1);
         $scope.searchTerm = '';
         $scope.searching = true;
         focus('searchInput');
     };
 
     $scope.searchResultClicked = function(idx) {
-       console.log('target idx: ' + idx);
-        console.log($scope.searchResults[idx]);
+        $scope.message = $scope.message.slice(0, $scope.cursorPos) +
+            $scope.searchResults[idx].src + ' ' +
+            $scope.message.slice($scope.cursorPos);
+
+        $scope.stopSearching();
     };
 
     $scope.search = function() {
+        $scope.waitingForSearchResults = true;
         var term = $scope.searchTerm;
         $scope.searchTerm = '';
-        console.log(term);
+        $scope.searchResults = [];
         imageSearch.search(term, function(err, data) {
+            $scope.waitingForSearchResults = false;
+
             if(err) {
                 console.log(err);
                 return;
             }
-
-            console.log(data);
             $scope.searchResults = data;
         });
     };
