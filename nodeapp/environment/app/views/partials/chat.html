@@ -13,7 +13,6 @@
 
             <ts-chat-message ng-repeat="message in messages"> </ts-chat-message>
         </div>
-
         <div class="messages col-xs-7"
              ng-show="searching">
             <p> Click an image to link it to your message </p>
@@ -25,7 +24,7 @@
             </div>
 
          </div>
-                
+
         <div class="tsmedia col-xs-4" scroll-glue="mediaGlued">
             <ts-media-bar></ts-media-bar>
         </div>
@@ -71,6 +70,5 @@
                     ng-keyup="$event.keyCode == 13 && search()"
                     focus-on="searchInput">
         </div>
-
     </div>
  </span>
