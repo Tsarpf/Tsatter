@@ -1,5 +1,5 @@
-var passport = require('passport'),
-    persistenceHandler = require('./persistence'),
+var persistenceHandler = require('./persistence'),
+    imageSearch = require('./imageSearch'),
     User = require('../app/models/user');
 
 module.exports = function(app) {
