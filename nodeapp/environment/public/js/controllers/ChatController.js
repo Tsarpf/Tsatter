@@ -99,6 +99,11 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         focus('searchInput');
     };
 
+    $scope.searchResultClicked = function(idx) {
+       console.log('target idx: ' + idx);
+        console.log($scope.searchResults[idx]);
+    };
+
     $scope.search = function() {
         var term = $scope.searchTerm;
         $scope.searchTerm = '';

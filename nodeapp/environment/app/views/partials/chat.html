@@ -17,7 +17,14 @@
         <div class="messages col-xs-7"
              ng-show="searching">
             Search results :D
-            <img ng-src="result" ng-repeat="result in searchResults">
+            <!--<img ng-src="{{result}}" ng-repeat="result in searchResults">-->
+
+            <div deckgrid class="deckgrid row" source="searchResults">
+                <div class="chat-summary tile clickable-element" ng-click="mother.searchResultClicked(card.$index)">
+                    <img ng-src="{{card.src}}" class="chat-summary-picture">
+                </div>
+            </div>
+
          </div>
                 
         <div class="tsmedia col-xs-4" scroll-glue="mediaGlued">
