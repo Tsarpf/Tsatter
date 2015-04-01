@@ -5,6 +5,7 @@
         </div>
 
         <div class="messages col-xs-7"
+            ng-show="!searching"
             scroll-glue="glued"
             lr-infinite-scroll="infiniteScrollDown"
             lr-infinite-scroll-up="infiniteScrollUp"
@@ -12,6 +13,11 @@
 
             <ts-chat-message ng-repeat="message in messages"> </ts-chat-message>
         </div>
+
+        <div class="messages col-xs-7"
+             ng-show="searching">
+            ses :D
+         </div>
                 
         <div class="tsmedia col-xs-4" scroll-glue="mediaGlued">
             <ts-media-bar></ts-media-bar>
@@ -39,6 +45,7 @@
                 ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg()"
                 ng-change="messageChanged()"
                 ng-model="message"
+                placeholder="Type '@' to search for pictures"
                 type="text"
                 class="new-message col-xs-7"
                 focus-on="chatInput">
@@ -46,11 +53,16 @@
         <div class="input-group col-xs-7" ng-show="searching">
             <span class="input-group-addon">
                 <span class="fui-search">
-
                 </span>
             </span>
-            <input type="text" value="" class="new-message form-control" placeholder="Search" ng-model="searchParameter" focus-on="searchInput">
-            <!--class="col-xs-7 new-message"-->
+            <input
+                    type="text"
+                    class="new-message form-control"
+                    placeholder="Esc to stop searching -- Enter to search"
+                    ng-model="searchTerm"
+                    ng-keydown="$event.keyCode == 27 && escPressedInSearch()"
+                    ng-keyup="$event.keyCode == 13 && search()"
+                    focus-on="searchInput">
         </div>
 
     </div>
