@@ -58,7 +58,11 @@ module.exports = function(app) {
     app.get('/search/', function(req, res, next) {
         var searchTerm = req.query.searchTerm;
         console.log('searched: ' + searchTerm);
-        imageSearch.search(searchTerm, function(results) {
+        imageSearch.search(searchTerm, function(err, results) {
+            if(err) {
+                console.log(err);
+                return res.json(err);
+            }
             var obj = JSON.parse(results);
             var resObj = [];
             for(var i = 0; i < obj.d.results.length; i++) {

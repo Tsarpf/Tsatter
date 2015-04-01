@@ -7,11 +7,12 @@ module.exports = (function() {
     var cache = {};
     var search = function(parameter, callback) {
         if(cache[parameter]) {
-            return cache[parameter];
+            return callback(null, cache[parameter]);
         }
         var url = bingUrl + '\'' + parameter + '\'';
         console.log(url);
         console.log('moi');
+
         request({url: url},
         function(error, response, body) {
             console.log('got response');
@@ -20,7 +21,7 @@ module.exports = (function() {
             }
             else {
                 cache[parameter] = body;
-                callback(body);
+                callback(null, body);
             }
         });
     };
