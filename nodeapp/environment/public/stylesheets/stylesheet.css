@@ -137,12 +137,12 @@
 }
 
 /*message entry line */
-.newMessage {
+.new-message {
     /*
     height: 20%;
     min-height: 20%;
     */
-    height: 50px;
+    height: 60px;
     /*outline: 1px solid orange;*/
 }
 

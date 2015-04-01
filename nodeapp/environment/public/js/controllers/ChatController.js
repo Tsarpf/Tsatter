@@ -33,14 +33,46 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         joinChannel($scope.channelName);
         $scope.nick = $rootScope.vars.nickname;
         $scope.getBacklog();
-        focus('showChannel');
+        focus('chatInput');
     });
 
 
 
     var lastCharacter = '';
-    $scope.messageKeyDown = function(key) {
-        console.log('pressed key: ' + key);
+    var lastMessage = '';
+    var searchStartingCharacter = '@';
+    $scope.messageChanged = function() {
+        console.log('message changed');
+        console.log($scope.message);
+        var length = $scope.message.length;
+
+        //To optimize performance a bit, first check if length difference is only 1
+        //and if the character that was changed was the last one (because it usually is)
+        if (length == lastMessage.length + 1 && $scope.message[length - 1] !== lastMessage[length - 2]) {
+            //if the last character that was the only thing changed isn't searchStartingCharacter, just skip to end
+           if($scope.message[length - 1] === searchStartingCharacter) {
+               $scope.startSearching();
+           }
+        }
+        else if(length < lastMessage.length) {
+            //Removed character, just skip to end
+        }
+        else {
+            //Resort to checking the whole string
+            for(var i = 0; i < length && i < lastMessage.length; i++) {
+                if($scope.message[i] !== lastMessage[i] && $scope.message[i] === searchStartingCharacter) {
+                    $scope.startSearching();
+                    break;
+                }
+            }
+        }
+        lastMessage = $scope.message;
+    };
+
+    $scope.startSearching = function() {
+        console.log('start searching!!!');
+        $scope.searching = true;
+        focus('searchInput');
     };
 
     $scope.currentlyHighlighted = {};
@@ -299,7 +331,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     };
     $scope.activate = function(data) {
         $timeout(function() {
-            focus('showChannel');
+            focus('chatInput');
         });
     };
     $scope.kick = function(data) {

@@ -35,12 +35,23 @@
                ng-keyup="$event.keyCode == 13 && ownNickAreaSubmit()">
 
         <input
+                ng-show="!searching"
                 ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg()"
-                ng-keydown="messageKeyDown($event.keyCode)"
+                ng-change="messageChanged()"
                 ng-model="message"
                 type="text"
-                class="newMessage col-xs-7"
-                focus-on="showChannel"
-                ng-change="messageFieldChanged()">
+                class="new-message col-xs-7"
+                focus-on="chatInput">
+
+        <div class="input-group col-xs-7" ng-show="searching">
+            <span class="input-group-addon">
+                <span class="fui-search">
+
+                </span>
+            </span>
+            <input type="text" value="" class="new-message form-control" placeholder="Search" ng-model="searchParameter" focus-on="searchInput">
+            <!--class="col-xs-7 new-message"-->
+        </div>
+
     </div>
  </span>
