@@ -1,16 +1,26 @@
-var fs = require('fs');
-var key = fs.readFileSync('bing-api-key.txt', {encoding: 'utf8'});
-var Bing = require('node-bing-api')({accKey: key});
-
 module.exports = (function() {
-    var search = function(parameter) {
-        Bing.images(parameter, function(error, res, body) {
+    var fs = require('fs');
+    var request = require('request');
+    var key = fs.readFileSync(__dirname + '/bing-api-key.txt', {encoding: 'utf8'});
+    console.log(key);
+    var bingUrl = 'https://:' + key + '@api.datamarket.azure.com/Bing/Search/v1/Image?$format=json&Query=';
+    var cache = {};
+    var search = function(parameter, callback) {
+        if(cache[parameter]) {
+            return cache[parameter];
+        }
+        var url = bingUrl + '\'' + parameter + '\'';
+        console.log(url);
+        console.log('moi');
+        request({url: url},
+        function(error, response, body) {
+            console.log('got response');
             if(error) {
                 console.log(error);
             }
             else {
-                console.log(body);
-                res.json(body);
+                cache[parameter] = body;
+                callback(body);
             }
         });
     };
