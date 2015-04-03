@@ -1,22 +1,28 @@
-angular.module('tsatter').factory('socket', ['$rootScope', function($rootScope) {
+angular.module('tsatter').factory('socket', ['$rootScope', '$timeout', function($rootScope, $timeout) {
     var address = location.host;
-    var socket = io(address);
-    socket.on('message', function(message) {
-        $rootScope.$apply(function() {
-            $rootScope.$broadcast(message.command, message);
-        });
-    });
+    var socket;
 
-    socket.on('disconnect', function() {
-        //alert('Disconnected!');
-        location.reload();
-    });
-    socket.on('reconnect', function() {
-        //alert('Disconnected!');
-        location.reload();
-    });
+    var start =  function() {
+        socket = io(address);
+        socket.on('message', function (message) {
+            $rootScope.$apply(function () {
+                $rootScope.$broadcast(message.command, message);
+            });
+        });
+
+        socket.on('disconnect', function () {
+            //alert('Disconnected!');
+            location.reload();
+        });
+        socket.on('reconnect', function () {
+            //alert('Disconnected!');
+            location.reload();
+        });
+    };
 
     var channels = [];
+
+    $timeout(start);
 
     return {
         listenChannel: function(channel) {
