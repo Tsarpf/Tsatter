@@ -126,6 +126,7 @@
 
 .single-message {
     word-break: break-word;
+    margin-bottom: 0px;
 }
 
 .single-message-highlighted {
