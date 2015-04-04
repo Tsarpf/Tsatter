@@ -30,12 +30,10 @@ Vagrant.configure("2") do |config|
     a.vm.synced_folder "nodeapp/environment/", "/home/nonroot/environment/src"
     a.vm.provider "docker" do |d|
       d.name = "nodeapp"
-      d.build_dir = "./nodeapp"
+      d.image = "tsatter/web"
       d.ports = ["3000:3000"]
       d.link("db:db_1")
       d.link("inspirk:ircserver")
-      d.cmd = ["tail", "-f", "/home/nonroot/environment/out.log"]
-      d.has_ssh = true
     end
   end
 
@@ -45,7 +43,7 @@ Vagrant.configure("2") do |config|
     a.vm.synced_folder "nginx-container/sites-enabled", "/etc/nginx/sites-enabled"
     a.vm.provider "docker" do |d|
       d.name = "nginx"
-      d.image = "nginx"
+      d.image = "dockerfile/nginx"
       d.ports = ["80:80"]
       d.link("nodeapp:nodeapp")
     end

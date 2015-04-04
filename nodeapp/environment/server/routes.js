@@ -67,7 +67,8 @@ module.exports = function(app) {
             var resObj = [];
             for(var i = 0; i < obj.d.results.length; i++) {
                resObj.push({
-                   src: obj.d.results[i].MediaUrl
+                   src: obj.d.results[i].MediaUrl,
+                   thumbnail: obj.d.results[i].Thumbnail.MediaUrl
                });
             }
             res.json(resObj);
