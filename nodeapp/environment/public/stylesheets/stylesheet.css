@@ -127,6 +127,11 @@
 .single-message {
     word-break: break-word;
     margin-bottom: 0px;
+    font-size: 14px;
+}
+
+.single-user {
+    font-size: 16px;
 }
 
 .single-message-highlighted {

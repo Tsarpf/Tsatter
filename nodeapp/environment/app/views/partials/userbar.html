@@ -7,7 +7,7 @@
 
 <div class="clickable-element" ng-repeat="user in users" ng-click="user.showControl = !user.showControl">
     <!-- the piece of shit caret won't inline <span style="display:inline-block" class="caret"></span> <span style="display:inline-block"> {{user.nick}} </span>-->
-    <span class="clickable-element {{user.status}}">
+    <span class="clickable-element single-user {{user.status}}">
         {{user.nick}}
     </span>
     <ul class="user-controls" ng-show="users[nick].status === 'op-user' && user.showControl" >
