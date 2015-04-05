@@ -36,6 +36,7 @@
     "grunt-contrib-uglify": "^0.8.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-filerev": "^2.2.0",
+    "grunt-shell-spawn": "^0.3.2",
     "grunt-usemin": "^3.0.0",
     "grunt-wiredep": "*",
     "usemin-patterns": "^0.1.4"

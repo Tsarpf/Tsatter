@@ -16,9 +16,12 @@ npm test
 grunt build
 
 forever start --minUptime 8000 -a -l ./forever.log -o ./server-out.log -e ./err.log -c "npm start" ./
+
 forever list
 
-grunt watchStatic
+grunt background-watch
+script /dev/null
+#grunt watchStatic
 
 #echo "tail -f src/out.log to see what the server is doing"
 #echo "Executing: $@"
