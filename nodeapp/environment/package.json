@@ -10,6 +10,7 @@
     "express-session": "*",
     "grunt": "*",
     "irc": "*",
+    "mkdirp": "^0.5.0",
     "mocha": "*",
     "mongoose": "3.8",
     "passport": "*",

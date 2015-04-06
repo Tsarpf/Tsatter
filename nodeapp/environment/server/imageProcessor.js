@@ -36,17 +36,6 @@ module.exports = (function() {
         console.log(msg);
     }
 
-    var getName = function() {
-        var chars, x;
-        var length = 10;
-        chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        var name = [];
-        for (x = 0; x < length; x++) {
-            name.push(chars[Math.floor(Math.random() * chars.length)]);
-        }
-        return name.join('');
-    };
-
     var processUrls = function(urls, channel) {
         for(var i = 0; i < urls.length; i++) {
             worker.send({
@@ -54,57 +43,6 @@ module.exports = (function() {
                 channel: channel
             });
         }
-    };
-
-    var download = function(url, filename, callback) {
-        var stream = request({
-            url: url,
-            method: "HEAD"
-        }, function(err, headRes) {
-            var size = headRes.headers['content-length'];
-            if (size > maxSize) {
-                console.log('Resource size exceeds limit (' + size + ')');
-            } else {
-                size = 0;
-                var file = fs.createWriteStream(filename);
-
-                var res = request({ url: url});
-                var checkType = true;
-                var type = '';
-                res.on('data', function(data) {
-                    size += data.length;
-
-                    if(checkType && size >= 4) {
-                        var hex = data.toString('hex', 0, 4);
-                        for(var key in fileTypes) {
-                            if(hex.indexOf(fileTypes[key]) === 0) {
-                                type = key;
-                                console.log('heyoo was type of: ' + type);
-                                checkType = false;
-                                break;
-                            }
-                        }
-                        if(!type) {
-                            res.abort();
-                            fs.unlink(filename);
-                            return callback(false);
-                        }
-                    }
-
-                    if (size > maxSize) {
-                        console.log('Resource stream exceeded limit (' + size + ')');
-
-                        res.abort(); // Abort the response (close and cleanup the stream)
-                        fs.unlink(filename); // Delete the file we were downloading the data to
-                        return callback(false);
-                    }
-                }).pipe(file);
-                res.on('end', function() {
-                    console.log('end');
-                    callback(true);
-                })
-            }
-        });
     };
 
     return {

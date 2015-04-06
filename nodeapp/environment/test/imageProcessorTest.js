@@ -9,7 +9,7 @@ if(!process.env.TRAVIS) {
     var should = require('should');
     var mongoose = require('mongoose');
     var Images = require('../app/models/images');
-    var imageDownload = require('../server/imageProcessor');
+    var imageProcessor = require('../server/imageProcessor');
 
     describe('image saving', function () {
         before(function (done) {
