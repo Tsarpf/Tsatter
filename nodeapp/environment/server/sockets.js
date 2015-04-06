@@ -137,9 +137,6 @@ var addListeners = function(io, irc, persistenceHandler) {
 
         socket.on('privmsg', function (msg) {
             client.say(msg.channel, msg.message);
-            if(msg.message.length > 512) {
-                msg.message = msg.message.substring(0, 512);
-            }
             persistenceHandler.saveMessage(msg.channel, username, msg.message);
         });
 

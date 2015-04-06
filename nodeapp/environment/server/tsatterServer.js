@@ -67,9 +67,8 @@ var runServer = function(options) {
     require('./sockets').initCons(io, persistenceHandler);
 
     return {app: app, server: server, mongConn: mongooseConn};
-    //return {app: app, server: httpsServer, mongConn: mongooseConn};
 };
 
 module.exports = function(options) {
     return runServer(options);
-}
+};

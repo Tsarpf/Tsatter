@@ -12,7 +12,7 @@ var getTestModel = function() {
         author: testAuthor,
         line: testLine
     });
-}
+};
 describe('mongoose', function() {
     before(function(done) {
        do {

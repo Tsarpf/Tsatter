@@ -1,8 +1,19 @@
 module.exports = (function() {
     var fs = require('fs');
     var request = require('request');
-    var key = fs.readFileSync(__dirname + '/bing-api-key.txt', {encoding: 'utf8'});
-    key = key.replace('\n','');
+    try {
+        var key = fs.readFileSync(__dirname + '/bing-api-key.txt', {encoding: 'utf8'});
+        key = key.replace('\n','');
+    }
+    catch(e) {
+        console.log('no key found');
+        return {
+            search: function(param, cb) {
+                console.log('bing key not specified, returning empty list');
+                callback(null, []);
+            }
+        }
+    }
     console.log('key is: "' + key + '"');
     var bingUrl = 'https://:' + key + '@api.datamarket.azure.com/Bing/Search/v1/Image?$format=json&Query=';
     var cache = {};
@@ -11,8 +22,6 @@ module.exports = (function() {
             return callback(null, cache[parameter]);
         }
         var url = bingUrl + '\'' + parameter + '\'';
-        console.log(url);
-        console.log('moi');
 
         request({url: url},
         function(error, response, body) {
@@ -22,7 +31,17 @@ module.exports = (function() {
             }
             else {
                 cache[parameter] = body;
-                callback(null, body);
+
+                var obj = JSON.parse(body);
+                var resObj = [];
+                for(var i = 0; i < obj.d.results.length; i++) {
+                    resObj.push({
+                        src: obj.d.results[i].MediaUrl,
+                        thumbnail: obj.d.results[i].Thumbnail.MediaUrl
+                    });
+                }
+
+                callback(null, resObj);
             }
         });
     };

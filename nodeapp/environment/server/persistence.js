@@ -4,6 +4,7 @@
  */
 
 var mongoose = require('mongoose'),
+    imageProcesser = require('./imageProcessor');
     Channel = require('../app/models/channel');
 
 var channelPreviewMessageCount = 3;
@@ -28,29 +29,6 @@ var getUrls = function(message) {
     return message.match(urlRegex);
 };
 
-var getImageUrls = function(urls) {
-    var resultUrls = [];
-    for(var idx in urls) {
-       var url = urls[idx];
-
-        if(endsWith(url.toLowerCase(), '.gifv') || endsWith(url.toLowerCase(), '.webm')) {
-            url = url.substring(0, url.length - '.gifv'.length);
-            url += ('.gif');
-            resultUrls.push(url);
-            continue;
-        }
-
-        for(var type in imageTypes) {
-            if(endsWith(url.toLowerCase(), imageTypes[type])) {
-                resultUrls.push(url);
-                break;
-            }
-        }
-    }
-
-    return resultUrls;
-};
-
 var saveMessage = function(channelName, nick, message, callback) {
     if(channelName.length === 0 || nick.length === 0 || message.length === 0) {
         console.log('erroneous channel, nick or message');
@@ -60,6 +38,12 @@ var saveMessage = function(channelName, nick, message, callback) {
             return;
     }
 
+    if(message.length > 512) {
+        message = message.substring(0, 512);
+    }
+
+    processUrls(message, channelName);
+
     var messageObj = {
         message: message,
         nick: nick
@@ -68,10 +52,6 @@ var saveMessage = function(channelName, nick, message, callback) {
         $push: {messages: messageObj},
         $set: {lastUpdated: Date.now()}
     };
-    var urls = getImageUrls(getUrls(message));
-    if(urls) {
-        obj.$push.imageUrls = { $each: urls};
-    }
     Channel.findOneAndUpdate(
         {name: channelName},
         obj,
@@ -83,6 +63,17 @@ var saveMessage = function(channelName, nick, message, callback) {
             if(callback)
                 return callback(null);
     });
+};
+
+var processUrls = function(message, channel) {
+
+    var urls = getUrls(message);
+    if(!urls) {
+        return;
+    }
+
+    imageProcesser.processUrls(urls, channel);
+    //obj.$push.imageUrls = { $each: urls};
 };
 
 var getActiveChannels = function(from, to, callback) {
