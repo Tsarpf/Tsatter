@@ -49,6 +49,13 @@ app.directive('tsCardMessages', function() {
     };
 });
 
+app.directive('tsHelp', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/partials/help.html'
+    };
+});
+
 var cleanHTML = function(htmldes) {
     return htmldes.replace(/[<>&\n]/g, function(x) {
         return {

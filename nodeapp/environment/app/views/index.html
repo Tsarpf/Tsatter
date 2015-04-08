@@ -67,43 +67,7 @@
 
                 </div>
 
-                <div class="col-xs-8 help-box" ng-cloak>
-                    <accordion>
-                        <accordion-group heading="How to use the chat">
-                            <accordion>
-                                <accordion-group heading="Linking images">
-                                    Link an image and it should automatically open next to the chat.
-                                </accordion-group>
-                                <accordion-group heading="Infinite chat history">
-                                    All chats have infinite chat history. That means you can just scroll up and you'll get the
-                                    whole history (if any exists) for the channel since the beginning of time.
-                                </accordion-group>
-
-                                <accordion-group heading="Give someone a link to a specific message">
-                                    You can link messages. Right click the message timestamp and copy it's URL. When someone
-                                    opens that link, they'll automatically join the channel and their chat will be scrolled
-                                    to the message you linked, and the message will be highlighted.
-                                </accordion-group>
-
-                                <accordion-group heading="Channel moderator">
-                                    If you're the first to join a channel (either just empty at the moment or completely new),
-                                    you get moderator privileges. This is indicated by your nick being in <b> bold </b>
-                                    This means you can kick people out of the channel or give other people moderator
-                                    privileges. You can (if you're a mod) either use /op "nick" or /kick "nick" or just
-                                    click on their nickname in the user list on the left.
-                                </accordion-group>
-
-                                <accordion-group heading="Based on IRC">
-                                    Channels are based on IRC (that is, they run on an actual IRC server).
-                                    If you're familiar with IRC protocol, you can send IRC commands straight to the IRC-server
-                                    by putting a / at the start of your message. I've also added some shortcuts for the commands
-                                    that are usually found in IRC-clients. The commands are a the moment /kick /op /deop /part
-                                </accordion-group>
-                            </accordion>
-                        </accordion-group>
-                    </accordion>
-
-                </div>
+                <ts-help ng-cloak></ts-help>
 
             </tab>
 
