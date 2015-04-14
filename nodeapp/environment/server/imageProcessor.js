@@ -14,13 +14,6 @@ module.exports = (function() {
     var fs = require('fs');
     var cluster = require('cluster');
 
-    var fileTypes = {
-        '.png': '89504e47',
-        '.jpg': 'ffd8ffe0',
-        '.gif': '47494638'
-    };
-    var maxSize = 10000000; //10 megabytes
-
 
     console.log('cpus: ' + require('os').cpus().length);
     cluster.setupMaster({

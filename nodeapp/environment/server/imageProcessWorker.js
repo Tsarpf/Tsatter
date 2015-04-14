@@ -5,10 +5,23 @@
 var mkdirp = require('mkdirp');
 var imageTooBig = 'http://i.imgur.com/0BFkWlU.png';
 var imagesPath = '/images/';
+var gm = require('gm');
 
 mkdirp(__dirname + '/../public' + imagesPath);
 
 var cache = {};
+
+var fileTypes = {
+    '.png': '89504e47',
+    '.jpg': 'ffd8ffe0',
+    '.gif': '47494638'
+};
+var maxSize = 10000000; //10 megabytes
+
+var thumbnailDimensions = {
+    width: 500,
+    height: 500
+};
 
 //message object fields: url, channel
 process.on('message', function(msg) {
@@ -21,41 +34,57 @@ process.on('message', function(msg) {
         if(err) {
             return;
         }
-        if(obj.process === true) {
-            minifyImage(obj.path, function(filepath) {
-                //minified
-                var resObj = {
+        var resObj = {};
+        if(obj.shouldProcess === true) {
+            minifyImage(obj, function(filepath) {
+                resObj = {
                     channel: msg.channel,
                     src: msg.url,
                     thumbnail: filepath
                 };
-                //process.send(resObj);
-                //cache[msg.url] = resObj;
             })
         }
         else {
-            var resObj = {
+            resObj = {
                 channel: msg.channel,
                 src: msg.url,
                 thumbnail: obj.path
             };
-            process.send(resObj);
-            cache[msg.url] = resObj;
         }
 
-
+        process.send(resObj);
+        cache[msg.url] = resObj;
     });
 });
 
 
-var minifyImage = function(filepath, callback) {
+//obj fields: path, shouldProcess, extension
+var minifyImage = function(obj, callback) {
+    switch(obj.extension) {
+        case '.jpg':
+            break;
+        case '.png':
+            gm(obj.path)
+                .colors(256)
+                .quality(90)
+                .bitdepth(8)
+                .resize(thumbnailDimensions.width, thumbnailDimensions.height + '>')
+                .noProfile()
+                .write(obj.path + obj.extension)
+            break;
+        case '.gif':
+            break;
+    }
+
    //run gw
     //http://aheckmann.github.io/gm/
     //https://github.com/Tsarpf/Tsatter/issues/80
 };
 
 
+//TODO: https://nodejs.org/api/stream.html#stream_class_stream_writable_1
 var download = function(url, callback) {
+    var type = '';
     var filepath = '/images/' + getName();
     var stream = request({
         url: url,
@@ -70,18 +99,19 @@ var download = function(url, callback) {
 
             var res = request({ url: url});
             var checkType = true;
-            var type = '';
             res.on('data', function(data) {
                 size += data.length;
 
                 if(checkType && size >= 4) {
                     var hex = data.toString('hex', 0, 4);
                     for(var key in fileTypes) {
-                        if(hex.indexOf(fileTypes[key]) === 0) {
-                            type = key;
-                            console.log('heyoo was type of: ' + type);
-                            checkType = false;
-                            break;
+                        if(fileTypes.hasOwnProperty(key)) {
+                            if(hex.indexOf(fileTypes[key]) === 0) {
+                                type = key;
+                                console.log('heyoo was type of: ' + type);
+                                checkType = false;
+                                break;
+                            }
                         }
                     }
                     if(!type) {
@@ -96,12 +126,12 @@ var download = function(url, callback) {
 
                     res.abort(); // Abort the response (close and cleanup the stream)
                     fs.unlink(filepath); // Delete the file we were downloading the data to
-                    return callback(null, {path: imageTooBig, process: false});
+                    return callback(null, {path: imageTooBig, shouldProcess: false});
                 }
             }).pipe(file);
             res.on('end', function() {
                 console.log('end');
-                callback(null, {path: filepath, process: true});
+                callback(null, {path: filepath, shouldProcess: true, extension: type});
             })
         }
     });
