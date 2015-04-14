@@ -110,14 +110,8 @@ var minifyImage = function(obj, callback) {
                 });
             break;
     }
-
-   //run gw
-    //http://aheckmann.github.io/gm/
-    //https://github.com/Tsarpf/Tsatter/issues/80
 };
 
-
-//TODO: https://nodejs.org/api/stream.html#stream_class_stream_writable_1
 var download = function(url, callback) {
     var type = '';
     var filepath = '/images/' + getName();
