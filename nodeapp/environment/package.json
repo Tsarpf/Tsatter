@@ -8,6 +8,7 @@
     "ejs": "*",
     "express": "*",
     "express-session": "*",
+    "gm": "^1.17.0",
     "grunt": "*",
     "irc": "*",
     "mkdirp": "^0.5.0",

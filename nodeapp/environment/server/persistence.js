@@ -72,7 +72,7 @@ var processUrls = function(message, channel) {
         return;
     }
 
-    imageProcesser.processUrls(urls, channel);
+    //imageProcesser.processUrls(urls, channel);
     //obj.$push.imageUrls = { $each: urls};
 };
 

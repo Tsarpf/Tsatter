@@ -37,10 +37,6 @@ describe('image size minifying', function () {
             worker.kill();
             done();
         });
-        function messageHandler (msg) {
-            console.log('got message from worker');
-            console.log(msg);
-        }
         worker.send({
             url: images[0],
             channel: testChannel

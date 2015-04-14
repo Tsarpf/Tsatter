@@ -6,6 +6,7 @@ var mkdirp = require('mkdirp');
 var imageTooBig = 'http://i.imgur.com/0BFkWlU.png';
 var imagesPath = '/images/';
 var gm = require('gm');
+var fs = require('fs');
 var request = require('request');
 
 mkdirp(__dirname + '/../public' + imagesPath);
@@ -56,15 +57,16 @@ process.on('message', function(msg) {
 
 //obj fields: path, shouldProcess, extension
 var minifyImage = function(obj, callback) {
-    var path = obj.path + obj.extension;
+    var origPath = __dirname + '/' + obj.path;
+    console.log('path: ' + origPath);
     switch(obj.extension) {
         case '.jpg':
-            gm(obj.path)
+            gm(origPath)
                 .interlace('Plane')
                 .quality(85)
                 .resize(thumbnailDimensions.width, thumbnailDimensions.height + '>')
                 .noProfile()
-                .write(path, function(err) {
+                .write(origPath + obj.extension, function(err) {
                     if(err) {
                         console.log('err');
                         console.log(err);
@@ -75,13 +77,13 @@ var minifyImage = function(obj, callback) {
                 });
             break;
         case '.png':
-            gm(obj.path)
+            gm(origPath)
                 .colors(256)
                 .quality(90)
                 .bitdepth(8)
                 .resize(thumbnailDimensions.width, thumbnailDimensions.height + '>')
                 .noProfile()
-                .write(path, function(err) {
+                .write(origPath + obj.extension, function(err) {
                     if(err) {
                         console.log('err');
                         console.log(err);
@@ -92,10 +94,10 @@ var minifyImage = function(obj, callback) {
                 });
             break;
         case '.gif':
-            gm(obj.path + '[0]')
+            gm(origPath + '[0]')
                 .resize(thumbnailDimensions.width, thumbnailDimensions.height + '>')
                 .noProfile()
-                .write(path, function(err) {
+                .write(origPath + obj.extension, function(err) {
                     if(err) {
                         console.log('err');
                         console.log(err);
@@ -110,7 +112,8 @@ var minifyImage = function(obj, callback) {
 
 var download = function(url, callback) {
     var type = '';
-    var filepath = '/images/' + getName();
+    var filepath = __dirname + '/images/' + getName();
+    console.log('download filepath: ' + filepath);
     var stream = request({
         url: url,
         method: "HEAD"
@@ -118,6 +121,8 @@ var download = function(url, callback) {
         var size = headRes.headers['content-length'];
         if (size > maxSize) {
             console.log('Resource size exceeds limit (' + size + ')');
+            fs.unlink(filepath); // Delete the file we were downloading the data to
+            callback('image too big');
         } else {
             size = 0;
             var file = fs.createWriteStream(filepath);

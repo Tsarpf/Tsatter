@@ -8,7 +8,7 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL fi_FI.UTF-8
 
 # Install apt-dependencies
-RUN apt-get update && apt-get install -y screen openssh-server sudo
+RUN apt-get update && apt-get install -y screen openssh-server sudo graphicsmagick
 
 # Install npm-dependencies
 RUN npm install -g nodemon bower forever grunt-cli

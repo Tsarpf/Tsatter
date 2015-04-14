@@ -7,7 +7,7 @@
 global.TS_TESTING = 'testing';
 var should = require('should');
 var mongoose = require('mongoose');
-var Images = require('../app/models/images');
+//var Images = require('../app/models/images');
 var imageProcessor = require('../server/imageProcessor');
 
 describe('image saving to database', function () {
