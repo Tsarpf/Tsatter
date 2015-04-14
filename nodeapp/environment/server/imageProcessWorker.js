@@ -34,34 +34,49 @@ process.on('message', function(msg) {
         if(err) {
             return;
         }
-        var resObj = {};
         if(obj.shouldProcess === true) {
             minifyImage(obj, function(filepath) {
-                resObj = {
+                var resObj = {
                     channel: msg.channel,
                     src: msg.url,
                     thumbnail: filepath
                 };
+                process.send(resObj);
+                cache[msg.url] = resObj;
             })
         }
         else {
-            resObj = {
+            var resObj = {
                 channel: msg.channel,
                 src: msg.url,
                 thumbnail: obj.path
             };
+            process.send(resObj);
+            cache[msg.url] = resObj;
         }
-
-        process.send(resObj);
-        cache[msg.url] = resObj;
     });
 });
 
 
 //obj fields: path, shouldProcess, extension
 var minifyImage = function(obj, callback) {
+    var path = obj.path + obj.extension;
     switch(obj.extension) {
         case '.jpg':
+            gm(obj.path)
+                .interlace('Plane')
+                .quality(85)
+                .resize(thumbnailDimensions.width, thumbnailDimensions.height + '>')
+                .noProfile()
+                .write(path, function(err) {
+                    if(err) {
+                        console.log('err');
+                        console.log(err);
+                    }
+                    else {
+                        callback(path);
+                    }
+                });
             break;
         case '.png':
             gm(obj.path)
@@ -70,9 +85,29 @@ var minifyImage = function(obj, callback) {
                 .bitdepth(8)
                 .resize(thumbnailDimensions.width, thumbnailDimensions.height + '>')
                 .noProfile()
-                .write(obj.path + obj.extension)
+                .write(path, function(err) {
+                    if(err) {
+                        console.log('err');
+                        console.log(err);
+                    }
+                    else {
+                        callback(path);
+                    }
+                });
             break;
         case '.gif':
+            gm(obj.path + '[0]')
+                .resize(thumbnailDimensions.width, thumbnailDimensions.height + '>')
+                .noProfile()
+                .write(path, function(err) {
+                    if(err) {
+                        console.log('err');
+                        console.log(err);
+                    }
+                    else {
+                        callback(path);
+                    }
+                });
             break;
     }
 
