@@ -14,20 +14,36 @@ describe('image size minifying', function () {
         'http://i.imgur.com/TvOqm5D.gif'
     ];
 
-    before(function (done) {
+    before(function () {
     });
     after(function () {
-        // runs after all tests in this block
     });
     beforeEach(function () {
-        // runs before each test in this block
     });
     afterEach(function () {
-        // runs after each test in this block
     });
-    // test cases
 
-    it('should increment stuff', function () {
-        [1, 2, 3][0].should.equal(1);
+    var cluster = require('cluster');
+    cluster.setupMaster({
+        exec: __dirname + '../server/imageProcessWorker.js'
+    });
+
+    var testChannel = 'testchannel123';
+    it('should increment stuff', function (done) {
+        var worker = cluster.fork();
+        worker.on('message', function(msgObj) {
+            console.log('message from worker');
+            console.log(msgObj);
+            worker.kill();
+            done();
+        });
+        function messageHandler (msg) {
+            console.log('got message from worker');
+            console.log(msg);
+        }
+        worker.send({
+            url: images[0],
+            channel: testChannel
+        });
     });
 });

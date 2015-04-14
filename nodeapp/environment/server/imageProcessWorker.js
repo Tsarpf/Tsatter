@@ -26,11 +26,6 @@ var thumbnailDimensions = {
 
 //message object fields: url, channel
 process.on('message', function(msg) {
-    console.log('msg received at worker');
-    console.log(msg);
-    process.send(msg);
-
-
     download(msg.url, function(err, obj) {
         if(err) {
             return;
