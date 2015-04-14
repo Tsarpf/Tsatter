@@ -6,6 +6,7 @@ var mkdirp = require('mkdirp');
 var imageTooBig = 'http://i.imgur.com/0BFkWlU.png';
 var imagesPath = '/images/';
 var gm = require('gm');
+var request = require('request');
 
 mkdirp(__dirname + '/../public' + imagesPath);
 

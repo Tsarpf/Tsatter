@@ -9,7 +9,6 @@
 module.exports = (function() {
     //var dbname = global.TS_TESTING || 'production';
 
-    var request = require('request');
     var async = require('async');
     var fs = require('fs');
     var cluster = require('cluster');

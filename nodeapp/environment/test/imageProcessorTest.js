@@ -33,27 +33,3 @@ describe('image saving to database', function () {
         [1, 2, 3][0].should.equal(1);
     });
 });
-
-describe('image size minifying', function () {
-    before(function (done) {
-        var options = {server: {socketOptions: {keepAlive: 1}}};
-        var connection = mongoose.createConnection('mongodb://db_1/', options)
-        connection.once('open', function(cb) {
-            done();
-        });
-    });
-    after(function () {
-        // runs after all tests in this block
-    });
-    beforeEach(function () {
-        // runs before each test in this block
-    });
-    afterEach(function () {
-        // runs after each test in this block
-    });
-    // test cases
-
-    it('should increment stuff', function () {
-        [1, 2, 3][0].should.equal(1);
-    });
-});
