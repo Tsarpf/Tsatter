@@ -20,7 +20,8 @@ forever start --minUptime 8000 -a -l ./forever.log -o ./server-out.log -e ./err.
 forever list
 
 grunt background-watch
-script /dev/null
+
+/bin/bash
 #grunt watchStatic
 
 #echo "tail -f src/out.log to see what the server is doing"

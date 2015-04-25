@@ -4,8 +4,9 @@
  */
 
 
+var fs = require('fs');
 
-describe('image size minifying', function () {
+describe('image download and minify', function () {
     var images = [
         'http://i.imgur.com/TtdbUJZ.jpg',
         'http://i.imgur.com/CuvkjnG.jpg',
@@ -29,16 +30,45 @@ describe('image size minifying', function () {
     });
 
     var testChannel = 'testchannel123';
-    it('should increment stuff', function (done) {
+    it('should generate a jpg file', function (done) {
         var worker = cluster.fork();
         worker.on('message', function(msgObj) {
-            console.log('message from worker');
-            console.log(msgObj);
+            fs.existsSync(msgObj.thumbnail).should.equal(true);
             worker.kill();
             done();
         });
         worker.send({
             url: images[0],
+            channel: testChannel
+        });
+    });
+
+    it('should generate a png file', function (done) {
+        this.timeout(5000);
+        var worker = cluster.fork();
+        worker.on('message', function(msgObj) {
+            console.log(msgObj);
+            fs.existsSync(msgObj.thumbnail).should.equal(true);
+            worker.kill();
+            done();
+        });
+        worker.send({
+            url: images[3],
+            channel: testChannel
+        });
+    });
+
+    it('should generate a gif file', function (done) {
+        this.timeout(5000);
+        var worker = cluster.fork();
+        worker.on('message', function(msgObj) {
+            console.log(msgObj);
+            fs.existsSync(msgObj.thumbnail).should.equal(true);
+            worker.kill();
+            done();
+        });
+        worker.send({
+            url: images[4],
             channel: testChannel
         });
     });
