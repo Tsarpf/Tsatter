@@ -26,7 +26,7 @@ describe('image download and minify', function () {
 
     var cluster = require('cluster');
     cluster.setupMaster({
-        exec: __dirname + '../server/imageProcessWorker.js'
+        exec: __dirname + '/../server/imageProcessWorker.js'
     });
 
     var testChannel = 'testchannel123';

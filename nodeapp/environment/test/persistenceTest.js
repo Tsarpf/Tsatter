@@ -6,7 +6,7 @@
 var should = require('should'),
     mongoose = require('mongoose'),
     Channel = require('../app/models/channel');
-    persistenceHandler = require('../server/persistence');
+    persistenceHandler = require('../server/persistence')();
 
 
 var testNick = 'tester';
@@ -101,27 +101,35 @@ describe('persistence handler', function() {
         done();
     });
 
-    it('should persist both a message and an url from a message with a url', function(done) {
-        persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrl, function() {
-            Channel.findOne({name: testChannel}).exec(function(err, doc) {
-                doc.messages.length.should.equal(3);
-                doc.messages[doc.messages.length - 1].message.should.equal(testMessageWithUrl);
-                doc.imageUrls[0].should.equal(urls[0]);
+    it('should call processUrls in imageProcessor when called with a message with a url', function(done) {
+        var persistence = require('../server/persistence')({
+            processUrls: function(resultUrls, channel, messageIdx) {
+                resultUrls[0].should.equal(urls[0]);
+                channel.should.equal(testChannel);
+                messageIdx.should.equal(2);
+                persistenceHandler = require('../server/persistence')();
                 done();
-            });
+            }
         });
+
+        persistence.saveMessage(testChannel, testNick, testMessageWithUrl);
     });
 
-    it('should persist both a message and urls from a message with multiple urls', function(done) {
-        persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrls, function() {
-            Channel.findOne({name: testChannel}).exec(function(err, doc) {
-                doc.messages.length.should.equal(4);
-                doc.messages[doc.messages.length - 1].message.should.equal(testMessageWithUrls);
-                doc.imageUrls[doc.imageUrls.length - 1].should.equal(urls[2]);
-                doc.imageUrls[doc.imageUrls.length - 2].should.equal(urls[1]);
+    it('should call processUrls with multiple urls when saving a singel message with multiple urls', function(done) {
+        var persistence = require('../server/persistence')({
+            processUrls: function(resultUrls, channel, messageIdx) {
+                resultUrls.length.should.equal(2);
+                resultUrls[0].should.equal(urls[1]);
+                resultUrls[1].should.equal(urls[2]);
+                channel.should.equal(testChannel);
+                messageIdx.should.equal(3);
+
+                persistenceHandler = require('../server/persistence')();
                 done();
-            });
+            }
         });
+
+        persistence.saveMessage(testChannel, testNick, testMessageWithUrls);
     });
 
     it('should return as many messages as are available if more are requested', function(done) {
