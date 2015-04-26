@@ -31,6 +31,7 @@ describe('image download and minify', function () {
 
     var testChannel = 'testchannel123';
     it('should generate a jpg file', function (done) {
+        this.timeout(5000);
         var worker = cluster.fork();
         worker.on('message', function(msgObj) {
             fs.existsSync(msgObj.thumbnail).should.equal(true);
@@ -39,7 +40,8 @@ describe('image download and minify', function () {
         });
         worker.send({
             url: images[0],
-            channel: testChannel
+            channel: testChannel,
+            messageIdx: 0
         });
     });
 
@@ -47,14 +49,14 @@ describe('image download and minify', function () {
         this.timeout(5000);
         var worker = cluster.fork();
         worker.on('message', function(msgObj) {
-            console.log(msgObj);
             fs.existsSync(msgObj.thumbnail).should.equal(true);
             worker.kill();
             done();
         });
         worker.send({
             url: images[3],
-            channel: testChannel
+            channel: testChannel,
+            messageIdx: 0
         });
     });
 
@@ -62,14 +64,14 @@ describe('image download and minify', function () {
         this.timeout(5000);
         var worker = cluster.fork();
         worker.on('message', function(msgObj) {
-            console.log(msgObj);
             fs.existsSync(msgObj.thumbnail).should.equal(true);
             worker.kill();
             done();
         });
         worker.send({
             url: images[4],
-            channel: testChannel
+            channel: testChannel,
+            messageIdx: 0
         });
     });
 });

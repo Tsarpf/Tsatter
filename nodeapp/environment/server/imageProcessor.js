@@ -1,17 +1,7 @@
-/**
- * Created by tsarpf on 4/6/15.
- */
-
-/**
- * Created by tsarpf on 4/5/15.
- */
-
 module.exports = (function() {
-    //var dbname = global.TS_TESTING || 'production';
-
-    var async = require('async');
     var fs = require('fs');
     var cluster = require('cluster');
+    var persistence = {};
 
 
     console.log('cpus: ' + require('os').cpus().length);
@@ -24,20 +14,28 @@ module.exports = (function() {
     worker.on('message', messageHandler);
 
     function messageHandler (msg) {
-        console.log('got message from worker');
-        console.log(msg);
+        persistence.saveProcessedImagePathToDB(msg.src, msg.thumbnail, msg.channel, msg.messageIdx);
     }
 
-    var processUrls = function(urls, channel) {
+    var processUrls = function(urls, channel, messageIdx) {
         for(var i = 0; i < urls.length; i++) {
             worker.send({
                 url: urls[i],
-                channel: channel
+                channel: channel,
+                messageIdx: messageIdx
             });
         }
     };
 
-    return {
-        processUrls: processUrls
+    return function(persistenceInject) {
+        if(!persistenceInject) {
+            throw new Error('no persistence module');
+        }
+
+        persistence = persistenceInject;
+
+        return {
+            processUrls: processUrls
+        }
     };
-})();
+}());

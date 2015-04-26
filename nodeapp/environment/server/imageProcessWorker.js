@@ -18,7 +18,7 @@ var fileTypes = {
     '.jpg': 'ffd8ffe0',
     '.gif': '47494638'
 };
-var maxSize = 10000000; //10 megabytes
+var maxSize = 45000000; //45 megabytes
 
 var thumbnailDimensions = {
     width: 500,
@@ -31,23 +31,21 @@ process.on('message', function(msg) {
         if(err) {
             return;
         }
+
+        var resObj = {
+            channel: msg.channel,
+            messageIdx: msg.messageIdx,
+            src: msg.url
+        };
         if(obj.shouldProcess === true) {
             minifyImage(obj, function(filepath) {
-                var resObj = {
-                    channel: msg.channel,
-                    src: msg.url,
-                    thumbnail: filepath
-                };
+                resObj.thumbnail = filepath;
                 process.send(resObj);
                 cache[msg.url] = resObj;
             })
         }
         else {
-            var resObj = {
-                channel: msg.channel,
-                src: msg.url,
-                thumbnail: obj.path
-            };
+            resObj.thumbnail = obj.path;
             process.send(resObj);
             cache[msg.url] = resObj;
         }
@@ -59,7 +57,6 @@ process.on('message', function(msg) {
 var minifyImage = function(obj, callback) {
     var origPath = obj.path;
     var path = origPath + obj.extension;
-    console.log('path: ' + path);
     switch(obj.extension) {
         case '.jpg':
             gm(origPath)
@@ -90,7 +87,6 @@ var minifyImage = function(obj, callback) {
                         console.log(err);
                     }
                     else {
-                        console.log('png written');
                         callback(path);
                     }
                 });
@@ -120,15 +116,12 @@ var download = function(url, callback) {
         method: "HEAD"
     }, function(err, headRes) {
         if(err) {
-            console.log('ses');
             console.log(err);
-            console.log('ses');
             return callback('error!');
         }
         var size = headRes.headers['content-length'];
         if (size > maxSize) {
             console.log('Resource size exceeds limit (' + size + ')');
-            fs.unlink(filepath); // Delete the file we were downloading the data to
             callback('image too big');
         } else {
             size = 0;
@@ -145,7 +138,6 @@ var download = function(url, callback) {
                         if(fileTypes.hasOwnProperty(key)) {
                             if(hex.indexOf(fileTypes[key]) === 0) {
                                 type = key;
-                                console.log('heyoo was type of: ' + type);
                                 checkType = false;
                                 break;
                             }
@@ -167,7 +159,6 @@ var download = function(url, callback) {
                 }
             }).pipe(file);
             res.on('end', function() {
-                console.log('download finished');
                 callback(null, {path: filepath, shouldProcess: true, extension: type});
             })
         }

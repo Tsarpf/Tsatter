@@ -4,8 +4,10 @@
  */
 
 var mongoose = require('mongoose'),
-    imageProcesser = require('./imageProcessor');
     Channel = require('../app/models/channel');
+
+
+var imageProcessor = require('./imageProcessor')(this);
 
 var channelPreviewMessageCount = 3;
 var channelPreviewImageUrlCount = 1;
@@ -15,13 +17,6 @@ var placeholderImageUrl = "http://i.imgur.com/a7i3u6V.png";
 function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
-
-var imageTypes = [
-    '.jpg',
-    '.jpeg',
-    '.gif',
-    '.png'
-];
 
 var urlRegex = /((((https?|ftp):\/\/)|www\.)(([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)|(([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(aero|asia|biz|cat|com|coop|info|int|jobs|mobi|museum|name|net|org|post|pro|tel|travel|xxx|edu|gov|mil|[a-zA-Z][a-zA-Z]))|([a-z]+[0-9]*))(:[0-9]+)?((\/|\?)[^ "]*[^ ,;\.:">)])?)|(spotify:[^ ]+:[^ ]+)/g;
 
@@ -42,8 +37,6 @@ var saveMessage = function(channelName, nick, message, callback) {
         message = message.substring(0, 512);
     }
 
-    processUrls(message, channelName);
-
     var messageObj = {
         message: message,
         nick: nick
@@ -59,21 +52,27 @@ var saveMessage = function(channelName, nick, message, callback) {
     ).exec(function(err, doc) {
             if(err) {
                 console.log(err);
+                return;
             }
+
+            processUrls(message, channelName, doc.messages.length - 1);
+
             if(callback)
                 return callback(null);
     });
 };
 
-var processUrls = function(message, channel) {
-
+var processUrls = function(message, channel, messageIdx) {
     var urls = getUrls(message);
     if(!urls) {
         return;
     }
 
-    //imageProcesser.processUrls(urls, channel);
+    //imageProcessor.processUrls(urls, channel);
     //obj.$push.imageUrls = { $each: urls};
+};
+
+var saveProcessedImagePathToDB = function(originalUrl, thumbnailUrl, channel, messageIdx) {
 };
 
 var getActiveChannels = function(from, to, callback) {
@@ -157,6 +156,7 @@ module.exports = {
     saveMessage: saveMessage,
     getMessages: getMessages,
     getActiveChannels: getActiveChannels,
-    getUrls: getUrls
+    getUrls: getUrls,
+    saveProcessedImagePathToDB: saveProcessedImagePathToDB
 };
 

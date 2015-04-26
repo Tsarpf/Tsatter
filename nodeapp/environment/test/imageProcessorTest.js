@@ -7,10 +7,17 @@
 global.TS_TESTING = 'testing';
 var should = require('should');
 var mongoose = require('mongoose');
-//var Images = require('../app/models/images');
-var imageProcessor = require('../server/imageProcessor');
+
+
+var urls = ['http://i.imgur.com/Bz9fanO.gif', 'http://i.imgur.com/UBs2heD.gif'];
+var tooBigUrl = 'http://i.imgur.com/L76A4TV.gif'; //47-49 mb or something
+urls.push(tooBigUrl);
+
+var testChannel = '#achannelthingy';
 
 describe('image saving to database', function () {
+    this.timeout(5000);
+    /*
     before(function (done) {
         var options = {server: {socketOptions: {keepAlive: 1}}};
         var connection = mongoose.createConnection('mongodb://db_1/', options)
@@ -19,17 +26,28 @@ describe('image saving to database', function () {
         });
     });
     after(function () {
-        // runs after all tests in this block
     });
     beforeEach(function () {
-        // runs before each test in this block
     });
     afterEach(function () {
-        // runs after each test in this block
     });
-    // test cases
+     */
 
-    it('should increment stuff', function () {
-        [1, 2, 3][0].should.equal(1);
+    it('should call save persistence\'s save to db twice after images processed', function (done) {
+        this.timeout(20000);
+        var mockupPersistence = {};
+        var count = 0;
+        mockupPersistence.saveProcessedImagePathToDB = function(originalUrl, thumbnailUrl, channel, messageIdx) {
+            count++;
+            if(count === 3) {
+                should.fail('we downloaded and processed an image that is too big!');
+            }
+            if(count === 2) {
+                done();
+            }
+        };
+        var imageProcessor = require('../server/imageProcessor')(mockupPersistence);
+        var messageIdx = 0;
+        imageProcessor.processUrls(urls, testChannel, messageIdx);
     });
 });
