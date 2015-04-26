@@ -4,6 +4,8 @@
 
 var mkdirp = require('mkdirp');
 var imageTooBig = 'http://i.imgur.com/0BFkWlU.png';
+
+//TODO: read from environment variable
 var imagesPath = __dirname + '/../dist/public/images/';
 var gm = require('gm');
 var fs = require('fs');
@@ -11,12 +13,11 @@ var request = require('request');
 
 mkdirp(imagesPath);
 
-var cache = {};
 
 var fileTypes = {
-    '.png': '89504e47',
-    '.jpg': 'ffd8ffe0',
-    '.gif': '47494638'
+    'png': '89504e47',
+    'jpg': 'ffd8ffe0',
+    'gif': '47494638'
 };
 var maxSize = 45000000; //45 megabytes
 
@@ -41,13 +42,11 @@ process.on('message', function(msg) {
             minifyImage(obj, function(filepath) {
                 resObj.thumbnail = filepath;
                 process.send(resObj);
-                cache[msg.url] = resObj;
             })
         }
         else {
-            resObj.thumbnail = obj.path;
+            resObj.thumbnail = obj.filename;
             process.send(resObj);
-            cache[msg.url] = resObj;
         }
     });
 });
@@ -55,10 +54,11 @@ process.on('message', function(msg) {
 
 //obj fields: path, shouldProcess, extension
 var minifyImage = function(obj, callback) {
-    var origPath = obj.path;
-    var path = origPath + obj.extension;
-    switch(obj.extension) {
-        case '.jpg':
+    var origPath = imagesPath + obj.filename;
+    var path = origPath + '.' + obj.type;
+    var filename = obj.filename + '.' + obj.type;
+    switch(obj.type) {
+        case 'jpg':
             gm(origPath)
                 .interlace('Plane')
                 .quality(85)
@@ -70,11 +70,11 @@ var minifyImage = function(obj, callback) {
                         console.log(err);
                     }
                     else {
-                        callback(path);
+                        callback(filename);
                     }
                 });
             break;
-        case '.png':
+        case 'png':
             gm(origPath)
                 .colors(256)
                 .quality(90)
@@ -87,11 +87,11 @@ var minifyImage = function(obj, callback) {
                         console.log(err);
                     }
                     else {
-                        callback(path);
+                        callback(filename);
                     }
                 });
             break;
-        case '.gif':
+        case 'gif':
             gm(origPath + '[0]')
                 .resize(thumbnailDimensions.width, thumbnailDimensions.height + '>')
                 .noProfile()
@@ -101,7 +101,7 @@ var minifyImage = function(obj, callback) {
                         console.log(err);
                     }
                     else {
-                        callback(path);
+                        callback(filename);
                     }
                 });
             break;
@@ -110,7 +110,8 @@ var minifyImage = function(obj, callback) {
 
 var download = function(url, callback) {
     var type = '';
-    var filepath = imagesPath + getName();
+    var filename = getName();
+    var filepath = imagesPath + filename;
     var stream = request({
         url: url,
         method: "HEAD"
@@ -159,7 +160,7 @@ var download = function(url, callback) {
                 }
             }).pipe(file);
             res.on('end', function() {
-                callback(null, {path: filepath, shouldProcess: true, extension: type});
+                callback(null, {filename: filename, shouldProcess: true, type: type});
             })
         }
     });

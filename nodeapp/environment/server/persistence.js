@@ -71,7 +71,7 @@ module.exports = (function() {
         imageProcessor.processUrls(urls, channel, messageIdx);
     };
 
-    var saveProcessedImagePathToDB = function(originalUrl, thumbnailUrl, channel, messageIdx) {
+    var saveProcessedImagePathToDB = function(originalUrl, thumbnailUrl, channel, messageIdx, callback) {
         var obj = {
             $push: {
                 imageUrls: {
@@ -85,6 +85,12 @@ module.exports = (function() {
         ).exec(function(err, doc) {
                 if(err) {
                     console.log(err);
+                    if(callback) {
+                        callback(err);
+                    }
+                }
+                if(callback) {
+                    callback(null);
                 }
             });
     };

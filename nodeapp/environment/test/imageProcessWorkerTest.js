@@ -29,12 +29,15 @@ describe('image download and minify', function () {
         exec: __dirname + '/../server/imageProcessWorker.js'
     });
 
+    var imagesPath = __dirname + '/../dist/public/images/';
+
     var testChannel = 'testchannel123';
     it('should generate a jpg file', function (done) {
         this.timeout(5000);
         var worker = cluster.fork();
         worker.on('message', function(msgObj) {
-            fs.existsSync(msgObj.thumbnail).should.equal(true);
+            var path = imagesPath + msgObj.thumbnail;
+            fs.existsSync(imagesPath + msgObj.thumbnail).should.equal(true);
             worker.kill();
             done();
         });
@@ -49,7 +52,7 @@ describe('image download and minify', function () {
         this.timeout(5000);
         var worker = cluster.fork();
         worker.on('message', function(msgObj) {
-            fs.existsSync(msgObj.thumbnail).should.equal(true);
+            fs.existsSync(imagesPath + msgObj.thumbnail).should.equal(true);
             worker.kill();
             done();
         });
@@ -64,7 +67,7 @@ describe('image download and minify', function () {
         this.timeout(5000);
         var worker = cluster.fork();
         worker.on('message', function(msgObj) {
-            fs.existsSync(msgObj.thumbnail).should.equal(true);
+            fs.existsSync(imagesPath + msgObj.thumbnail).should.equal(true);
             worker.kill();
             done();
         });

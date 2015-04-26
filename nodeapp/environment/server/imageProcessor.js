@@ -14,7 +14,13 @@ module.exports = (function() {
     worker.on('message', messageHandler);
 
     function messageHandler (msg) {
-        persistence.saveProcessedImagePathToDB(msg.src, msg.thumbnail, msg.channel, msg.messageIdx);
+        var thumbnailUrl = '/public/images' + msg.thumbnail;
+        persistence.saveProcessedImagePathToDB(msg.src, thumbnailUrl, msg.channel, msg.messageIdx, function(err) {
+            if(err) {
+                return console.log(err);
+            }
+            //get jiggy widdit
+        });
     }
 
     var processUrls = function(urls, channel, messageIdx) {
