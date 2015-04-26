@@ -72,16 +72,21 @@ module.exports = (function() {
     };
 
     var saveProcessedImagePathToDB = function(originalUrl, thumbnailUrl, channel, messageIdx) {
-
-        //obj.$push.imageUrls = { $each: urls};
-
-        /*
-        imageUrls: [{
-            originalUrl: String,
-            thumbnail: String,
-            messageIdx: Number
-        }],
-        */
+        var obj = {
+            $push: {
+                imageUrls: {
+                    originalUrl: originalUrl,
+                    thumbnail: thumbnailUrl,
+                    messageIdx: messageIdx
+                }
+            }
+        };
+        Channel.findOneAndUpdate({name: channel}, obj, {upsert: true}
+        ).exec(function(err, doc) {
+                if(err) {
+                    console.log(err);
+                }
+            });
     };
 
     var getActiveChannels = function(from, to, callback) {
@@ -120,7 +125,11 @@ module.exports = (function() {
     var getMessages = function(channelName, from, to, callback) {
         Channel.findOne({name: channelName}).exec(function(err, doc) {
             if(err || !doc) {
-                console.log(err);
+                if(err) {
+                    console.log(err);
+                    return callback(err, []);
+                }
+
                 console.log('no messages found');
                 return callback(err, []);
             }
@@ -166,7 +175,12 @@ module.exports = (function() {
             imageProcessor = imageProcessorInject;
         }
         else {
-            imageProcessor = require('./imageProcessor')(this);
+            imageProcessor = {
+                processUrls: function() {
+                    console.log('image processor not set! Called with arguments:');
+                    console.log(arguments);
+                }
+            };
         }
 
         return {

@@ -6,7 +6,6 @@
 var should = require('should'),
     mongoose = require('mongoose'),
     Channel = require('../app/models/channel');
-    persistenceHandler = require('../server/persistence')();
 
 
 var testNick = 'tester';
@@ -18,6 +17,8 @@ var testMessageWithUrls = 'a merry ' + urls[1] + ' to you ' + urls[2];
 
 
 var testChannel = '#achannelthingy';
+
+var persistenceHandler = require('../server/persistence')();
 
 var testChannels = [
     '#achannelthingy',
@@ -31,7 +32,20 @@ var testChannels = [
     '#achannelthingy8'
 ];
 
+var getPersistenceWithMockupProcessUrl = function(urls, channelName, idx) {
+    return require('../server/persistence')({
+            processUrls: function(resultUrls, channel, messageIdx) {
+                console.log('called!');
+                urls.should.deepEqual(resultUrls);
+                channel.should.equal(channelName);
+                messageIdx.should.equal(idx);
+            }
+        }
+    );
+};
+
 describe('persistence handler', function() {
+
     before(function(done) {
         var options = {
             server: {
@@ -102,7 +116,7 @@ describe('persistence handler', function() {
     });
 
     it('should call processUrls in imageProcessor when called with a message with a url', function(done) {
-        var persistence = require('../server/persistence')({
+        persistenceHandler = require('../server/persistence')({
             processUrls: function(resultUrls, channel, messageIdx) {
                 resultUrls[0].should.equal(urls[0]);
                 channel.should.equal(testChannel);
@@ -112,11 +126,11 @@ describe('persistence handler', function() {
             }
         });
 
-        persistence.saveMessage(testChannel, testNick, testMessageWithUrl);
+        persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrl);
     });
 
     it('should call processUrls with multiple urls when saving a singel message with multiple urls', function(done) {
-        var persistence = require('../server/persistence')({
+        persistenceHandler = require('../server/persistence')({
             processUrls: function(resultUrls, channel, messageIdx) {
                 resultUrls.length.should.equal(2);
                 resultUrls[0].should.equal(urls[1]);
@@ -129,7 +143,7 @@ describe('persistence handler', function() {
             }
         });
 
-        persistence.saveMessage(testChannel, testNick, testMessageWithUrls);
+        persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrls);
     });
 
     it('should return as many messages as are available if more are requested', function(done) {
@@ -168,7 +182,7 @@ describe('persistence handler', function() {
     });
 
     it('should update channel last updated field when message is added', function(done) {
-        persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrl, function() {
+        persistenceHandler.saveMessage(testChannel, testNick, testMessage, function() {
             Channel.findOne({name: testChannel}).exec(function(err, doc) {
                 var maxMillisecondsSince = 100;
                 (Date.now() - doc.lastUpdated).should.be.below(maxMillisecondsSince);
@@ -195,7 +209,7 @@ describe('persistence handler', function() {
     });
 
     it('shouldn\'t give more messages or image urls when getting active channels than the channel has', function(done) {
-        persistenceHandler.saveMessage(testChannels[6], testNick, testMessageWithUrls, function() {
+        persistenceHandler.saveMessage(testChannels[6], testNick, testMessage, function() {
             persistenceHandler.getActiveChannels(0,1, function(err, results) {
                 results[0].name.should.equal(testChannels[6]);
                 results[0].messages.length.should.equal(1);
@@ -221,6 +235,15 @@ describe('persistence handler', function() {
         })
     });
 
+   it('should save image path etc to db', function(done) {
+       persistenceHandler.saveProcessedImagePathToDB(urls[0], 'dumbnail', testChannel, 0);
+       Channel.findOne({name: testChannel}).exec(function(err, doc) {
+           doc.imageUrls[0].thumbnail.should.equal('dumbnail');
+           doc.imageUrls[0].originalUrl.should.equal(urls[0]);
+           doc.imageUrls[0].messageIdx.should.equal(0);
+           done();
+       });
+   });
 });
 
 
