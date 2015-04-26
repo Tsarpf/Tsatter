@@ -6,6 +6,8 @@ function nextAnon() {
     return 'anon' + (count++);
 }
 
+var broadcaster = require('./broadcaster');
+
 var connected = 0;
 
 var addListeners = function(io, irc, persistenceHandler) {
@@ -132,7 +134,10 @@ var addListeners = function(io, irc, persistenceHandler) {
         socket.on('join', function (msg) {
             console.log('got join');
             console.log(msg);
+
+            //broadcaster.addToChannel(msg.channel, socket);
             client.join(msg.channel);
+
         });
 
         socket.on('privmsg', function (msg) {
@@ -182,5 +187,5 @@ var initializeConnections = function(io, persistenceHandler) {
 };
 
 module.exports = {
-    initCons: initializeConnections 
+    initCons: initializeConnections
 };
