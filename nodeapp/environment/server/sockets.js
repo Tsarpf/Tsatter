@@ -152,7 +152,10 @@ module.exports = (function() {
 
         socket.on('privmsg', function (msg) {
             client.say(msg.channel, msg.message);
-            persistenceHandler.saveMessage(msg.channel, username, msg.message, function(idx) {
+            persistenceHandler.saveMessage(msg.channel, username, msg.message, function(err, idx) {
+                if(err) {
+                    return console.log(err);
+                }
                 var urls = getUrls(msg.message);
                 if(!urls) {
                     return;

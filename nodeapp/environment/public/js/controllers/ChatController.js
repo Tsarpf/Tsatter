@@ -21,7 +21,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.editingNick = false;
     $scope.infiniteBottomLocation = Number.MAX_VALUE;
     $scope.infiniteTopLocation = 0;
-    $scope.infiniteStep = 20;
+    $scope.infiniteStep = 30;
     $scope.infiniteReachedTop = false;
     $scope.infiniteReachedBottom = false;
     $scope.origin = location.origin;
@@ -402,6 +402,10 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
                 break;
         }
     };
+    $scope.mediaDelivery = function(data) {
+        console.log(data.image);
+        $scope.mediaList.push(data.image);
+    };
     $scope.handler = {
         PRIVMSG: $scope.privmsg,
         JOIN: $scope.join,
@@ -413,7 +417,8 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         MODE: $scope.mode,
         err_erroneusnickname: $scope.errnick, //its erroneous not erroneus :(
         err_nicknameinuse:  $scope.nicknameinuse,
-        activate: $scope.activate
+        activate: $scope.activate,
+        mediaDelivery: $scope.mediaDelivery
     };
 
     $scope.replaceNick = function(nick, newNick) {
@@ -453,7 +458,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     }
 
     $scope.addMessage = function(message, nick, timestamp, idx, top) {
-        if(!idx ) {
+        if(!idx && !top) {
             idx = getIdx();
         }
         var obj = {message: message, nick: nick, timestamp: getTimestamp(timestamp), idx: idx, class: ''};
@@ -478,6 +483,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             $scope.messages.push(obj);
         }
 
+        /*
         var urls = getUrls(message);
         if(!urls) {
             return;
@@ -499,6 +505,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
                //obj.message = obj.message.replace(src, '[' + num + ']');
            });
         }
+        */
     };
 
     var getTimestamp = function(timestamp) {

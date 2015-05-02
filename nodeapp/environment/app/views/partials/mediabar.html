@@ -1,7 +1,9 @@
 
 <div class="media-bar">
     <div ng-repeat="media in mediaList" images-loaded="imgLoadedEvents">
-        <img ng-src="{{media.url}}" class="media-element">
-        <p> [{{media.idx}}] </p>
+        <a ng-href="{{media.src}}">
+            <img ng-src="{{media.thumbnail}}" class="media-element">
+        </a>
+        <p> [{{media.messageIdx}}] </p>
     </div>
 </div>
