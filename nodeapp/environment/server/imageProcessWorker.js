@@ -7,6 +7,7 @@ var imageTooBig = 'http://i.imgur.com/0BFkWlU.png';
 
 //TODO: read from environment variable
 var imagesPath = __dirname + '/../dist/public/images/';
+
 var gm = require('gm');
 var fs = require('fs');
 var request = require('request');

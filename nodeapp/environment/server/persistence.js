@@ -14,16 +14,6 @@ module.exports = (function() {
 
     var placeholderImageUrl = "http://i.imgur.com/a7i3u6V.png";
 
-    function endsWith(str, suffix) {
-        return str.indexOf(suffix, str.length - suffix.length) !== -1;
-    }
-
-    var urlRegex = /((((https?|ftp):\/\/)|www\.)(([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)|(([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(aero|asia|biz|cat|com|coop|info|int|jobs|mobi|museum|name|net|org|post|pro|tel|travel|xxx|edu|gov|mil|[a-zA-Z][a-zA-Z]))|([a-z]+[0-9]*))(:[0-9]+)?((\/|\?)[^ "]*[^ ,;\.:">)])?)|(spotify:[^ ]+:[^ ]+)/g;
-
-    var getUrls = function(message) {
-        return message.match(urlRegex);
-    };
-
     var saveMessage = function(channelName, nick, message, callback) {
         if(channelName.length === 0 || nick.length === 0 || message.length === 0) {
             console.log('erroneous channel, nick or message');
@@ -55,21 +45,13 @@ module.exports = (function() {
                     return;
                 }
 
-                processUrls(message, channelName, doc.messages.length - 1);
+                //processUrls(message, channelName, doc.messages.length - 1);
 
                 if(callback)
-                    return callback(null);
+                    return callback(null, doc.messages.length - 1);
         });
     };
 
-    var processUrls = function(message, channel, messageIdx) {
-        var urls = getUrls(message);
-        if(!urls) {
-            return;
-        }
-
-        imageProcessor.processUrls(urls, channel, messageIdx);
-    };
 
     var saveProcessedImagePathToDB = function(originalUrl, thumbnailUrl, channel, messageIdx, callback) {
         var obj = {
@@ -181,12 +163,16 @@ module.exports = (function() {
             imageProcessor = imageProcessorInject;
         }
         else {
+            throw new Error('no image processor module');
+            //imageProcessor = require('imageProcessor');
+            /*
             imageProcessor = {
                 processUrls: function() {
                     console.log('image processor not set! Called with arguments:');
                     console.log(arguments);
                 }
             };
+            */
         }
 
         return {

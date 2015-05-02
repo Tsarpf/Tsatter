@@ -17,6 +17,7 @@ module.exports = (function() {
     console.log('key is: "' + key + '"');
     var bingUrl = 'https://:' + key + '@api.datamarket.azure.com/Bing/Search/v1/Image?$format=json&Query=';
     var cache = {};
+
     var search = function(parameter, callback) {
         if(cache[parameter]) {
             return callback(null, cache[parameter]);

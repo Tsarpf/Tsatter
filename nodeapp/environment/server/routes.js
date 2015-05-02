@@ -1,8 +1,9 @@
-var persistenceHandler = require('./persistence'),
-    imageSearch = require('./imageSearch'),
+var persistenceHandler,
+    imageSearch,
     User = require('../app/models/user');
 
-module.exports = function(app) {
+var app;
+module.exports = (function() {
     app.get('/activity/', function(req, res, next) {
         var from = parseInt(req.query.from);
         var to = parseInt(req.query.to);
@@ -75,4 +76,16 @@ module.exports = function(app) {
     app.all('/', function (req, res) {
         res.render('index.html');
     });
-};
+
+    return function(persistence, imageSearchInject, appInject) {
+        if(persistence && imageSearch && appInject) {
+            app = appInject;
+            persistenceHandler = persistence;
+            imageSearch = imageSearchInject;
+        }
+        else {
+            throw new Error('missing module injections!');
+        }
+    }
+
+}());

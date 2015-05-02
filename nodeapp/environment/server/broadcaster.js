@@ -40,6 +40,9 @@ module.exports = (function() {
     function quit(socket) {
         var socketid = socket.id;
         console.log(socketid + ' quit');
+        if(!users[socketid]) {
+            return;
+        }
         for(var i = 0; i < users[socketid].length; i++) {
             var channel = users[socketid][i];
             for(var j = 0; j < channels[channel].length; j++) {
