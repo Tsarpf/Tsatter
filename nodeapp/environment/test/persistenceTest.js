@@ -108,47 +108,16 @@ describe('persistence handler', function() {
         });
     });
 
-    it('should find urls correctly', function(done) {
-        var testUrls = persistenceHandler.getUrls(testMessageWithUrls);
-        testUrls[0].should.equal(urls[1]);
-        testUrls[1].should.equal(urls[2]);
-        done();
-    });
-
     it('should call processUrls in imageProcessor when called with a message with a url', function(done) {
-        persistenceHandler = require('../server/persistence')({
-            processUrls: function(resultUrls, channel, messageIdx) {
-                resultUrls[0].should.equal(urls[0]);
-                channel.should.equal(testChannel);
-                messageIdx.should.equal(2);
-                persistenceHandler = require('../server/persistence')();
-                done();
-            }
+        persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrl, function(err, msgIdx) {
+            msgIdx.should.equal(2);
+            done();
         });
-
-        persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrl);
-    });
-
-    it('should call processUrls with multiple urls when saving a singel message with multiple urls', function(done) {
-        persistenceHandler = require('../server/persistence')({
-            processUrls: function(resultUrls, channel, messageIdx) {
-                resultUrls.length.should.equal(2);
-                resultUrls[0].should.equal(urls[1]);
-                resultUrls[1].should.equal(urls[2]);
-                channel.should.equal(testChannel);
-                messageIdx.should.equal(3);
-
-                persistenceHandler = require('../server/persistence')();
-                done();
-            }
-        });
-
-        persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrls);
     });
 
     it('should return as many messages as are available if more are requested', function(done) {
         persistenceHandler.getMessages(testChannel, 0, 6, function(err, messages) {
-            messages.length.should.equal(4);
+            messages.length.should.equal(3);
             done();
         })
     });

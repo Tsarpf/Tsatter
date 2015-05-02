@@ -1,11 +1,14 @@
 var port = 3000;
 var should = require('should'),
-    server = require('../server/tsatterServer')({port: port}),
+    persistence = require('../server/persistence')(),
+    server = require('../server/tsatterServer')({port: port}, persistence),
+    broadcaster = require('../server/broadcaster'),
+    imageProcessor = {
+        processUrls: function() {}
+    },
+    sockets = require('../server/sockets')(broadcaster, persistence, imageProcessor, server),
     client = require('socket.io-client'),
-    request = require('request'),
-    requestSuper = require('supertest'),
-    Channel = require('../app/models/channel'),
-    agent = requestSuper.agent(server.app);
+    Channel = require('../app/models/channel');
 
 describe('Server full system', function () {
     var fstSock, sndSock;
@@ -16,11 +19,11 @@ describe('Server full system', function () {
     var cookies;
     var url = 'http://127.0.0.1:' + port;
 
-    this.timeout(20000);
+    this.timeout(10000);
 
     beforeEach(function (done) {
         var options = {
-            forceNew: true,
+            forceNew: true
         };
         fstSock = client(url, options);
         sndSock = client(url, options);

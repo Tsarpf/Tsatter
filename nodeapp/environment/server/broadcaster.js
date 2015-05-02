@@ -10,30 +10,23 @@ module.exports = (function() {
     function add(channel, socket) {
         console.log('added ' + socket.id);
         if(!channels[channel]) {
-            channels[channel] = [socket];
+            channels[channel] = {};
         }
-        else {
-            channels[channel].push(socket);
-        }
-
+        channels[channel][socket.id] = socket;
 
         if(!users[socket.id]) {
-            users[socket.id] = [channel];
+            users[socket.id] = {};
         }
-        else {
-            users[socket.id].push(channel);
-        }
+        users[socket.id][channel] = channels[channel];
     }
 
     function remove(channel, socket) {
         console.log('removed ' + socket.id);
+        console.log(channel);
+        console.log(channels);
 
-        for(var i = 0; i < channels[channel].length; i++) {
-            var sock = channels[channel][i];
-
-            if(sock.id === socket.id) {
-                channels[channel].splice(i, 1);
-            }
+        if(channels[channel][socket.id]) {
+            delete channels[channel][socket.id];
         }
     }
 
@@ -43,21 +36,21 @@ module.exports = (function() {
         if(!users[socketid]) {
             return;
         }
-        for(var i = 0; i < users[socketid].length; i++) {
-            var channel = users[socketid][i];
-            for(var j = 0; j < channels[channel].length; j++) {
-                var sock = channels[channel][j];
-                if(sock.id === socketid) {
-                    channels[channel].splice(j,1);
-                }
+
+        for(var key in users[socketid]) {
+            if(users[socketid].hasOwnProperty(key)) {
+                var channel = users[socketid][key];
+                delete channel[socketid];
             }
         }
     }
 
     function broadcast(channel, message) {
-        for(var i = 0; i < channels[channel].length; i++) {
-            var sock = channels[channel][i];
-            sock.emit(message);
+        for(var key in channels[channel]) {
+            if(channels[channel].hasOwnProperty(key)) {
+               var socket = channels[channel][key];
+                socket.emit(message);
+            }
         }
     }
 

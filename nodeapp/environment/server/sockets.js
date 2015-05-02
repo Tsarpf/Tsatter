@@ -170,22 +170,28 @@ module.exports = (function() {
         socket.on('message', function (messageObj) {
             console.log('got raw message from socket');
             console.log(messageObj.command);
-            try {
-
+            if(messageObj.command.length >= 2) {
                 switch(messageObj.command[0].toLowerCase()) {
                     case 'part':
                         broadcaster.remove(messageObj.command[1], socket);
                         break;
+                    case 'join':
+                        broadcaster.add(
+                            messageObj.command[1], socket);
+                        break;
                     default:
                         break;
                 }
-
                 client.send.apply(client, messageObj.command);
             }
+            //try {
+            //}
+            /*
             catch (err) {
                 console.log('send fail');
                 console.log(err);
             }
+            */
         });
 
         socket.on('reconnect', function () {
@@ -196,7 +202,7 @@ module.exports = (function() {
         socket.on('disconnect', function (test) {
             connected--;
             console.log('disconnect ' + test);
-            console.log('currenctly connected: ' + connected);
+            console.log('currently connected: ' + connected);
             broadcaster.quit(socket);
             client.disconnect('socket disconnected');
         });
@@ -220,6 +226,6 @@ module.exports = (function() {
 
         io = require('socket.io')(server.getServer());
 
-        io.on('connection', addListeners());
+        io.on('connection', addListeners);
     };
 }());

@@ -25,7 +25,7 @@
     "xmlhttprequest": "*"
   },
   "scripts": {
-    "start": "nodemon run.js",
+    "start": "nodemon server/run.js",
     "test": "../node_modules/.bin/mocha",
     "travistest": "./node_modules/.bin/mocha"
   },

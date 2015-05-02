@@ -50,4 +50,4 @@ module.exports = (function() {
     return {
         search: search
     };
-})();
+}());

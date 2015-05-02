@@ -156,8 +156,7 @@ module.exports = (function() {
             saveMessage: saveMessage,
             getMessages: getMessages,
             getActiveChannels: getActiveChannels,
-            getUrls: getUrls,
             saveProcessedImagePathToDB: saveProcessedImagePathToDB
-        }
+        };
     };
 }());
