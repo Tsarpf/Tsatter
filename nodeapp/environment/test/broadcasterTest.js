@@ -10,6 +10,7 @@ describe('broadcaster', function() {
 
     var count = 0;
     var testObj = 'testmessage';
+    var testChannel = 'testtest';
     var getMockSock = function(emit) {
         var obj = {
             id: ++count
@@ -18,16 +19,15 @@ describe('broadcaster', function() {
             obj.emit = emit
         }
         else {
-            obj.emit = function (message) {
+            obj.emit = function (channel, message) {
                 message.should.equal(testObj);
+                channel.should.equal(testChannel);
                 console.log(obj.id + ' got message');
             }
         }
-
         return obj;
     };
 
-    var testChannel = 'testtest';
     it('should broadcast to added users', function() {
         broadcaster.add(testChannel, getMockSock());
         broadcaster.add(testChannel, getMockSock());
@@ -36,7 +36,7 @@ describe('broadcaster', function() {
     });
 
     it('shouldn\'t broadcast to a removed user', function() {
-        var sock = getMockSock(function(msg) {
+        var sock = getMockSock(function() {
             should.fail('not to be called');
         });
         broadcaster.add(testChannel, sock);
@@ -45,7 +45,7 @@ describe('broadcaster', function() {
     });
 
     it('shouldn\'t broadcast to user that has quit', function() {
-        var sock = getMockSock(function(msg) {
+        var sock = getMockSock(function() {
             should.fail();
         });
 
@@ -56,7 +56,7 @@ describe('broadcaster', function() {
 
     it('shouldn\'t broadcast to same user multiple times if added multiple times to a channel', function() {
         var count = 0;
-        var sock = getMockSock(function(msg) {
+        var sock = getMockSock(function() {
             count++;
             if(count >= 2) {
                 should.fail();

@@ -49,7 +49,7 @@ module.exports = (function() {
         for(var key in channels[channel]) {
             if(channels[channel].hasOwnProperty(key)) {
                var socket = channels[channel][key];
-                socket.emit(message);
+                socket.emit(channel, message);
             }
         }
     }

@@ -37,7 +37,8 @@ process.on('message', function(msg) {
         var resObj = {
             channel: msg.channel,
             messageIdx: msg.messageIdx,
-            src: msg.url
+            src: msg.url,
+            type: obj.type
         };
         if(obj.shouldProcess === true) {
             minifyImage(obj, function(filepath) {

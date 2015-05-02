@@ -1,7 +1,8 @@
 module.exports = (function() {
     var fs = require('fs');
     var cluster = require('cluster');
-    var persistence = {};
+    var persistence,
+        broadcaster;
 
 
     console.log('cpus: ' + require('os').cpus().length);
@@ -15,11 +16,15 @@ module.exports = (function() {
 
     function messageHandler (msg) {
         var thumbnailUrl = '/public/images' + msg.thumbnail;
-        persistence.saveProcessedImagePathToDB(msg.src, thumbnailUrl, msg.channel, msg.messageIdx, function(err) {
+        persistence.saveProcessedImagePathToDB(msg.src, thumbnailUrl, msg.channel, msg.messageIdx, msg.type, function(err) {
             if(err) {
                 return console.log(err);
             }
             //get jiggy widdit
+            broadcaster.broadcast(msg.channel, {
+                command: 'mediaDelivery',
+                image: msg
+            });
         });
     }
 
@@ -33,12 +38,13 @@ module.exports = (function() {
         }
     };
 
-    return function(persistenceInject) {
-        if(!persistenceInject) {
-            throw new Error('no persistence module');
+    return function(persistenceInject, broadcasterInject) {
+        if(!persistenceInject || !broadcasterInject) {
+            throw new Error('module dependency missing!');
         }
 
         persistence = persistenceInject;
+        broadcaster = broadcasterInject;
 
         return {
             processUrls: processUrls

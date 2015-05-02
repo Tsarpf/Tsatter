@@ -47,13 +47,14 @@ module.exports = (function() {
         });
     };
 
-    var saveProcessedImagePathToDB = function(originalUrl, thumbnailUrl, channel, messageIdx, callback) {
+    var saveProcessedImagePathToDB = function(originalUrl, thumbnailUrl, channel, messageIdx, type, callback) {
         var obj = {
             $push: {
                 imageUrls: {
                     originalUrl: originalUrl,
                     thumbnail: thumbnailUrl,
-                    messageIdx: messageIdx
+                    messageIdx: messageIdx,
+                    type: type
                 }
             }
         };

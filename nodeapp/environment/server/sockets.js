@@ -157,6 +157,8 @@ module.exports = (function() {
                 if(!urls) {
                     return;
                 }
+                //TODO: check if src url already has a downloaded image
+
                 imageProcessor.processUrls(urls, msg.channel, idx);
             });
         });
