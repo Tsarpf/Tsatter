@@ -6,9 +6,6 @@
 module.exports = (function() {
     //var mongoose = require('mongoose'),
     var Channel = require('../app/models/channel');
-
-    var imageProcessor = {};
-
     var channelPreviewMessageCount = 3;
     var channelPreviewImageUrlCount = 1;
 
@@ -45,13 +42,10 @@ module.exports = (function() {
                     return;
                 }
 
-                //processUrls(message, channelName, doc.messages.length - 1);
-
                 if(callback)
                     return callback(null, doc.messages.length - 1);
         });
     };
-
 
     var saveProcessedImagePathToDB = function(originalUrl, thumbnailUrl, channel, messageIdx, callback) {
         var obj = {
@@ -131,7 +125,6 @@ module.exports = (function() {
         });
     };
 
-
     var getSendableMessageArray = function(messages, from, to) {
         var messageArray = [];
         if(from < 0) {
@@ -158,23 +151,7 @@ module.exports = (function() {
         return messageArray;
     };
 
-    return function(imageProcessorInject) {
-        if(imageProcessorInject) {
-            imageProcessor = imageProcessorInject;
-        }
-        else {
-            throw new Error('no image processor module');
-            //imageProcessor = require('imageProcessor');
-            /*
-            imageProcessor = {
-                processUrls: function() {
-                    console.log('image processor not set! Called with arguments:');
-                    console.log(arguments);
-                }
-            };
-            */
-        }
-
+    return function() {
         return {
             saveMessage: saveMessage,
             getMessages: getMessages,
