@@ -53,4 +53,19 @@ describe('broadcaster', function() {
         broadcaster.quit(sock);
         broadcaster.broadcast(testChannel, testObj);
     });
+
+    it('shouldn\'t broadcast to same user multiple times if added multiple times to a channel', function() {
+        var count = 0;
+        var sock = getMockSock(function(msg) {
+            count++;
+            if(count >= 2) {
+                should.fail();
+            }
+        });
+
+        broadcaster.add(testChannel, sock);
+        broadcaster.add(testChannel, sock);
+
+        broadcaster.broadcast(testChannel, testObj);
+    });
 });
