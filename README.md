@@ -1,8 +1,6 @@
 
 Tsatter
 =======
-[![Build Status](https://travis-ci.org/Tsarpf/Tsatter.svg?branch=master)](https://travis-ci.org/Tsarpf/Tsatter)
-[![Stories in Ready](https://badge.waffle.io/Tsarpf/Tsatter.png?label=ready&title=Ready)](https://waffle.io/Tsarpf/Tsatter)
 ####Probably running the newest version here: http://tsatter.com
 ####You can also join the same channels by connecting to tsatter.com using your favorite IRC-client
 
