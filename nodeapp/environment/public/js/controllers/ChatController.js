@@ -11,7 +11,8 @@ angular.module('tsatter').controller('ChatController', [
     '$anchorScroll',
     '$q',
     'imageSearch',
-function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll, $q, imageSearch) {
+    'infiniteMessages',
+function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll, $q, imageSearch, infiniteMessages) {
     $scope.messages = [];
     $scope.users = {};
     $scope.mediaList = [];
@@ -30,9 +31,13 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.waitingForSearchResults = false;
     $scope.cursorPos = 0;
 
+    var channelParamObj = {channel: null};
+    $scope.messageDatasource = infiniteMessages(channelParamObj);
 
     //we have to do this in a timeout so that the directive is initialized
     $timeout(function(){
+        channelParamObj.channel = $scope.channelName;
+        console.log('channel name set!');
         joinChannel($scope.channelName);
         $scope.nick = $rootScope.vars.nickname;
         $scope.getBacklog();
