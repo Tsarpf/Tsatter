@@ -120,51 +120,50 @@ var download = function(url, callback) {
     }, function(err, headRes) {
         if(err) {
             console.log(err);
-            return callback('error!');
+            return callback(err);
         }
         var size = headRes.headers['content-length'];
         if (size > maxSize) {
             console.log('Resource size exceeds limit (' + size + ')');
-            callback('image too big');
-        } else {
-            size = 0;
-            var file = fs.createWriteStream(filepath);
+            return callback('image too big');
+        }
+        size = 0;
+        var file = fs.createWriteStream(filepath);
 
-            var res = request({ url: url});
-            var checkType = true;
-            res.on('data', function(data) {
-                size += data.length;
+        var res = request({ url: url});
+        var checkType = true;
+        res.on('data', function(data) {
+            size += data.length;
 
-                if(checkType && size >= 4) {
-                    var hex = data.toString('hex', 0, 4);
-                    for(var key in fileTypes) {
-                        if(fileTypes.hasOwnProperty(key)) {
-                            if(hex.indexOf(fileTypes[key]) === 0) {
-                                type = key;
-                                checkType = false;
-                                break;
-                            }
+            if(checkType && size >= 4) {
+                var hex = data.toString('hex', 0, 4);
+                for(var key in fileTypes) {
+                    if(fileTypes.hasOwnProperty(key)) {
+                        if(hex.indexOf(fileTypes[key]) === 0) {
+                            type = key;
+                            checkType = false;
+                            break;
                         }
                     }
-                    if(!type) {
-                        res.abort();
-                        fs.unlink(filepath);
-                        return callback('not an image');
-                    }
                 }
-
-                if (size > maxSize) {
-                    console.log('Resource stream exceeded limit (' + size + ')');
-
-                    res.abort(); // Abort the response (close and cleanup the stream)
-                    fs.unlink(filepath); // Delete the file we were downloading the data to
-                    return callback(null, {path: imageTooBig, shouldProcess: false});
+                if(!type) {
+                    res.abort();
+                    fs.unlink(filepath);
+                    return callback('not an image');
                 }
-            }).pipe(file);
-            res.on('end', function() {
-                callback(null, {filename: filename, shouldProcess: true, type: type});
-            })
-        }
+            }
+
+            if (size > maxSize) {
+                console.log('Resource stream exceeded limit (' + size + ')');
+
+                res.abort(); // Abort the response (close and cleanup the stream)
+                fs.unlink(filepath); // Delete the file we were downloading the data to
+                return callback(null, {path: imageTooBig, shouldProcess: false});
+            }
+        }).pipe(file);
+        res.on('end', function() {
+            callback(null, {filename: filename, shouldProcess: true, type: type});
+        })
     });
 };
 
