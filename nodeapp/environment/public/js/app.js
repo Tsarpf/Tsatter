@@ -5,6 +5,7 @@ var app = angular.module('tsatter', [
     'ngSanitize',
     'luegg.directives',
     'duScroll',
+    'ui.scroll',
     'flash',
     'angular-images-loaded',
     'lrInfiniteScroll',

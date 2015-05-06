@@ -249,8 +249,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
                 for(var i = 0; i < data.length; i++) {
                     $scope.addBackendMessage(data[i]);
                 }
-
-
             }, errorLogger);
     };
 
@@ -504,10 +502,10 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     var getTimestamp = function(timestamp) {
         var date;
         if(!timestamp) {
-           date = new Date(Date.now());
+           date = new Date(Date.now()).getTime();
         }
         else {
-            date = new Date(timestamp);
+            date = new Date(timestamp).getTime();
         }
         return date;
     };

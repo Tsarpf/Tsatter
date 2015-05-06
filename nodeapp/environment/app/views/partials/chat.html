@@ -7,11 +7,11 @@
         <div class="messages col-xs-7"
             ng-show="!searching"
             scroll-glue="glued"
-            lr-infinite-scroll="infiniteScrollDown"
-            lr-infinite-scroll-up="infiniteScrollUp"
+            ui-scroll-viewport
             scroll-threshold="100">
 
-            <ts-chat-message ng-repeat="message in messages"> </ts-chat-message>
+            <!--<ts-chat-message ng-repeat="message in messages"> </ts-chat-message>-->
+            <ts-chat-message ui-scroll="message in messages"></ts-chat-message>
         </div>
         <div class="messages col-xs-7"
              ng-show="searching">
