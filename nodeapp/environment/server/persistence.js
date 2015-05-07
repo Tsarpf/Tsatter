@@ -140,13 +140,17 @@ var getSendableMessageArray = function(messages, from, to) {
     var messageArray = [];
     if(from < 0) {
         from = messages.length + from;
+        if(to === 0) {
+            to = messages.length - 1; //Last one
+        }
     }
     if(to < 0) {
-        to = messages.length + to + 1;
+        to = messages.length + to;
     }
 
+    //if to is still negative, -to > messages.length and we've decided not to wrap around
     if(to < 0) {
-        return []
+        return [];
     }
     if(from < 0) {
        from = 0;
