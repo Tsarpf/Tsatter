@@ -1,11 +1,4 @@
-FROM dockerfile/nodejs
-
-# Setup environment
-ENV DEBIAN_FRONTEND noninteractive
-RUN locale-gen en_US.UTF-8 fi_FI.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL fi_FI.UTF-8
+FROM node
 
 # Install apt-dependencies
 RUN apt-get update && apt-get install -y screen openssh-server sudo
