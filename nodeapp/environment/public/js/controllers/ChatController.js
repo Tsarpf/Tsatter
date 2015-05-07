@@ -16,7 +16,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.messages = [];
     $scope.users = {};
     $scope.mediaList = [];
-    $scope.glued = true;
+    //$scope.glued = true;
     $scope.mediaGlued = true;
     $scope.nick = '';
     $scope.editingNick = false;
@@ -40,7 +40,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         console.log('channel name set!');
         joinChannel($scope.channelName);
         $scope.nick = $rootScope.vars.nickname;
-        $scope.getBacklog();
         focus('chatInput');
     });
 
@@ -152,162 +151,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         $scope.infiniteReachedBottom = true;
         $scope.infiniteReachedTop = true;
         console.log('error!');
-    };
-
-    $scope.getBacklog = function() {
-        var hash = $location.hash();
-        var from = -$scope.infiniteStep - 1;
-        var to = -1;
-        if(hash) {
-            var targetChannel = '#' + hash.split('__')[0];
-            if(targetChannel === $scope.channelName) {
-                var target = parseInt(hash.split('__')[1]);
-
-                if(hash.split('__')[1]) {
-                    to = parseInt(target + $scope.infiniteStep / 2);
-                    from = parseInt(target - $scope.infiniteStep / 2);
-
-                    //If we're closer than infiniteStep/2 to 0, get more messages after the targeted message
-                    if(from <= 0) {
-                        to += (-from);
-                        from = 0;
-                        $scope.infiniteReachedTop = true;
-                    }
-
-                    $scope.glued = false;
-                    $scope.infiniteBottomLocation = to;
-                    $scope.infiniteTopLocation = from;
-                }
-            }
-        }
-        else {
-            $scope.infiniteReachedBottom = true;
-        }
-
-        $scope.getMessagesFromServer($scope.channelName, from, to,
-        function(data, status, headers, config) {
-            for (var i = 0; i < data.length; i++) {
-                $scope.addBackendMessage(data[i]);
-            }
-            $timeout(function() {
-                var hash = $location.hash();
-                for(var i = 0; i < $scope.messages.length; i++) {
-                    if($scope.messages[i].idx == hash.split('__')[1]) {
-                        $scope.currentlyHighlighted = $scope.messages[i];
-                        $scope.currentlyHighlighted.class = 'single-message-highlighted';
-                        break;
-                    }
-                }
-                $anchorScroll();
-            });
-
-            if(data.length === 0 && $location.hash().length > 1) {
-               //message not found. do a flash message here?
-                $location.hash('');
-                $scope.getBacklog();
-                $scope.glued = true;
-            }
-
-            if(data.length > 0) {
-                $scope.infiniteBottomLocation = data[i - 1].idx;
-                $scope.infiniteTopLocation = data[0].idx;
-            }
-
-            if(data.length < $scope.infiniteStep - 1) {
-                $scope.infiniteReachedTop = true;
-                $scope.infiniteReachedBottom = true;
-            }
-
-        }, errorLogger);
-    };
-
-    $scope.infiniteScrollDown = function() {
-        if($scope.infiniteReachedBottom) {
-            return;
-        }
-
-        $scope.getMessagesFromServer($scope.channelName, $scope.infiniteBottomLocation, $scope.infiniteBottomLocation + $scope.infiniteStep,
-            function(data, status, headers, config) {
-                if(data.length === 0) {
-                    $scope.infiniteReachedBottom = true;
-                    return;
-                }
-
-                if(data.length < $scope.infiniteStep - 1) {
-                    $scope.infiniteReachedBottom = true;
-                }
-
-                var tm = function(idx) {
-                    return function() {
-                        idx -= 10;
-                        if(idx < 0) {idx = 0;}
-                        var id = $scope.channelName.substring(1) + '__' + idx;
-                        $scope.glued = false;
-                        $location.hash(id);
-                        $anchorScroll();
-                    }
-                };
-                $timeout(tm($scope.infiniteBottomLocation));
-
-                $scope.infiniteBottomLocation += data.length;
-
-                for(var i = 0; i < data.length; i++) {
-                    $scope.addBackendMessage(data[i]);
-                }
-            }, errorLogger);
-    };
-
-    $scope.infiniteScrollUp = function() {
-        //numbers go down since the oldest message has the smallest index 0
-        if($scope.infiniteReachedTop) {
-            return;
-        }
-
-        if($scope.infiniteTopLocation === 0) {
-            $scope.infiniteReachedTop = true;
-            return;
-        }
-
-        var top = $scope.infiniteTopLocation;
-        var topAfterDecrement = top - $scope.infiniteStep;
-
-        if(topAfterDecrement < 0) {
-            topAfterDecrement = 0;
-            $scope.infiniteReachedTop = true;
-        }
-
-        $scope.getMessagesFromServer($scope.channelName, topAfterDecrement, top,
-            function(data, status, headers, config) {
-                if(data.length === 0) {
-                    $scope.infiniteReachedTop = true;
-                    return;
-                }
-
-                if(data.length < $scope.infiniteStep - 1) {
-                    $scope.infiniteReachedTop  = true;
-                }
-
-                var tm = function(idx) {
-                    return function() {
-                        //idx += 5;
-                        //if(idx < 0) {idx = 0;}
-                        var id = $scope.channelName.substring(1) + '__' + idx;
-                        $scope.glued = false;
-                        $location.hash(id);
-                        $anchorScroll();
-                    }
-                };
-                $timeout(tm($scope.infiniteTopLocation));
-                $scope.infiniteTopLocation -= data.length;
-                if($scope.infiniteTopLocation < 0) {
-                    $scope.infiniteTopLocation = 0;
-                }
-
-                for(var i = data.length - 1; i >= 0; i--) {
-                    $scope.addBackendMessage(data[i], true);
-                }
-            }, errorLogger);
-
     };
 
     //Not sure yet if this is really a robust solution. It seems a bit dangerous

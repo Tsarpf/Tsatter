@@ -35,6 +35,7 @@ module.exports = function(app) {
 
         from = parseInt(from);
         to = parseInt(to);
+        /*
         if(from > to) {
             res.writeHead(400, {error: 'invalid from/to field(s)'});
             return res.end();
@@ -43,11 +44,14 @@ module.exports = function(app) {
             res.writeHead(403, {error: 'Too many messages requested'});
             return res.end();
         }
+        */
 
         persistenceHandler.getMessages(channel, from, to, function(err, messages) {
             if(err) {
                 console.log('message fetch fail');
                 console.log(err);
+                res.writeHead(403, {error: err});
+                res.end();
             }
             else {
                 res.json(messages);

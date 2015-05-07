@@ -159,6 +159,21 @@ describe('persistence handler', function() {
         })
     });
 
+    it('should return the correct messages when asking for third and second last using negative numbers', function(done) {
+        persistenceHandler.getMessages(testChannel, -4, -1, function(err, messages) {
+            messages.length.should.equal(2);
+            done();
+        })
+    });
+
+    it('should return the correct messages when asking for negative ie. last ones', function(done) {
+        persistenceHandler.getMessages(testChannel, -3, 0, function(err, messages) {
+            messages.length.should.equal(2);
+            done();
+        })
+    });
+
+
     it('should update channel last updated field when message is added', function(done) {
         persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrl, function() {
             Channel.findOne({name: testChannel}).exec(function(err, doc) {

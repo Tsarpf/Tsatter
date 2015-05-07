@@ -6,12 +6,18 @@
 
         <div class="messages col-xs-7"
             ng-show="!searching"
-            scroll-glue="glued"
-            ui-scroll-viewport
-            scroll-threshold="100">
+            ui-scroll-viewport>
 
-            <!--<ts-chat-message ng-repeat="message in messages"> </ts-chat-message>-->
-            <ts-chat-message ui-scroll="message in messageDatasource"></ts-chat-message>
+            <div ui-scroll="message in messageDatasource" buffer-size="25" >
+                <ts-chat-message></ts-chat-message>
+            </div>
+
+            <!--
+            <div ui-scroll="message in messageDatasource">
+                {{message.message}}
+            </div>
+            -->
+
         </div>
         <div class="messages col-xs-7"
              ng-show="searching">
