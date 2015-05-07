@@ -16,15 +16,10 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.messages = [];
     $scope.users = {};
     $scope.mediaList = [];
-    //$scope.glued = true;
+    $scope.glued = true;
     $scope.mediaGlued = true;
     $scope.nick = '';
     $scope.editingNick = false;
-    $scope.infiniteBottomLocation = Number.MAX_VALUE;
-    $scope.infiniteTopLocation = 0;
-    $scope.infiniteStep = 20;
-    $scope.infiniteReachedTop = false;
-    $scope.infiniteReachedBottom = false;
     $scope.origin = location.origin;
     $scope.searching = false;
     $scope.searchResults = [];
@@ -37,6 +32,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     //we have to do this in a timeout so that the directive is initialized
     $timeout(function(){
         channelParamObj.channel = $scope.channelName;
+        channelParamObj.adapter = $scope.messageAdapter;
         console.log('channel name set!');
         joinChannel($scope.channelName);
         $scope.nick = $rootScope.vars.nickname;
@@ -205,7 +201,10 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         $scope.addServerMessage(data.nick + ' joined the channel');
     };
     $scope.privmsg = function(data) {
-        $scope.addMessage(data.args[1], data.nick);
+        //$scope.addMessage(data.args[1], data.nick);
+        //FIXME: the idx is not implemented correctly
+        var obj = {message: data.args[1], nick: data.nick, timestamp: getTimestamp(), idx: 0, class: ''};
+        $scope.messages.push(obj);
     };
     $scope.nick = function(data) {
         if(data.nick === $scope.nick) {
@@ -272,6 +271,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         delete $scope.users[nick];
     };
 
+    /*
     $scope.addServerMessage = function(message) {
         if($scope.infiniteReachedBottom) {
             if($scope.messages[$scope.messages.length - 1].message === message) {
@@ -280,6 +280,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             $scope.addMessage(message, 'server');
         }
     };
+    */
 
     $scope.addBackendMessage = function(message, top) {
         $scope.addMessage(message.message, message.nick, message.timestamp, message.idx, top);
@@ -298,6 +299,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         return 0;
     }
 
+    /*
     $scope.addMessage = function(message, nick, timestamp, idx, top) {
         if(!idx ) {
             idx = getIdx();
@@ -346,6 +348,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
            });
         }
     };
+    */
 
     var getTimestamp = function(timestamp) {
         var date;
@@ -433,8 +436,14 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         }
         else {
             var obj = {channel: $scope.channelName, message: message};
-            socket.emit('privmsg', obj);
-            $scope.addMessage(message, $rootScope.vars.nickname);
+            socket.emit('privmsg', obj, function(success) {
+                if(success) {
+                    //$scope.messageDatasource.incrementRevision();
+                    var obj = {message: message, nick: $rootScope.vars.nickname, timestamp: getTimestamp(), idx: 0, class: ''};
+                    $scope.messages.push(obj);
+                }
+            });
+            //$scope.addMessage(message, $rootScope.vars.nickname);
         }
     };
 

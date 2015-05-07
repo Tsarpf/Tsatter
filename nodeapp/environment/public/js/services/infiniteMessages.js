@@ -5,13 +5,8 @@
 
 
 angular.module('tsatter').factory('infiniteMessages', ['$http', '$timeout', function($http, $timeout) {
-    var runTimes = 0;
+    var rev = 0;
     return function(obj) {
-        console.log('ahoy from infinitemessages thing');
-        console.log(obj);
-
-        var throttleTime = 1000;
-        var lastRun = 0;
         function getData(index, count, success) {
             var from = index - 1;
             var to = index + count - 1;
@@ -52,8 +47,23 @@ angular.module('tsatter').factory('infiniteMessages', ['$http', '$timeout', func
                 })
         }
 
+        function revision() {
+            return rev;
+        }
+
+        function incrementRevision() {
+            rev++;
+        }
+
+        function addMessage(msg) {
+
+        }
+
         return {
-            get: getData
+            get: getData,
+            incrementRevision: incrementRevision,
+            revision: revision,
+            addMessage: addMessage
         }
     }
 }]);

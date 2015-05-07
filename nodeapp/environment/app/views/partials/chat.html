@@ -5,12 +5,16 @@
         </div>
 
         <div class="messages col-xs-7"
-            ng-show="!searching"
-            ui-scroll-viewport>
+             ng-show="!searching"
+             adapter="messageAdapter"
+             scroll-glue="glued"
+             ui-scroll-viewport>
 
-            <div ui-scroll="message in messageDatasource" buffer-size="25" >
+            <div ui-scroll="message in messageDatasource" buffer-size="25" class="backlog">
                 <ts-chat-message></ts-chat-message>
             </div>
+
+            <ts-chat-message ng-repeat="message in messages"></ts-chat-message>
 
             <!--
             <div ui-scroll="message in messageDatasource">

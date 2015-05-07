@@ -106,6 +106,10 @@
     overflow: auto;
 }
 
+
+.backlog {
+    background-color: rgb(231, 228, 218);
+}
 .messages {
     height: 90%;
     min-height: 90%;

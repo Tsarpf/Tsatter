@@ -135,12 +135,21 @@ var addListeners = function(io, irc, persistenceHandler) {
             client.join(msg.channel);
         });
 
-        socket.on('privmsg', function (msg) {
+        socket.on('privmsg', function (msg, fn) {
             client.say(msg.channel, msg.message);
             if(msg.message.length > 512) {
                 msg.message = msg.message.substring(0, 512);
             }
-            persistenceHandler.saveMessage(msg.channel, username, msg.message);
+            persistenceHandler.saveMessage(msg.channel, username, msg.message, function(err) {
+                if(err) {
+                    console.log(err);
+                    return fn(false);
+                }
+                if(fn) {
+                    fn(true);
+                }
+
+            });
         });
 
         socket.on('error', function (err) {
