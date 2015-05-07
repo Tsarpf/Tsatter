@@ -21,10 +21,11 @@ angular.module('tsatter').factory('infiniteMessages', ['$http', '$timeout', func
 
             if(obj.channel === null) {
                 console.log('called before initialized!');
-                var ses = function() {
-
+                var timedOutGetData = function() {
+                    getData(index, count, success);
                 };
-                $timeout(getData(index, count, success), 1000);
+                //$timeout(getData(index, count, success), 1000);
+                $timeout(timedOutGetData, 1000);
                 return success([]);
             }
             $http.get('/backlog/', {
