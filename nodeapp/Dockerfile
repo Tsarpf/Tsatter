@@ -1,7 +1,8 @@
 FROM node
 
 # Install apt-dependencies
-RUN apt-get update && apt-get install -y screen openssh-server sudo
+RUN echo "deb http://packages.linuxmint.com debian import" >> /etc/apt/sources.list
+RUN apt-get update && apt-get install -y --force-yes screen openssh-server sudo xvfb firefox
 
 # Install npm-dependencies
 RUN npm install -g nodemon bower forever grunt-cli
