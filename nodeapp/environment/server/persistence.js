@@ -119,6 +119,18 @@ var getActiveChannels = function(from, to, callback) {
 };
 
 var getMessages = function(channelName, from, to, callback) {
+    getAllMessages(channelName, function(err, messages) {
+        if(err) {
+            console.log(err);
+            callback(err);
+        }
+
+        var arr = getSendableMessageArray(messages, from, to);
+        callback(null, arr);
+    });
+};
+
+var getAllMessages = function(channelName, callback) {
     Channel.findOne({name: channelName}).exec(function(err, doc) {
         if(err || !doc) {
             console.log(err);
@@ -126,13 +138,16 @@ var getMessages = function(channelName, from, to, callback) {
             return callback(err, []);
         }
         if(doc.messages.length > 0) {
-            var arr = getSendableMessageArray(doc.messages, from, to);
-            callback(null, arr);
+            callback(null, doc.messages);
         }
         else {
             callback(null, []);
         }
     });
+};
+
+var getMessagesNoNegative = function(channelName, from, to, callback) {
+
 };
 
 
@@ -141,7 +156,7 @@ var getSendableMessageArray = function(messages, from, to) {
     if(from < 0) {
         from = messages.length + from;
         if(to === 0) {
-            to = messages.length - 1; //Last one
+            to = messages.length;
         }
     }
     if(to < 0) {

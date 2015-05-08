@@ -159,20 +159,29 @@ describe('persistence handler', function() {
         })
     });
 
-    it('should return the correct messages when asking for third and second last using negative numbers', function(done) {
-        persistenceHandler.getMessages(testChannel, -4, -1, function(err, messages) {
-            messages.length.should.equal(2);
-            done();
-        })
+    it('should return the correct messages when getting them using negative numbers', function(done) {
+        var thirdLast = testMessage + 10;
+        var secondLast = testMessage + 11;
+        var last = testMessage + 12;
+        persistenceHandler.saveMessage(testChannel, testNick, thirdLast, function() {
+            persistenceHandler.saveMessage(testChannel, testNick, secondLast, function() {
+                persistenceHandler.saveMessage(testChannel, testNick, last, function() {
+                    persistenceHandler.getMessages(testChannel, -3, -1, function(err, messages) {
+                        messages.length.should.equal(2);
+                        messages[0].message.should.equal(thirdLast);
+                        messages[1].message.should.equal(secondLast);
+                        persistenceHandler.getMessages(testChannel, -3, 0, function(err, messages) {
+                            messages.length.should.equal(3);
+                            messages[0].message.should.equal(thirdLast);
+                            messages[1].message.should.equal(secondLast);
+                            messages[2].message.should.equal(last);
+                            done();
+                        })
+                    })
+                });
+            });
+        });
     });
-
-    it('should return the correct messages when asking for negative ie. last ones', function(done) {
-        persistenceHandler.getMessages(testChannel, -3, 0, function(err, messages) {
-            messages.length.should.equal(2);
-            done();
-        })
-    });
-
 
     it('should update channel last updated field when message is added', function(done) {
         persistenceHandler.saveMessage(testChannel, testNick, testMessageWithUrl, function() {
