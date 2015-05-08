@@ -16,7 +16,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.messages = [];
     $scope.users = {};
     $scope.mediaList = [];
-    $scope.glued = true;
+    $scope.glued = false;
     $scope.mediaGlued = true;
     $scope.nick = '';
     $scope.editingNick = false;
@@ -25,19 +25,40 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.searchResults = [];
     $scope.waitingForSearchResults = false;
     $scope.cursorPos = 0;
+    $scope.messageBufferSize = 20;
 
-    var channelParamObj = {channel: null};
+    var channelParamObj = {
+        channel: null,
+        linkOffset: null,
+        adapter: null,
+        bufferSize: $scope.messageBufferSize
+    };
     $scope.messageDatasource = infiniteMessages(channelParamObj);
 
     //we have to do this in a timeout so that the directive is initialized
     $timeout(function(){
         channelParamObj.channel = $scope.channelName;
         channelParamObj.adapter = $scope.messageAdapter;
+        channelParamObj.linkOffset = $scope.getLinkIdx();
+        //channelParamObj.linkOffset =
         console.log('channel name set!');
         joinChannel($scope.channelName);
         $scope.nick = $rootScope.vars.nickname;
         focus('chatInput');
     });
+
+    $scope.getLinkIdx = function() {
+        var hash = $location.hash();
+        if(hash) {
+            var targetChannel = '#' + hash.split('__')[0];
+            if (targetChannel === $scope.channelName) {
+                var target = parseInt(hash.split('__')[1]);
+                $location.hash('');
+                return target;
+            }
+        }
+        return null;
+    };
 
     var lastMessage = '';
     var searchStartingCharacter = '@';
@@ -126,29 +147,13 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
     $scope.currentlyHighlighted = {};
     $scope.messageClicked = function(index) {
+
         $scope.messages[index].class = 'single-message-highlighted';
         if($scope.currentlyHighlighted) {
             $scope.currentlyHighlighted.class = '';
         }
         $scope.currentlyHighlighted = $scope.messages[index];
     };
-    $scope.getMessagesFromServer = function(channel, from, to, success, error) {
-        $http.get('/backlog/', {
-            params: {
-                channel: channel,
-                from: from,
-                to: to
-            }
-        }).
-            success(success).
-            error(error);
-    };
-    var errorLogger = function(data, status, headers, config) {
-        $scope.infiniteReachedBottom = true;
-        $scope.infiniteReachedTop = true;
-        console.log('error!');
-    };
-
     //Not sure yet if this is really a robust solution. It seems a bit dangerous
     $scope.mediaCount = 0;
 
@@ -198,7 +203,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             status: 'normal-user',
             showControl: false
         };
-        $scope.addServerMessage(data.nick + ' joined the channel');
+        //$scope.addServerMessage(data.nick + ' joined the channel');
     };
     $scope.privmsg = function(data) {
         //$scope.addMessage(data.args[1], data.nick);

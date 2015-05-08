@@ -25,28 +25,24 @@ module.exports = function(app) {
 
     app.get('/backlog/', function(req, res, next) {
         var channel = req.query.channel;
-        var from = parseInt(req.query.from);
-        var to = parseInt(req.query.to);
-        if(isNaN(from) || isNaN(to) || !channel) {
+        var index = parseInt(req.query.index);
+        var count = parseInt(req.query.count);
+        if(isNaN(index) || isNaN(count) || !channel) {
             console.log('äh');
-            res.writeHead(400, {error: 'invalid from/to field(s)'});
+            res.writeHead(400, {error: 'invalid field(s)'});
             return res.end();
         }
 
-        from = parseInt(from);
-        to = parseInt(to);
-        /*
-        if(from > to) {
-            res.writeHead(400, {error: 'invalid from/to field(s)'});
-            return res.end();
+        var linkOffset = req.query.linkOffset;
+        if(linkOffset) {
+            linkOffset = parseInt(linkOffset);
+            if(isNaN(linkOffset) || linkOffset < 0) {
+                res.writeHead(400, {error: 'invalid field(s)'});
+                return res.end();
+            }
         }
-        else if ((to - from) > 50) {
-            res.writeHead(403, {error: 'Too many messages requested'});
-            return res.end();
-        }
-        */
 
-        persistenceHandler.getMessages(channel, from, to, function(err, messages) {
+        persistenceHandler.getMessagesFlipped(channel, index, count, linkOffset, function(err, messages) {
             if(err) {
                 console.log('message fetch fail');
                 console.log(err);

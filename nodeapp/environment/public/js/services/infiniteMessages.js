@@ -6,18 +6,9 @@
 
 angular.module('tsatter').factory('infiniteMessages', ['$http', '$timeout', function($http, $timeout) {
     var rev = 0;
+    var linkOffset = 0;
     return function(obj) {
         function getData(index, count, success) {
-            var from = index - 1;
-            var to = index + count - 1;
-            console.log('index: %d, count: %d', index, count);
-            console.log('from: %d, to: %d', from, to);
-            if(index < 0 && to <= 0) {
-                return success([]);
-            }
-            if(index < 0 && to > 0) {
-                from = 0;
-            }
             var timedOutGetData = function(index, count, success) {
                 return function() {
                     getData(index, count, success);
@@ -28,14 +19,25 @@ angular.module('tsatter').factory('infiniteMessages', ['$http', '$timeout', func
                 //$timeout(getData(index, count, success), 1000);
                 $timeout(timedOutGetData(index, count, success));
                 return;
-                //return success([]);
             }
-            $http.get('/backlog/', {
-                params: {
-                    channel: obj.channel,
-                    from: from,
-                    to: to
+
+            var params = {
+                channel: obj.channel,
+                //Subtract 1 because the ui.scroll library uses a weird indexing that starts from 1
+                index: index - 1,
+                count: count
+            };
+
+            if(obj.linkOffset) {
+                //We want to center the message so add bufferSize / 2
+                params.linkOffset = obj.linkOffset; //+ obj.bufferSize / 2;
+                if(params.linkOffset < 0) {
+                    params.linkOffset = 0;
                 }
+            }
+
+            $http.get('/backlog/', {
+                params: params
             }).
                 success(function(data, status, headers, config) {
                     console.log('got backlog data');

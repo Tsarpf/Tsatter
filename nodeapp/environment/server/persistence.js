@@ -118,18 +118,6 @@ var getActiveChannels = function(from, to, callback) {
     });
 };
 
-var getMessages = function(channelName, from, to, callback) {
-    getAllMessages(channelName, function(err, messages) {
-        if(err) {
-            console.log(err);
-            callback(err);
-        }
-
-        var arr = getSendableMessageArray(messages, from, to);
-        callback(null, arr);
-    });
-};
-
 var getAllMessages = function(channelName, callback) {
     Channel.findOne({name: channelName}).exec(function(err, doc) {
         if(err || !doc) {
@@ -146,44 +134,43 @@ var getAllMessages = function(channelName, callback) {
     });
 };
 
-var getMessagesNoNegative = function(channelName, from, to, callback) {
-
-};
-
-
-var getSendableMessageArray = function(messages, from, to) {
-    var messageArray = [];
-    if(from < 0) {
-        from = messages.length + from;
-        if(to === 0) {
-            to = messages.length;
+var getMessagesFlipped = function(channelName, index, count, linkOffset, callback) {
+    getAllMessages(channelName, function(err, messages) {
+        if(err) {
+            return callback(err);
         }
-    }
-    if(to < 0) {
-        to = messages.length + to;
-    }
 
-    //if to is still negative, -to > messages.length and we've decided not to wrap around
-    if(to < 0) {
-        return [];
-    }
-    if(from < 0) {
-       from = 0;
-    }
-    for (var i = from; i < to && i < messages.length; i++) {
-        messageArray.push({
-            nick: messages[i].nick,
-            message: messages[i].message,
-            timestamp: messages[i].timestamp,
-            idx: i
-        });
-    }
-    return messageArray;
+        var from, to;
+        if(linkOffset) {
+            from = linkOffset - count + index;
+            to = linkOffset + index;
+        }
+        else {
+            from = messages.length - count + index;
+            to = messages.length + index;
+        }
+
+
+        if(from < 0) {
+            from = 0;
+        }
+
+        var messageArray = [];
+        for(var i = from; i < to && i < messages.length; i++) {
+            messageArray.push({
+                nick: messages[i].nick,
+                message: messages[i].message,
+                timestamp: messages[i].timestamp,
+                idx: i
+            });
+        }
+        callback(null, messageArray);
+    })
 };
 
 module.exports = {
     saveMessage: saveMessage,
-    getMessages: getMessages,
+    getMessagesFlipped: getMessagesFlipped,
     getActiveChannels: getActiveChannels,
     getUrls: getUrls
 };
