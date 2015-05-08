@@ -2,10 +2,10 @@ FROM node
 
 # Install apt-dependencies
 RUN echo "deb http://packages.linuxmint.com debian import" >> /etc/apt/sources.list
-RUN apt-get update && apt-get install -y --force-yes screen openssh-server sudo xvfb firefox
+RUN apt-get update && apt-get install -y --force-yes screen openssh-server sudo xvfb firefox libxcomposite-dev libasound2 libdbus-glib-1-2 gtk+2.0
 
 # Install npm-dependencies
-RUN npm install -g nodemon bower forever grunt-cli
+RUN npm install -g nodemon bower forever grunt-cli karma-cli
 ADD environment/package.json /home/nonroot/environment/
 WORKDIR /home/nonroot/environment
 RUN npm install

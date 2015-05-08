@@ -7,9 +7,10 @@ module.exports = function(config) {
         frameworks: ['mocha'],
 
         files: [
+            'public/libs/angular/angular.js',
             'public/js/**/*.js'
         ],
 
-        browsers: ['Chrome'],
+        browsers: ['Firefox']
     });
 };

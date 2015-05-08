@@ -39,6 +39,7 @@
     "grunt-usemin": "^3.0.0",
     "grunt-wiredep": "*",
     "karma": "^0.12.31",
+    "karma-firefox-launcher": "^0.1.4",
     "karma-mocha": "^0.1.10",
     "mocha": "^2.2.4",
     "usemin-patterns": "^0.1.4"
