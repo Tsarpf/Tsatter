@@ -7,8 +7,9 @@
         <div class="messages col-xs-7"
              ng-show="!searching"
              adapter="messageAdapter"
+             scroll-glue="messagesGlued"
+             msd-wheel="mouseScroll($event)"
              ui-scroll-viewport>
-            <!--scroll-glue="glued"-->
 
             <div ui-scroll="message in messageDatasource" buffer-size="messageBufferSize">
                 <ts-chat-message></ts-chat-message>

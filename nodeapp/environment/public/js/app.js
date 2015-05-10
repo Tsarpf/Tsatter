@@ -9,7 +9,8 @@ var app = angular.module('tsatter', [
     'flash',
     'angular-images-loaded',
     'lrInfiniteScroll',
-    'infinite-scroll'
+    'infinite-scroll',
+    'monospaced.mousewheel'
 ]);
 
 app.directive('tsChat', ['$timeout', function($timeout) {

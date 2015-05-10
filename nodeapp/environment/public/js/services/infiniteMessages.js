@@ -6,7 +6,6 @@
 
 angular.module('tsatter').factory('infiniteMessages', ['$http', '$timeout', function($http, $timeout) {
     var rev = 0;
-    var linkOffset = 0;
     return function(obj) {
         function getData(index, count, success) {
             var timedOutGetData = function(index, count, success) {

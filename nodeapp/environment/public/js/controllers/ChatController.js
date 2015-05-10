@@ -16,7 +16,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.messages = [];
     $scope.users = {};
     $scope.mediaList = [];
-    $scope.glued = false;
+    $scope.messagesGlued = true;
     $scope.mediaGlued = true;
     $scope.nick = '';
     $scope.editingNick = false;
@@ -46,6 +46,15 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         $scope.nick = $rootScope.vars.nickname;
         focus('chatInput');
     });
+
+    $scope.mouseScroll = function(event) {
+        if(event.deltaY < 0) {
+           $scope.messagesGlued = false;
+        }
+
+        console.log('mouse event!');
+        console.log(event);
+    };
 
     $scope.getLinkIdx = function() {
         var hash = $location.hash();

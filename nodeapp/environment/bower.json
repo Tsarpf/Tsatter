@@ -18,7 +18,9 @@
     "angular-flash-messages": "~1.2.0",
     "angular-images-loaded": "~0.0.5",
     "ngInfiniteScroll": "~1.2.0",
-    "angular-ui-utils": "bower-scroll"
+    "angular-ui-utils": "bower-scroll",
+    "angular-mousewheel": "~1.0.4",
+    "hamsterjs": "~1.0.5"
   },
   "overrides": {
     "socket.io-client": {
