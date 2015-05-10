@@ -113,7 +113,8 @@
 .messages {
     height: 90%;
     min-height: 90%;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: scroll;
     /*outline: 1px solid orange;*/
 }
 

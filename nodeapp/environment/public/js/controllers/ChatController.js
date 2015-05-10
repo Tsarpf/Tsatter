@@ -51,9 +51,10 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         if(event.deltaY < 0) {
            $scope.messagesGlued = false;
         }
+    };
 
-        console.log('mouse event!');
-        console.log(event);
+    $scope.messageScrollBottom = function() {
+        $scope.messagesGlued = true;
     };
 
     $scope.getLinkIdx = function() {
