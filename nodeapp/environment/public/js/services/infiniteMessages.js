@@ -19,11 +19,7 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
     return function(obj) {
         adapter = obj.adapter;
         function getData(index, count, callback) {
-            /*
-            if(index + count > highestRequested) {
-                highestRequested = index + count;
-            }
-            */
+            bufferSize  = count;
             var timedOutGetData = function(index, count, success) {
                 return function() {
                     getData(index, count, success);
@@ -37,25 +33,22 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
             }
 
             if(first && obj.linkOffset === null) {
-                //Then request the last x messages
+                //Then just request the last x messages
                 noLinkGetLast().then(function(data) {
                     callback(data);
                 });
             }
             else if(first && obj.linkOffset >= 0) {
-                first = false;
-                //Get messages around linked message
-                
-
-                getMessages(obj.channel, obj.linkOffset - bufferSize / 2, bufferSize).then(function(data) {
-                    insertCache(data);
-                    for(var i = 0; i < data.length; i++) {
-                        if(data[i].idx === obj.linkOffset) {
-                            data[i].class = 'single-message-highlighted';
-                            obj.currentlyHighlighted = data[i];
-                        }
-                    }
-                });
+                //We want to show the linked message
+                getAroundLink().then(function(data) {
+                    callback(data);
+                }, function(err) {
+                    //Linked message not found, show last x messages
+                    console.log(err);
+                    noLinkGetLast().then(function(data) {
+                        callback(data);
+                    })
+                })
             }
 
             /*
@@ -90,6 +83,30 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
 
         function getAroundLink(link) {
            var deferred = $q.defer();
+
+            first = false;
+            var index = obj.linkOffset - bufferSize / 2;
+            if(index < 0) {
+                index = 0;
+            }
+            getMessages(obj.channel, index, bufferSize).then(function(data) {
+                if(data.length === 0) {
+                    deferred.reject('did not find such message, showing last messages from channel');
+                    return;
+                }
+
+                for(var i = 0; i < data.length; i++) {
+                    if(data[i].idx === obj.linkOffset) {
+                        data[i].class = 'single-message-highlighted';
+                        obj.currentlyHighlighted = data[i];
+                        insertCache(data);
+                        deferred.resolve(data);
+                        return;
+                    }
+                }
+
+                deferred.reject('did not find such message, showing last messages from channel');
+            });
 
             return deferred.promise;
         }
