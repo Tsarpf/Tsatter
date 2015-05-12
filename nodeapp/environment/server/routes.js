@@ -24,25 +24,34 @@ module.exports = function(app) {
     });
 
     app.get('/backlog/', function(req, res, next) {
+
         var channel = req.query.channel;
         var index = parseInt(req.query.index);
         var count = parseInt(req.query.count);
-        if(isNaN(index) || isNaN(count) || !channel) {
+
+        if(isNaN(count) || !channel) {
             console.log('äh');
             res.writeHead(400, {error: 'invalid field(s)'});
             return res.end();
         }
 
-        var linkOffset = req.query.linkOffset;
-        if(linkOffset) {
-            linkOffset = parseInt(linkOffset);
-            if(isNaN(linkOffset) || linkOffset < 0) {
-                res.writeHead(400, {error: 'invalid field(s)'});
-                return res.end();
-            }
+        if(isNaN(index)) {
+            //get last <count> messages
+            persistenceHandler.getMessagesFlipped(channel, 0, count, function(err, messages) {
+                if(err) {
+                    console.log('message fetch fail');
+                    console.log(err);
+                    res.writeHead(403, {error: err});
+                    res.end();
+                }
+                else {
+                    res.json(messages);
+                }
+            });
+            return;
         }
 
-        persistenceHandler.getMessagesFlipped(channel, index, count, linkOffset, function(err, messages) {
+        persistenceHandler.getMessages(channel, index, count, function(err, messages) {
             if(err) {
                 console.log('message fetch fail');
                 console.log(err);

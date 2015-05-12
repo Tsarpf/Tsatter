@@ -134,21 +134,33 @@ var getAllMessages = function(channelName, callback) {
     });
 };
 
-var getMessagesFlipped = function(channelName, index, count, linkOffset, callback) {
+var getMessages = function(channelName, index, count, callback) {
+    getAllMessages(channelName, function(err, messages) {
+        if(err || index < 0 || count < 0) {
+            return callback('error! ' + err);
+        }
+
+        var arr = [];
+        for(var i = index; i < messages.length && i < index + count; i++) {
+            arr.push({
+                nick: messages[i].nick,
+                message: messages[i].message,
+                timestamp: messages[i].timestamp,
+                idx: i
+            });
+        }
+        callback(null, arr);
+    });
+};
+
+var getMessagesFlipped = function(channelName, index, count, callback) {
     getAllMessages(channelName, function(err, messages) {
         if(err) {
             return callback(err);
         }
 
-        var from, to;
-        if(linkOffset) {
-            from = linkOffset - count + index;
-            to = linkOffset + index;
-        }
-        else {
-            from = messages.length - count + index;
-            to = messages.length + index;
-        }
+        var from = messages.length - count + index;
+        var to = messages.length + index;
 
 
         if(from < 0) {
@@ -170,6 +182,7 @@ var getMessagesFlipped = function(channelName, index, count, linkOffset, callbac
 
 module.exports = {
     saveMessage: saveMessage,
+    getMessages: getMessages,
     getMessagesFlipped: getMessagesFlipped,
     getActiveChannels: getActiveChannels,
     getUrls: getUrls
