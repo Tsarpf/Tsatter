@@ -12,13 +12,11 @@
              scrolly="messageScrollBottom()"
              ui-scroll-viewport>
 
-            <div ui-scroll="message in messageDatasource" buffer-size="messageBufferSize">
+            <div ui-scroll="message in messageDatasource"
+                 adapter="messageAdapter">
+
                 <ts-chat-message></ts-chat-message>
             </div>
-
-            <!--
-            <ts-chat-message ng-repeat="message in messages"></ts-chat-message>
-            -->
 
             <!--
             <div ui-scroll="message in messageDatasource">

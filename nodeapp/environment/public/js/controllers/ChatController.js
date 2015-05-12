@@ -25,13 +25,13 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.searchResults = [];
     $scope.waitingForSearchResults = false;
     $scope.cursorPos = 0;
-    $scope.messageBufferSize = 20;
+    $scope.messageAdapter = null;
 
     var channelParamObj = {
         channel: null,
         linkOffset: null,
         adapter: null,
-        bufferSize: $scope.messageBufferSize
+        currentlyHighlighted: $scope.currentlyHighlighted
     };
     $scope.messageDatasource = infiniteMessages(channelParamObj);
 
