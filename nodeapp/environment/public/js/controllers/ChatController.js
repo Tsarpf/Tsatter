@@ -218,8 +218,8 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.privmsg = function(data) {
         //$scope.addMessage(data.args[1], data.nick);
         //FIXME: the idx is not implemented correctly
-        var obj = {message: data.args[1], nick: data.nick, timestamp: getTimestamp(), idx: 0, class: ''};
-        $scope.messages.push(obj);
+        var obj = {message: data.args[1], nick: data.nick, timestamp: getTimestamp(), idx: null, class: ''};
+        $scope.messageDatasource.addMessage(obj);
     };
     $scope.nick = function(data) {
         if(data.nick === $scope.nick) {
@@ -285,17 +285,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.removeNick = function(nick) {
         delete $scope.users[nick];
     };
-
-    /*
-    $scope.addServerMessage = function(message) {
-        if($scope.infiniteReachedBottom) {
-            if($scope.messages[$scope.messages.length - 1].message === message) {
-                return;
-            }
-            $scope.addMessage(message, 'server');
-        }
-    };
-    */
 
     $scope.addBackendMessage = function(message, top) {
         $scope.addMessage(message.message, message.nick, message.timestamp, message.idx, top);
@@ -454,8 +443,8 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             socket.emit('privmsg', obj, function(success) {
                 if(success) {
                     //$scope.messageDatasource.incrementRevision();
-                    var obj = {message: message, nick: $rootScope.vars.nickname, timestamp: getTimestamp(), idx: 0, class: ''};
-                    $scope.messages.push(obj);
+                    var obj = {message: message, nick: $rootScope.vars.nickname, timestamp: getTimestamp(), idx: null, class: ''};
+                    $scope.messageDatasource.addMessage(obj);
                 }
             });
             //$scope.addMessage(message, $rootScope.vars.nickname);

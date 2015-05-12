@@ -8,16 +8,19 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
     return function(obj) {
         var rev = 0;
 
+        var lastRequest = 0;
         var first = true;
+
+        var liveMessageAnchor = null;
+        var initialized = false;
+
         var bufferSize = 20;
         var index0 = null;
-        var adapter;
 
         var EOF = null;
         var bottomLoaded = false;
 
         var cache = [];
-        adapter = obj.adapter;
         function getData(index, count, callback) {
             var timedOutGetData = function(index, count, success) {
                 return function() {
@@ -31,9 +34,19 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                 return;
             }
 
+            //Ugly hack for checking if initial loads done
+            if(!initialized) {
+                if(index < 0) {
+                    initialized = true;
+                }
+            }
+
+
+
             //weird 1-based indexing in the lib
             index--;
 
+            console.log('index: %d, count: %d', index, count);
             if(first) {
                 first = false;
                 if(obj.linkOffset === null) {
@@ -72,7 +85,12 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                 reqCount = count - remainder;
                 reqIndex = 0;
             }
+            if(initialized && reqIndex < lastRequest) {
+                bottomLoaded = false;
+                liveMessageAnchor = null;
+            }
 
+            console.log('reqindex: %d, reqcount: %d', reqIndex, reqCount);
             if(EOF !== null) {
                 if(reqIndex > EOF) {
                     return callback([]);
@@ -90,6 +108,12 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                     }
                 }
                 if(!missing) {
+                    if(reqIndex + reqCount >= EOF) {
+                        bottomLoaded = true;
+                    }
+                    if(initialized) {
+                        lastRequest = reqIndex;
+                    }
                     return callback(arr);
                 }
             }
@@ -101,39 +125,26 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
         }
 
         function addMessage(msg) {
-            cache[msg.idx] = msg;
-            if(bottomLoaded && EOF) {
-                //Then we should immediately show the message at the bottom
-                adapter.applyUpdates(bufferSize, [EOF, msg]);
+            if(EOF === null) {
+               return; //we'll get it from backlog eventually
             }
-            EOF = msg.idx;
-        }
 
-        function requestMessages(index, count) {
-            var deferred = $q.defer();
-
-            $http.get('/backlog/', {
-                params: {
-                    channel: obj.channel,
-                    index: index,
-                    count: count
-                }
-            }).success(function(data) {
-                if(data.length === 0) {
-                    EOF = cache.length - 1;
-                    bottomLoaded = true;
-                }
-                else if(data.length < count) {
-                    EOF = data[data.length - 1].idx;
-                    bottomLoaded = true;
-                }
-                insertCache(data);
-                deferred.resolve(data);
-            }).error(function(data) {
-                deferred.reject('error when requesting data!');
-            });
-
-            return deferred.promise;
+            if(liveMessageAnchor === null) {
+                liveMessageAnchor = cache[EOF];
+            }
+            var idx = EOF + 1;
+            cache[idx] = msg;
+            msg.idx = idx;
+            if(bottomLoaded) {
+                //Then we should immediately show the message at the bottom
+                //obj.adapter.applyUpdates(bufferSize, [liveMessageAnchor, msg]);
+                obj.adapter.applyUpdates(function(item, scope) {
+                    if(item.idx === EOF) {
+                        return [item, msg];
+                    }
+                });
+            }
+            EOF = idx;
         }
 
         function getAroundLink(count) {
@@ -160,6 +171,38 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                 }
 
                 deferred.reject('did not find such message, showing last messages from channel');
+            });
+
+            return deferred.promise;
+        }
+
+        function requestMessages(index, count) {
+            var deferred = $q.defer();
+
+            $http.get('/backlog/', {
+                params: {
+                    channel: obj.channel,
+                    index: index,
+                    count: count
+                }
+            }).success(function(data) {
+                console.log('got length: %d', data.length);
+                if(data.length === 0) {
+                    EOF = cache.length - 1;
+                    bottomLoaded = true;
+                }
+                else if(data.length < count) {
+                    EOF = data[data.length - 1].idx;
+                    bottomLoaded = true;
+                }
+                insertCache(data);
+                if(initialized) {
+                    lastRequest = index;
+                }
+                deferred.resolve(data);
+            }).error(function(data) {
+                console.log('error');
+                deferred.reject('error when requesting data!');
             });
 
             return deferred.promise;
@@ -207,7 +250,6 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
         function incrementRevision() {
             rev++;
         }
-
 
         return {
             get: getData,
