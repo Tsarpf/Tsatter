@@ -29,6 +29,7 @@ module.exports = function(app) {
         var index = parseInt(req.query.index);
         var count = parseInt(req.query.count);
 
+
         if(isNaN(count) || !channel) {
             console.log('äh');
             res.writeHead(400, {error: 'invalid field(s)'});
