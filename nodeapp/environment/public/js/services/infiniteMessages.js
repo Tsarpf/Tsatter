@@ -31,6 +31,9 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                 return;
             }
 
+            //weird 1-based indexing in the lib
+            index--;
+
             if(first) {
                 first = false;
                 if(obj.linkOffset === null) {
@@ -51,6 +54,9 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                         })
                     })
                 }
+                else {
+                    console.log('alert alert shouldnt happen!');
+                }
                 return;
             }
 
@@ -58,37 +64,9 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
 
             //get messages reqIndex, count
             //index0 should be set by now
-            requestMessages()
-
-
-            /*
-            var params = {
-                channel: obj.channel,
-                //Subtract 1 because the ui.scroll library uses a weird indexing that starts from 1
-                index: index - 1,
-                count: count
-            };
-
-            if(obj.linkOffset) {
-                //We want to center the message so add bufferSize / 2
-                params.linkOffset = obj.linkOffset; //+ obj.bufferSize / 2;
-                if(params.linkOffset < 0) {
-                    params.linkOffset = 0;
-                }
-            }
-
-            $http.get('/backlog/', {
-                params: params
-            }).
-                success(function(data, status, headers, config) {
-                    console.log('count: %d, data.length: %d', count, data.length);
-                    console.log(data);
-                    success(data);
-                }).
-                error(function(data, status, headers, config) {
-                    console.log('error in infinite-messages provider!');
-                })
-            */
+            requestMessages(index, count).then(function(data) {
+                callback(data);
+            });
         }
 
         function getMessages(index, count) {
@@ -136,6 +114,7 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                         }
                         data[i].class = 'single-message-highlighted';
                         obj.currentlyHighlighted = data[i];
+                        index0 = index;
                         deferred.resolve(data);
                         return;
                     }
@@ -199,8 +178,7 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                     EOF = cache.length - 1;
                     bottomLoaded = true;
                 }
-                if(data.length < count) {
-                    //Cant just set EOF here because we could be requesting for example -3 to 7 which was then translated to 0-7 for our purposes and then count would be 6
+                if(data.length < reqCount) {
                     EOF = data[data.length - 1].idx;
                     bottomLoaded = true;
                 }
