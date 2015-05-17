@@ -124,27 +124,22 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
             });
         }
 
-        function addMessage(msg) {
+        function addMessage(message) {
             if(EOF === null) {
                return; //we'll get it from backlog eventually
             }
 
-            if(liveMessageAnchor === null) {
-                liveMessageAnchor = cache[EOF];
-            }
-            var idx = EOF + 1;
-            cache[idx] = msg;
-            msg.idx = idx;
-            if(bottomLoaded) {
-                //Then we should immediately show the message at the bottom
-                //obj.adapter.applyUpdates(bufferSize, [liveMessageAnchor, msg]);
-                obj.adapter.applyUpdates(function(item, scope) {
-                    if(item.idx === EOF) {
-                        return [item, msg];
-                    }
-                });
-            }
-            EOF = idx;
+
+            obj.adapter.applyUpdates(function(item, scope) {
+                if(item.idx === EOF) {
+                    EOF++;
+                    message.idx = EOF;
+                    cache[EOF] = message;
+                    console.log('added');
+                    console.log(message);
+                    return [item, message];
+                }
+            });
         }
 
         function getAroundLink(count) {

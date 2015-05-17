@@ -1,5 +1,4 @@
 var app = angular.module('tsatter', [
-    'ngAnimate',
     'ui.bootstrap',
     'akoenig.deckgrid',
     'ngSanitize',
