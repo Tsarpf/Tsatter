@@ -150,19 +150,26 @@ module.exports = (function() {
 
         });
 
-        socket.on('privmsg', function (msg) {
+        socket.on('privmsg', function (msg, fn) {
             client.say(msg.channel, msg.message);
-            persistenceHandler.saveMessage(msg.channel, username, msg.message, function(err, idx) {
+            if(msg.message.length > 512) {
+                msg.message = msg.message.substring(0, 512);
+            }
+            persistenceHandler.saveMessage(msg.channel, username, msg.message, function(err) {
                 if(err) {
-                    return console.log(err);
+                    console.log(err);
+                    return fn(false);
                 }
-                var urls = getUrls(msg.message);
-                if(!urls) {
-                    return;
-                }
-                //TODO: check if src url already has a downloaded image
 
-                imageProcessor.processUrls(urls, msg.channel, idx);
+                //TODO: check if src url already has a downloaded image
+                var urls = getUrls(msg.message);
+                if(urls) {
+                    imageProcessor.processUrls(urls, msg.channel, idx);
+                }
+
+                if(fn) {
+                    fn(true);
+                }
             });
         });
 

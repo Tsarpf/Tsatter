@@ -22,7 +22,6 @@ forever list
 grunt background-watch
 
 /bin/bash
-#grunt watchStatic
 
 #echo "tail -f src/out.log to see what the server is doing"
 #echo "Executing: $@"

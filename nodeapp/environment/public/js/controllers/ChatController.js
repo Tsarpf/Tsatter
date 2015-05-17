@@ -11,33 +11,64 @@ angular.module('tsatter').controller('ChatController', [
     '$anchorScroll',
     '$q',
     'imageSearch',
-function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll, $q, imageSearch) {
+    'infiniteMessages',
+function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll, $q, imageSearch, infiniteMessages) {
     $scope.messages = [];
     $scope.users = {};
     $scope.mediaList = [];
-    $scope.glued = true;
+    $scope.messagesGlued = true;
     $scope.mediaGlued = true;
     $scope.nick = '';
     $scope.editingNick = false;
-    $scope.infiniteBottomLocation = Number.MAX_VALUE;
-    $scope.infiniteTopLocation = 0;
-    $scope.infiniteStep = 30;
-    $scope.infiniteReachedTop = false;
-    $scope.infiniteReachedBottom = false;
     $scope.origin = location.origin;
     $scope.searching = false;
     $scope.searchResults = [];
     $scope.waitingForSearchResults = false;
     $scope.cursorPos = 0;
+    $scope.messageAdapter = null;
 
+    var channelParamObj = {
+        channel: null,
+        linkOffset: null,
+        adapter: null,
+        currentlyHighlighted: $scope.currentlyHighlighted
+    };
+    $scope.messageDatasource = infiniteMessages(channelParamObj);
 
     //we have to do this in a timeout so that the directive is initialized
     $timeout(function(){
+        channelParamObj.channel = $scope.channelName;
+        channelParamObj.adapter = $scope.messageAdapter;
+        channelParamObj.linkOffset = $scope.getLinkIdx();
+        //channelParamObj.linkOffset =
+        console.log('channel name set!');
         joinChannel($scope.channelName);
         $scope.nick = $rootScope.vars.nickname;
-        $scope.getBacklog();
         focus('chatInput');
     });
+
+    $scope.mouseScroll = function(event) {
+        if(event.deltaY < 0) {
+           $scope.messagesGlued = false;
+        }
+    };
+
+    $scope.messageScrollBottom = function() {
+        $scope.messagesGlued = true;
+    };
+
+    $scope.getLinkIdx = function() {
+        var hash = $location.hash();
+        if(hash) {
+            var targetChannel = '#' + hash.split('__')[0];
+            if (targetChannel === $scope.channelName) {
+                var target = parseInt(hash.split('__')[1]);
+                $location.hash('');
+                return target;
+            }
+        }
+        return null;
+    };
 
     var lastMessage = '';
     var searchStartingCharacter = '@';
@@ -126,187 +157,13 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
     $scope.currentlyHighlighted = {};
     $scope.messageClicked = function(index) {
+
         $scope.messages[index].class = 'single-message-highlighted';
         if($scope.currentlyHighlighted) {
             $scope.currentlyHighlighted.class = '';
         }
         $scope.currentlyHighlighted = $scope.messages[index];
     };
-    $scope.getMessagesFromServer = function(channel, from, to, success, error) {
-        $http.get('/backlog/', {
-            params: {
-                channel: channel,
-                from: from,
-                to: to
-            }
-        }).
-            success(success).
-            error(error);
-    };
-    var errorLogger = function(data, status, headers, config) {
-        $scope.infiniteReachedBottom = true;
-        $scope.infiniteReachedTop = true;
-        console.log('error!');
-    };
-
-    $scope.getBacklog = function() {
-        var hash = $location.hash();
-        var from = -$scope.infiniteStep - 1;
-        var to = -1;
-        if(hash) {
-            var targetChannel = '#' + hash.split('__')[0];
-            if(targetChannel === $scope.channelName) {
-                var target = parseInt(hash.split('__')[1]);
-
-                if(hash.split('__')[1]) {
-                    to = parseInt(target + $scope.infiniteStep / 2);
-                    from = parseInt(target - $scope.infiniteStep / 2);
-
-                    //If we're closer than infiniteStep/2 to 0, get more messages after the targeted message
-                    if(from <= 0) {
-                        to += (-from);
-                        from = 0;
-                        $scope.infiniteReachedTop = true;
-                    }
-
-                    $scope.glued = false;
-                    $scope.infiniteBottomLocation = to;
-                    $scope.infiniteTopLocation = from;
-                }
-            }
-        }
-        else {
-            $scope.infiniteReachedBottom = true;
-        }
-
-        $scope.getMessagesFromServer($scope.channelName, from, to,
-        function(data, status, headers, config) {
-            for (var i = 0; i < data.length; i++) {
-                $scope.addBackendMessage(data[i]);
-            }
-            $timeout(function() {
-                var hash = $location.hash();
-                for(var i = 0; i < $scope.messages.length; i++) {
-                    if($scope.messages[i].idx == hash.split('__')[1]) {
-                        $scope.currentlyHighlighted = $scope.messages[i];
-                        $scope.currentlyHighlighted.class = 'single-message-highlighted';
-                        break;
-                    }
-                }
-                $anchorScroll();
-            });
-
-            if(data.length === 0 && $location.hash().length > 1) {
-               //message not found. do a flash message here?
-                $location.hash('');
-                $scope.getBacklog();
-                $scope.glued = true;
-            }
-
-            if(data.length > 0) {
-                $scope.infiniteBottomLocation = data[i - 1].idx;
-                $scope.infiniteTopLocation = data[0].idx;
-            }
-
-            if(data.length < $scope.infiniteStep - 1) {
-                $scope.infiniteReachedTop = true;
-                $scope.infiniteReachedBottom = true;
-            }
-
-        }, errorLogger);
-    };
-
-    $scope.infiniteScrollDown = function() {
-        if($scope.infiniteReachedBottom) {
-            return;
-        }
-
-        $scope.getMessagesFromServer($scope.channelName, $scope.infiniteBottomLocation, $scope.infiniteBottomLocation + $scope.infiniteStep,
-            function(data, status, headers, config) {
-                if(data.length === 0) {
-                    $scope.infiniteReachedBottom = true;
-                    return;
-                }
-
-                if(data.length < $scope.infiniteStep - 1) {
-                    $scope.infiniteReachedBottom = true;
-                }
-
-                var tm = function(idx) {
-                    return function() {
-                        idx -= 10;
-                        if(idx < 0) {idx = 0;}
-                        var id = $scope.channelName.substring(1) + '__' + idx;
-                        $scope.glued = false;
-                        $location.hash(id);
-                        $anchorScroll();
-                    }
-                };
-                $timeout(tm($scope.infiniteBottomLocation));
-
-                $scope.infiniteBottomLocation += data.length;
-
-                for(var i = 0; i < data.length; i++) {
-                    $scope.addBackendMessage(data[i]);
-                }
-
-
-            }, errorLogger);
-    };
-
-    $scope.infiniteScrollUp = function() {
-        //numbers go down since the oldest message has the smallest index 0
-        if($scope.infiniteReachedTop) {
-            return;
-        }
-
-        if($scope.infiniteTopLocation === 0) {
-            $scope.infiniteReachedTop = true;
-            return;
-        }
-
-        var top = $scope.infiniteTopLocation;
-        var topAfterDecrement = top - $scope.infiniteStep;
-
-        if(topAfterDecrement < 0) {
-            topAfterDecrement = 0;
-            $scope.infiniteReachedTop = true;
-        }
-
-        $scope.getMessagesFromServer($scope.channelName, topAfterDecrement, top,
-            function(data, status, headers, config) {
-                if(data.length === 0) {
-                    $scope.infiniteReachedTop = true;
-                    return;
-                }
-
-                if(data.length < $scope.infiniteStep - 1) {
-                    $scope.infiniteReachedTop  = true;
-                }
-
-                var tm = function(idx) {
-                    return function() {
-                        //idx += 5;
-                        //if(idx < 0) {idx = 0;}
-                        var id = $scope.channelName.substring(1) + '__' + idx;
-                        $scope.glued = false;
-                        $location.hash(id);
-                        $anchorScroll();
-                    }
-                };
-                $timeout(tm($scope.infiniteTopLocation));
-                $scope.infiniteTopLocation -= data.length;
-                if($scope.infiniteTopLocation < 0) {
-                    $scope.infiniteTopLocation = 0;
-                }
-
-                for(var i = data.length - 1; i >= 0; i--) {
-                    $scope.addBackendMessage(data[i], true);
-                }
-            }, errorLogger);
-
-    };
-
     //Not sure yet if this is really a robust solution. It seems a bit dangerous
     $scope.mediaCount = 0;
 
@@ -356,10 +213,12 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             status: 'normal-user',
             showControl: false
         };
-        $scope.addServerMessage(data.nick + ' joined the channel');
+        //$scope.addServerMessage(data.nick + ' joined the channel');
     };
     $scope.privmsg = function(data) {
-        $scope.addMessage(data.args[1], data.nick);
+        //FIXME: the idx is not implemented correctly
+        var obj = {message: data.args[1], nick: data.nick, timestamp: getTimestamp(), idx: null, class: ''};
+        $scope.messageDatasource.addMessage(obj);
     };
     $scope.nick = function(data) {
         if(data.nick === $scope.nick) {
@@ -431,66 +290,17 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         delete $scope.users[nick];
     };
 
-    $scope.addServerMessage = function(message) {
-        if($scope.infiniteReachedBottom) {
-            if($scope.messages[$scope.messages.length - 1].message === message) {
-                return;
-            }
-            $scope.addMessage(message, 'server');
-        }
-    };
-
     $scope.addBackendMessage = function(message, top) {
         $scope.addMessage(message.message, message.nick, message.timestamp, message.idx, top);
-    };
-
-    function spliceSlice(str, index, count, add) {
-        return str.slice(0, index) + (add || "") + str.slice(index + count);
-    }
-
-    function getIdx() {
-        for(var i = $scope.messages.length - 1; i >= 0; i--) {
-            if(typeof $scope.messages[i].idx !== 'undefined') {
-                return $scope.messages[i].idx + 1;
-            }
-        }
-        return 0;
-    }
-
-    $scope.addMessage = function(message, nick, timestamp, idx, top) {
-        if(!idx && !top) {
-            idx = getIdx();
-        }
-        var obj = {message: message, nick: nick, timestamp: getTimestamp(timestamp), idx: idx, class: ''};
-        if(top) {
-            if($scope.messages[0]) {
-                if ($scope.messages[0].idx) {
-                    if ($scope.messages[0].idx === idx) {
-                        return;
-                    }
-                }
-            }
-            $scope.messages.unshift(obj);
-        }
-        else {
-            if ($scope.messages[$scope.messages.length - 1]) {
-                if ($scope.messages[$scope.messages.length - 1].idx) {
-                    if ($scope.messages[$scope.messages.length - 1].idx === idx) {
-                        return;
-                    }
-                }
-            }
-            $scope.messages.push(obj);
-        }
     };
 
     var getTimestamp = function(timestamp) {
         var date;
         if(!timestamp) {
-           date = new Date(Date.now());
+           date = new Date(Date.now()).getTime();
         }
         else {
-            date = new Date(timestamp);
+            date = new Date(timestamp).getTime();
         }
         return date;
     };
@@ -570,8 +380,13 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         }
         else {
             var obj = {channel: $scope.channelName, message: message};
-            socket.emit('privmsg', obj);
-            $scope.addMessage(message, $rootScope.vars.nickname);
+            socket.emit('privmsg', obj, function(success) {
+                if(success) {
+                    obj = {message: message, nick: $rootScope.vars.nickname, timestamp: getTimestamp(), idx: null, class: ''};
+                    $scope.messageDatasource.addMessage(obj);
+                }
+            });
+            //$scope.addMessage(message, $rootScope.vars.nickname);
         }
     };
 
