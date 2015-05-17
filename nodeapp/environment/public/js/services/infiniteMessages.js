@@ -28,7 +28,6 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                 };
             };
             if(obj.channel === null || obj.adapter === null) {
-                console.log('called before initialized!');
                 //$timeout(getData(index, count, success), 1000);
                 $timeout(timedOutGetData(index, count, callback));
                 return;
@@ -46,7 +45,6 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
             //weird 1-based indexing in the lib
             index--;
 
-            console.log('index: %d, count: %d', index, count);
             if(first) {
                 first = false;
                 if(obj.linkOffset === null) {
@@ -90,7 +88,6 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                 liveMessageAnchor = null;
             }
 
-            console.log('reqindex: %d, reqcount: %d', reqIndex, reqCount);
             if(EOF !== null) {
                 if(reqIndex > EOF) {
                     return callback([]);
@@ -135,8 +132,6 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                     EOF++;
                     message.idx = EOF;
                     cache[EOF] = message;
-                    console.log('added');
-                    console.log(message);
                     return [item, message];
                 }
             });
@@ -181,7 +176,6 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                     count: count
                 }
             }).success(function(data) {
-                console.log('got length: %d', data.length);
                 if(data.length === 0) {
                     EOF = cache.length - 1;
                     bottomLoaded = true;
@@ -196,7 +190,6 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                 }
                 deferred.resolve(data);
             }).error(function(data) {
-                console.log('error');
                 deferred.reject('error when requesting data!');
             });
 

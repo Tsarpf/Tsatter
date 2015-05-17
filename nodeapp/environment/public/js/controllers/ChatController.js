@@ -216,7 +216,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         //$scope.addServerMessage(data.nick + ' joined the channel');
     };
     $scope.privmsg = function(data) {
-        //$scope.addMessage(data.args[1], data.nick);
         //FIXME: the idx is not implemented correctly
         var obj = {message: data.args[1], nick: data.nick, timestamp: getTimestamp(), idx: null, class: ''};
         $scope.messageDatasource.addMessage(obj);
@@ -289,70 +288,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.addBackendMessage = function(message, top) {
         $scope.addMessage(message.message, message.nick, message.timestamp, message.idx, top);
     };
-
-    function spliceSlice(str, index, count, add) {
-        return str.slice(0, index) + (add || "") + str.slice(index + count);
-    }
-
-    function getIdx() {
-        for(var i = $scope.messages.length - 1; i >= 0; i--) {
-            if(typeof $scope.messages[i].idx !== 'undefined') {
-                return $scope.messages[i].idx + 1;
-            }
-        }
-        return 0;
-    }
-
-    /*
-    $scope.addMessage = function(message, nick, timestamp, idx, top) {
-        if(!idx ) {
-            idx = getIdx();
-        }
-        var obj = {message: message, nick: nick, timestamp: getTimestamp(timestamp), idx: idx, class: ''};
-        if(top) {
-            if($scope.messages[0]) {
-                if ($scope.messages[0].idx) {
-                    if ($scope.messages[0].idx === idx) {
-                        return;
-                    }
-                }
-            }
-            $scope.messages.unshift(obj);
-        }
-        else {
-            if ($scope.messages[$scope.messages.length - 1]) {
-                if ($scope.messages[$scope.messages.length - 1].idx) {
-                    if ($scope.messages[$scope.messages.length - 1].idx === idx) {
-                        return;
-                    }
-                }
-            }
-            $scope.messages.push(obj);
-        }
-
-        var urls = getUrls(message);
-        if(!urls) {
-            return;
-        }
-        for(var j = 0; j < urls.length; j++) {
-           isImage(urls[j], obj).then(function(args) {
-               var wasImage = args[0];
-               if(!wasImage) {
-                   return;
-               }
-
-               var src = args[1];
-               var obj = args[2];
-
-               var num = $scope.mediaCount++;
-               $scope.mediaList.push({url: src, idx: num});
-               var idx = obj.message.indexOf(src);
-               obj.message = spliceSlice(obj.message, idx + src.length, 0, ' [' + num + '] ');
-               //obj.message = obj.message.replace(src, '[' + num + ']');
-           });
-        }
-    };
-    */
 
     var getTimestamp = function(timestamp) {
         var date;
@@ -442,8 +377,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             var obj = {channel: $scope.channelName, message: message};
             socket.emit('privmsg', obj, function(success) {
                 if(success) {
-                    //$scope.messageDatasource.incrementRevision();
-                    var obj = {message: message, nick: $rootScope.vars.nickname, timestamp: getTimestamp(), idx: null, class: ''};
+                    obj = {message: message, nick: $rootScope.vars.nickname, timestamp: getTimestamp(), idx: null, class: ''};
                     $scope.messageDatasource.addMessage(obj);
                 }
             });
@@ -459,29 +393,5 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         },
         fail: function(instance) {
         }
-    };
-
-    //http://stackoverflow.com/questions/22423057/angular-js-isimage-check-if-its-image-by-url
-    //Awesome.
-    function isImage(src, obj) {
-
-        var deferred = $q.defer();
-
-        var image = new Image();
-        image.onerror = function() {
-            deferred.resolve([false]);
-        };
-        image.onload = function() {
-            deferred.resolve([true, src, obj]);
-        };
-        image.src = src;
-
-        return deferred.promise;
-    }
-
-    //Maybe the rest of these should be in a service?
-    var urlRegex = /((((https?|ftp):\/\/)|www\.)(([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)|(([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(aero|asia|biz|cat|com|coop|info|int|jobs|mobi|museum|name|net|org|post|pro|tel|travel|xxx|edu|gov|mil|[a-zA-Z][a-zA-Z]))|([a-z]+[0-9]*))(:[0-9]+)?((\/|\?)[^ "]*[^ ,;\.:">)])?)|(spotify:[^ ]+:[^ ]+)/g;
-    var getUrls = function(message) {
-        return message.match(urlRegex);
     };
 }]);
