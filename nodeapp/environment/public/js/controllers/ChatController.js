@@ -26,21 +26,34 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.waitingForSearchResults = false;
     $scope.cursorPos = 0;
     $scope.messageAdapter = null;
+    $scope.imageAdapter = null;
 
-    var channelParamObj = {
+    var messageProviderObj = {
         channel: null,
         linkOffset: null,
         adapter: null,
-        currentlyHighlighted: $scope.currentlyHighlighted
+        currentlyHighlighted: $scope.currentlyHighlighted,
+        getPath: '/backlog/'
     };
-    $scope.messageDatasource = infiniteMessages(channelParamObj);
+    $scope.messageDatasource = infiniteMessages(messageProviderObj);
+
+    var imageProviderObj = {
+        channel: null,
+        linkOffset: null,
+        adapter: null,
+        currentlyHighlighted: null,
+        getPath: '/imagebacklog/'
+    };
+    $scope.imageDatasource = infiniteMessages(imageProviderObj);
 
     //we have to do this in a timeout so that the directive is initialized
     $timeout(function(){
-        channelParamObj.channel = $scope.channelName;
-        channelParamObj.adapter = $scope.messageAdapter;
-        channelParamObj.linkOffset = $scope.getLinkIdx();
-        //channelParamObj.linkOffset =
+        messageProviderObj.channel = $scope.channelName;
+        messageProviderObj.adapter = $scope.messageAdapter;
+        messageProviderObj.linkOffset = $scope.getLinkIdx();
+
+        imageProviderObj.channel = $scope.channelName;
+        imageProviderObj.adapter = $scope.imageAdapter;
         console.log('channel name set!');
         joinChannel($scope.channelName);
         $scope.nick = $rootScope.vars.nickname;

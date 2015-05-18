@@ -167,9 +167,64 @@ module.exports = (function() {
         })
     };
 
+    var getAllImages = function (channelName, callback) {
+        Channel.findOne({name: channelName}).exec(function (err, doc) {
+            if (err || !doc) {
+                console.log(err);
+                console.log('no messages found');
+                return callback(err, []);
+            }
+            if (doc.imageUrls.length > 0) {
+                callback(null, doc.imageUrls);
+            }
+            else {
+                callback(null, []);
+            }
+        });
+    };
+
+    var getImages = function (channelName, index, count, callback) {
+        getAllImages(channelName, function (err, images) {
+            if (err || index < 0 || count < 0) {
+                return callback('error! ' + err);
+            }
+
+            var arr = [];
+            for (var i = index; i < images.length && i < index + count; i++) {
+                arr.push(images[i]);
+            }
+
+            callback(null, arr);
+        });
+    };
+
+    var getImagesFlipped = function (channelName, index, count, callback) {
+        getAllImages(channelName, function (err, images) {
+            if (err) {
+                return callback(err);
+            }
+
+            var from = images.length - count + index;
+            var to = images.length + index;
+
+
+            if (from < 0) {
+                from = 0;
+            }
+
+            var messageArray = [];
+            for (var i = from; i < to && i < images.length; i++) {
+                messageArray.push(images[i]);
+            }
+            callback(null, messageArray);
+        })
+    };
+
     return function() {
         return {
             saveMessage: saveMessage,
+            getImages: getImages,
+            getImagesFlipped: getImagesFlipped,
             getMessages: getMessages,
             getMessagesFlipped: getMessagesFlipped,
             getActiveChannels: getActiveChannels,

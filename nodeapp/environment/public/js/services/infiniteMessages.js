@@ -169,7 +169,7 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
         function requestMessages(index, count) {
             var deferred = $q.defer();
 
-            $http.get('/backlog/', {
+            $http.get(obj.getPath, {
                 params: {
                     channel: obj.channel,
                     index: index,
@@ -199,7 +199,7 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
         function requestLastMessages(count) {
             var deferred = $q.defer();
 
-            $http.get('/backlog/', {
+            $http.get(obj.getPath, {
                 params: {
                     channel: obj.channel,
                     count: count

@@ -36,7 +36,6 @@ module.exports = (function() {
 
 
             if(isNaN(count) || !channel) {
-                console.log('äh');
                 res.writeHead(400, {error: 'invalid field(s)'});
                 return res.end();
             }
@@ -58,6 +57,46 @@ module.exports = (function() {
             }
 
             persistenceHandler.getMessages(channel, index, count, function(err, messages) {
+                if(err) {
+                    console.log('message fetch fail');
+                    console.log(err);
+                    res.writeHead(403, {error: err});
+                    res.end();
+                }
+                else {
+                    res.json(messages);
+                }
+            });
+        });
+
+        app.get('/imagebacklog/', function(req, res, next) {
+            var channel = req.query.channel;
+            var index = parseInt(req.query.index);
+            var count = parseInt(req.query.count);
+
+
+            if(isNaN(count) || !channel) {
+                res.writeHead(400, {error: 'invalid field(s)'});
+                return res.end();
+            }
+
+            if(isNaN(index)) {
+                //get last <count> images
+                persistenceHandler.getImagesFlipped(channel, 0, count, function(err, images) {
+                    if(err) {
+                        console.log('message fetch fail');
+                        console.log(err);
+                        res.writeHead(403, {error: err});
+                        res.end();
+                    }
+                    else {
+                        res.json(messages);
+                    }
+                });
+                return;
+            }
+
+            persistenceHandler.getImages(channel, index, count, function(err, images) {
                 if(err) {
                     console.log('message fetch fail');
                     console.log(err);
