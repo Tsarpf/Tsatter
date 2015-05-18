@@ -30,22 +30,21 @@ module.exports = (function() {
 
 
         app.get('/backlog/', function(req, res, next) {
-
             var channel = req.query.channel;
             var index = parseInt(req.query.index);
             var count = parseInt(req.query.count);
 
 
-            if (isNaN(count) || !channel) {
+            if(isNaN(count) || !channel) {
                 console.log('äh');
                 res.writeHead(400, {error: 'invalid field(s)'});
                 return res.end();
             }
 
-            if (isNaN(index)) {
+            if(isNaN(index)) {
                 //get last <count> messages
-                persistenceHandler.getMessagesFlipped(channel, 0, count, function (err, messages) {
-                    if (err) {
+                persistenceHandler.getMessagesFlipped(channel, 0, count, function(err, messages) {
+                    if(err) {
                         console.log('message fetch fail');
                         console.log(err);
                         res.writeHead(403, {error: err});
@@ -58,24 +57,16 @@ module.exports = (function() {
                 return;
             }
 
-            persistenceHandler.getMessages(channel, index, count, function (err, messages) {
-                if (err) {
+            persistenceHandler.getMessages(channel, index, count, function(err, messages) {
+                if(err) {
                     console.log('message fetch fail');
                     console.log(err);
                     res.writeHead(403, {error: err});
                     res.end();
                 }
-
-                from = parseInt(from);
-                to = parseInt(to);
-                if (from > to) {
-                    res.writeHead(400, {error: 'invalid from/to field(s)'});
-                    return res.end();
+                else {
+                    res.json(messages);
                 }
-
-                persistenceHandler.getActiveChannels(from, to, function (err, results) {
-                    res.json(results);
-                });
             });
         });
 
@@ -94,6 +85,12 @@ module.exports = (function() {
         app.get('/partials/:name', function(req, res){
             var name = req.params.name;
             res.render('partials/' + name);
+        });
+
+        app.get('/public/images/:remainder', function(req,res) {
+            console.log('got request for public');
+            console.log(req.params.remainder);
+            res.redirect('http://localhost/public/images/' + req.params.remainder);
         });
 
         app.all('/', function (req, res) {

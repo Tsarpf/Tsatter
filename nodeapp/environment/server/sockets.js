@@ -155,7 +155,7 @@ module.exports = (function() {
             if(msg.message.length > 512) {
                 msg.message = msg.message.substring(0, 512);
             }
-            persistenceHandler.saveMessage(msg.channel, username, msg.message, function(err) {
+            persistenceHandler.saveMessage(msg.channel, username, msg.message, function(err, idx) {
                 if(err) {
                     console.log(err);
                     return fn(false);

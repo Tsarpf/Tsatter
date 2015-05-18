@@ -17,7 +17,7 @@ mkdirp(imagesPath);
 
 var fileTypes = {
     'png': '89504e47',
-    'jpg': 'ffd8ffe0',
+    'jpg': 'ffd8',
     'gif': '47494638'
 };
 var maxSize = 45000000; //45 megabytes
@@ -114,18 +114,20 @@ var download = function(url, callback) {
     var type = '';
     var filename = getName();
     var filepath = imagesPath + filename;
+    var size;
     var stream = request({
         url: url,
         method: "HEAD"
     }, function(err, headRes) {
         if(err) {
             console.log(err);
+            console.log('request fail');
             return callback(err);
         }
-        var size = headRes.headers['content-length'];
+        size = headRes.headers['content-length'];
         if (size > maxSize) {
             console.log('Resource size exceeds limit (' + size + ')');
-            return callback('image too big');
+            return callback(null, {path: imageTooBig, shouldProcess: false});
         }
         size = 0;
         var file = fs.createWriteStream(filepath);
@@ -149,6 +151,7 @@ var download = function(url, callback) {
                 if(!type) {
                     res.abort();
                     fs.unlink(filepath);
+                    console.log('not an image');
                     return callback('not an image');
                 }
             }
@@ -162,7 +165,10 @@ var download = function(url, callback) {
             }
         }).pipe(file);
         res.on('end', function() {
-            callback(null, {filename: filename, shouldProcess: true, type: type});
+            if(type && size < maxSize) {
+                console.log('found type');
+                callback(null, {filename: filename, shouldProcess: true, type: type});
+            }
         })
     });
 };
