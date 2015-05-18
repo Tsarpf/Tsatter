@@ -106,7 +106,6 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                return; //we'll get it from backlog eventually
             }
 
-
             obj.adapter.applyUpdates(function(item, scope) {
                 if(item.idx === EOF) {
                     EOF++;

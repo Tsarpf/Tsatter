@@ -191,7 +191,12 @@ module.exports = (function() {
 
             var arr = [];
             for (var i = index; i < images.length && i < index + count; i++) {
-                arr.push(images[i]);
+                arr.push({
+                    messageIdx: images[i].messageIdx,
+                    thumbnail: images[i].thumbnail,
+                    originalUrl: images[i].originalUrl,
+                    idx: i
+                });
             }
 
             callback(null, arr);
@@ -212,11 +217,17 @@ module.exports = (function() {
                 from = 0;
             }
 
-            var messageArray = [];
+            var arr = [];
             for (var i = from; i < to && i < images.length; i++) {
-                messageArray.push(images[i]);
+                arr.push({
+                    messageIdx: images[i].messageIdx,
+                    thumbnail: images[i].thumbnail,
+                    originalUrl: images[i].originalUrl,
+                    idx: i
+                });
             }
-            callback(null, messageArray);
+
+            callback(null, arr);
         })
     };
 

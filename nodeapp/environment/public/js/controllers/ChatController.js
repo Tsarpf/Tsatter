@@ -284,8 +284,9 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         }
     };
     $scope.mediaDelivery = function(data) {
+        console.log('media delivery just for you!');
         console.log(data.image);
-        $scope.mediaList.push(data.image);
+        $scope.imageDatasource.addMessage(data.image);
     };
     $scope.handler = {
         PRIVMSG: $scope.privmsg,
