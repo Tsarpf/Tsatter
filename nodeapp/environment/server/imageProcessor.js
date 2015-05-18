@@ -16,6 +16,7 @@ module.exports = (function() {
 
     function messageHandler (msg) {
         var thumbnailUrl = '/public/images/' + msg.thumbnail;
+
         persistence.saveProcessedImagePathToDB(msg.src, thumbnailUrl, msg.channel, msg.messageIdx, msg.type, function(err) {
             if(err) {
                 return console.log(err);

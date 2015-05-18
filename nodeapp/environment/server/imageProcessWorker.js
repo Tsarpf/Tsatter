@@ -3,7 +3,7 @@
  */
 
 var mkdirp = require('mkdirp');
-var imageTooBig = 'http://i.imgur.com/0BFkWlU.png';
+var imageTooBig = 'image-too-big.png';
 
 //TODO: read from environment variable
 var imagesPath = __dirname + '/../dist/public/images/';
@@ -47,7 +47,7 @@ process.on('message', function(msg) {
             })
         }
         else {
-            resObj.thumbnail = obj.filename;
+            resObj.thumbnail = obj.thumbnail;
             process.send(resObj);
         }
     });
@@ -126,8 +126,9 @@ var download = function(url, callback) {
         }
         size = headRes.headers['content-length'];
         if (size > maxSize) {
+            console.log('skipped due to header content-length');
             console.log('Resource size exceeds limit (' + size + ')');
-            return callback(null, {path: imageTooBig, shouldProcess: false});
+            return callback(null, {thumbnail: imageTooBig, shouldProcess: false});
         }
         size = 0;
         var file = fs.createWriteStream(filepath);
@@ -157,11 +158,12 @@ var download = function(url, callback) {
             }
 
             if (size > maxSize) {
+                console.log('aborted due to actual size too big');
                 console.log('Resource stream exceeded limit (' + size + ')');
 
                 res.abort(); // Abort the response (close and cleanup the stream)
                 fs.unlink(filepath); // Delete the file we were downloading the data to
-                return callback(null, {path: imageTooBig, shouldProcess: false});
+                return callback(null, {thumbnail: imageTooBig, shouldProcess: false});
             }
         }).pipe(file);
         res.on('end', function() {
