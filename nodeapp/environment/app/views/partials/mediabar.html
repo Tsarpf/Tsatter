@@ -1,6 +1,6 @@
 
 <div ui-scroll="media in imageDatasource" buffer-size="5" adapter="imageAdapter">
-    <a ng-href="{{media.src}}">
+    <a ng-href="{{media.originalUrl}}" target="_blank">
         <img ng-src="{{media.thumbnail}}" class="media-element">
     </a>
     <p> [{{media.messageIdx}}] </p>

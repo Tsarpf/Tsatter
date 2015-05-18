@@ -22,6 +22,8 @@ module.exports = (function() {
             }
             //get jiggy widdit
             msg.thumbnail = thumbnailUrl;
+            msg.originalUrl = msg.src;
+            delete msg.src;
             broadcaster.broadcast(msg.channel, {
                 command: 'mediaDelivery',
                 image: msg
