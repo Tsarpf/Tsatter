@@ -74,6 +74,7 @@ module.exports = (function() {
             var index = parseInt(req.query.index);
             var count = parseInt(req.query.count);
 
+            console.log('requested image backlog');
 
             if(isNaN(count) || !channel) {
                 res.writeHead(400, {error: 'invalid field(s)'});
@@ -90,7 +91,7 @@ module.exports = (function() {
                         res.end();
                     }
                     else {
-                        res.json(messages);
+                        res.json(images);
                     }
                 });
                 return;
@@ -104,7 +105,7 @@ module.exports = (function() {
                     res.end();
                 }
                 else {
-                    res.json(messages);
+                    res.json(images);
                 }
             });
         });
@@ -127,8 +128,6 @@ module.exports = (function() {
         });
 
         app.get('/public/images/:remainder', function(req,res) {
-            console.log('got request for public');
-            console.log(req.params.remainder);
             res.redirect('http://localhost/public/images/' + req.params.remainder);
         });
 

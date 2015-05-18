@@ -43,7 +43,8 @@ module.exports = (function() {
 
         client.addListener('raw', function (message) {
             if(message.commandType === 'error') {
-                console.log(message);
+                //console.log('error');
+                //console.log(message);
                 socket.send(message);
             }
         });
@@ -180,8 +181,8 @@ module.exports = (function() {
         });
 
         socket.on('message', function (messageObj) {
-            console.log('got raw message from socket');
-            console.log(messageObj.command);
+            //console.log('got raw message from socket');
+            //console.log(messageObj.command);
             if(messageObj.command.length >= 2) {
                 switch(messageObj.command[0].toLowerCase()) {
                     case 'part':
@@ -196,14 +197,6 @@ module.exports = (function() {
                 }
                 client.send.apply(client, messageObj.command);
             }
-            //try {
-            //}
-            /*
-            catch (err) {
-                console.log('send fail');
-                console.log(err);
-            }
-            */
         });
 
         socket.on('reconnect', function () {

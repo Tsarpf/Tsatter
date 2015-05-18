@@ -54,13 +54,12 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
         imageProviderObj.channel = $scope.channelName;
         imageProviderObj.adapter = $scope.imageAdapter;
-        console.log('channel name set!');
         joinChannel($scope.channelName);
         $scope.nick = $rootScope.vars.nickname;
         focus('chatInput');
     });
 
-    $scope.mouseScroll = function(event) {
+    $scope.messageMouseScroll = function(event) {
         if(event.deltaY < 0) {
            $scope.messagesGlued = false;
         }
@@ -68,6 +67,16 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
     $scope.messageScrollBottom = function() {
         $scope.messagesGlued = true;
+    };
+
+    $scope.mediaMouseScroll = function(event) {
+        if(event.deltaY < 0) {
+            $scope.mediaGlued = false;
+        }
+    };
+
+    $scope.mediaScrollBottom = function() {
+        $scope.mediaGlued = true;
     };
 
     $scope.getLinkIdx = function() {
@@ -196,7 +205,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
     $scope.part = function(data) {
         $scope.removeNick(data.nick);
-        $scope.addServerMessage(data.nick + ' left the channel');
+        //$scope.addServerMessage(data.nick + ' left the channel');
     };
     $scope.names = function(data) {
         $scope.users = {};
@@ -238,17 +247,17 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             $scope.nick = data.args[0];
         }
         $scope.replaceNick(data.nick, data.args[0]);
-        $scope.addServerMessage(data.nick + ' is now known as ' + data.args[0]);
+        //$scope.addServerMessage(data.nick + ' is now known as ' + data.args[0]);
     };
     $scope.quit = function(data) {
         $scope.removeNick(data.nick);
-        $scope.addServerMessage(data.nick + ' quit');
+        //$scope.addServerMessage(data.nick + ' quit');
     };
     $scope.errnick = function(data) {
-        $scope.addServerMessage(data.args[data.args.length - 1]);
+        //$scope.addServerMessage(data.args[data.args.length - 1]);
     };
     $scope.nicknameinuse = function(data) {
-        $scope.addServerMessage(data.args[data.args.length - 1]);
+        //$scope.addServerMessage(data.args[data.args.length - 1]);
     };
     $scope.activate = function(data) {
         $timeout(function() {
@@ -258,17 +267,17 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.kick = function(data) {
         var msg = data.args[1] + ' was kicked by ' + data.nick;
         $scope.removeNick(data.args[1]);
-        $scope.addServerMessage(msg);
+        //$scope.addServerMessage(msg);
     };
     $scope.mode = function(data) {
         switch(data.args[1]) {
             case '+o':
                 $scope.users[data.args[2]].status = 'op-user';
-                $scope.addServerMessage(data.nick + ' made ' + data.args[2] + ' a moderator');
+                //$scope.addServerMessage(data.nick + ' made ' + data.args[2] + ' a moderator');
                 break;
             case '-o':
                 $scope.users[data.args[2]].status = 'normal-user';
-                $scope.addServerMessage(data.nick + ' removed operator rights from ' + data.args[2]);
+                //$scope.addServerMessage(data.nick + ' removed operator rights from ' + data.args[2]);
                 break;
             default:
                 break;
