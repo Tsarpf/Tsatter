@@ -7,20 +7,12 @@
 angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout', function($q, $http, $timeout) {
     return function(obj) {
         var rev = 0;
-
-        var lastRequest = 0;
         var first = true;
-
-        var liveMessageAnchor = null;
         var initialized = false;
-
-        var bufferSize = 20;
         var index0 = null;
-
         var EOF = null;
-        var bottomLoaded = false;
-
         var cache = [];
+
         function getData(index, count, callback) {
             var timedOutGetData = function(index, count, success) {
                 return function() {
@@ -39,8 +31,6 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                     initialized = true;
                 }
             }
-
-
 
             //weird 1-based indexing in the lib
             index--;
@@ -83,10 +73,6 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                 reqCount = count - remainder;
                 reqIndex = 0;
             }
-            if(initialized && reqIndex < lastRequest) {
-                bottomLoaded = false;
-                liveMessageAnchor = null;
-            }
 
             if(EOF !== null) {
                 if(reqIndex > EOF) {
@@ -105,12 +91,6 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                     }
                 }
                 if(!missing) {
-                    if(reqIndex + reqCount >= EOF) {
-                        bottomLoaded = true;
-                    }
-                    if(initialized) {
-                        lastRequest = reqIndex;
-                    }
                     return callback(arr);
                 }
             }
@@ -178,16 +158,11 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
             }).success(function(data) {
                 if(data.length === 0) {
                     EOF = cache.length - 1;
-                    bottomLoaded = true;
                 }
                 else if(data.length < count) {
                     EOF = data[data.length - 1].idx;
-                    bottomLoaded = true;
                 }
                 insertCache(data);
-                if(initialized) {
-                    lastRequest = index;
-                }
                 deferred.resolve(data);
             }).error(function(data) {
                 deferred.reject('error when requesting data!');
@@ -208,13 +183,11 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                 if(data.length === 0) {
                     index0 = 0;
                     EOF = 0;
-                    bottomLoaded = true;
                     return deferred.resolve(data);
                 }
 
                 index0 = data[0].idx;
                 EOF = data[data.length - 1].idx;
-                bottomLoaded = true;
                 insertCache(data);
                 deferred.resolve(data);
             }).error(function(data) {
