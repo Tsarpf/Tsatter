@@ -92,7 +92,7 @@ module.exports = (function() {
             for (var i = from; i < to && i < docs.length; i++) {
                 var imageUrls = docs[i].imageUrls.slice(-channelPreviewImageUrlCount);
                 if (imageUrls.length === 0) {
-                    imageUrls = [placeholderImageUrl];
+                    imageUrls = [{thumbnail: placeholderImageUrl}];
                 }
                 var obj = {
                     name: docs[i].name,
@@ -198,7 +198,6 @@ module.exports = (function() {
                     idx: i
                 });
             }
-
             callback(null, arr);
         });
     };
@@ -226,7 +225,6 @@ module.exports = (function() {
                     idx: i
                 });
             }
-
             callback(null, arr);
         })
     };

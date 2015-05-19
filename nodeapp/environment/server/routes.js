@@ -127,8 +127,8 @@ module.exports = (function() {
             res.render('partials/' + name);
         });
 
-        app.get('/public/images/:remainder', function(req,res) {
-            res.redirect('http://localhost/public/images/' + req.params.remainder);
+        app.get('/images/:remainder', function(req,res) {
+            res.redirect('http://localhost/images/' + req.params.remainder);
         });
 
         app.all('/', function (req, res) {

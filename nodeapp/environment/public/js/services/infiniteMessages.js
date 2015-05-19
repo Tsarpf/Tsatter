@@ -102,6 +102,11 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
         }
 
         function addMessage(message) {
+
+            if(cache.length === 0) {
+                return incrementRevision();
+            }
+
             if(EOF === null) {
                return; //we'll get it from backlog eventually
             }
