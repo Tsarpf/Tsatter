@@ -128,7 +128,7 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
             if(index < 0) {
                 index = 0;
             }
-            requestMessages(obj.channel, index, count).then(function(data) {
+            requestMessages(index, count).then(function(data) {
                 if(data.length === 0) {
                     deferred.reject('did not find such message, showing last messages from channel');
                     return;

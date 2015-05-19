@@ -163,6 +163,7 @@ module.exports = (function() {
                     idx: i
                 });
             }
+
             callback(null, messageArray);
         })
     };

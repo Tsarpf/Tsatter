@@ -34,7 +34,6 @@ module.exports = (function() {
             var index = parseInt(req.query.index);
             var count = parseInt(req.query.count);
 
-
             if(isNaN(count) || !channel) {
                 res.writeHead(400, {error: 'invalid field(s)'});
                 return res.end();
@@ -73,8 +72,6 @@ module.exports = (function() {
             var channel = req.query.channel;
             var index = parseInt(req.query.index);
             var count = parseInt(req.query.count);
-
-            console.log('requested image backlog');
 
             if(isNaN(count) || !channel) {
                 res.writeHead(400, {error: 'invalid field(s)'});

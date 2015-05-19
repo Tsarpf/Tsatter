@@ -179,12 +179,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
     $scope.currentlyHighlighted = {};
     $scope.messageClicked = function(index) {
-
-        $scope.messages[index].class = 'single-message-highlighted';
-        if($scope.currentlyHighlighted) {
-            $scope.currentlyHighlighted.class = '';
-        }
-        $scope.currentlyHighlighted = $scope.messages[index];
+        //TODO: show a field for copying the link
     };
     //Not sure yet if this is really a robust solution. It seems a bit dangerous
     $scope.mediaCount = 0;
