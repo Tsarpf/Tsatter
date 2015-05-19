@@ -150,18 +150,18 @@ describe('persistence handler', function() {
         })
     });
 
-    it('should return the correct messages when getting them using negative numbers', function(done) {
+    it('should return the correct messages when getting them using flipped order', function(done) {
         var thirdLast = testMessage + 10;
         var secondLast = testMessage + 11;
         var last = testMessage + 12;
         persistenceHandler.saveMessage(testChannel, testNick, thirdLast, function() {
             persistenceHandler.saveMessage(testChannel, testNick, secondLast, function() {
                 persistenceHandler.saveMessage(testChannel, testNick, last, function() {
-                    persistenceHandler.getMessages(testChannel, -3, -1, function(err, messages) {
+                    persistenceHandler.getMessagesFlipped(testChannel, -1, 2, function(err, messages) {
                         messages.length.should.equal(2);
                         messages[0].message.should.equal(thirdLast);
                         messages[1].message.should.equal(secondLast);
-                        persistenceHandler.getMessages(testChannel, -3, 0, function(err, messages) {
+                        persistenceHandler.getMessagesFlipped(testChannel, 0, 3, function(err, messages) {
                             messages.length.should.equal(3);
                             messages[0].message.should.equal(thirdLast);
                             messages[1].message.should.equal(secondLast);
@@ -220,7 +220,7 @@ describe('persistence handler', function() {
     });
 
     it('should give correct idx\'s for channel messages', function(done) {
-        persistenceHandler.getMessages(testChannel, 1, 6, function(err, messages) {
+        persistenceHandler.getMessages(testChannel, 1, 5, function(err, messages) {
             messages.length.should.equal(5);
             messages[0].idx.should.equal(1);
             messages[4].idx.should.equal(5);

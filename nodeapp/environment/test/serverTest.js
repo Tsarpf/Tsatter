@@ -49,6 +49,9 @@ describe('Server full system', function () {
 
     it('should register', function (done) {
         fstSock.on('message', function (data) {
+            if(data.command === 'err_nomotd') {
+                return;
+            }
             data.command.should.equal('rpl_welcome');
             done();
         });
@@ -58,6 +61,9 @@ describe('Server full system', function () {
         fstSock.on('message', function (data) {
             if (data.command === 'rpl_welcome') {
                 fstSock.send({command: ['join', testChannel]});
+                return;
+            }
+            else if(data.command === 'err_nomotd') {
                 return;
             }
             data.command.should.equal('JOIN');

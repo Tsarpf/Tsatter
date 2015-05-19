@@ -80,7 +80,7 @@ module.exports = function(grunt) {
             }
         },
         clean: {
-            dist: ['dist/*']
+            dist: ['dist/app/*', 'dist/public/*', 'dist/server/*']
         },
         watch: {
             everything: {

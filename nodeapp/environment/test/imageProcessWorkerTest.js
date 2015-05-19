@@ -29,7 +29,7 @@ describe('image download and minify', function () {
         exec: __dirname + '/../server/imageProcessWorker.js'
     });
 
-    var imagesPath = __dirname + '/../dist/public/images/';
+    var imagesPath = __dirname + '/../dist/images/';
 
     var testChannel = 'testchannel123';
     it('should generate a jpg file', function (done) {

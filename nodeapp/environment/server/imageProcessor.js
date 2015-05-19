@@ -15,7 +15,7 @@ module.exports = (function() {
     worker.on('message', messageHandler);
 
     function messageHandler (msg) {
-        var thumbnailUrl = '/public/images/' + msg.thumbnail;
+        var thumbnailUrl = '/images/' + msg.thumbnail;
 
         persistence.saveProcessedImagePathToDB(msg.src, thumbnailUrl, msg.channel, msg.messageIdx, msg.type, function(err) {
             if(err) {

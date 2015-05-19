@@ -6,7 +6,7 @@ var mkdirp = require('mkdirp');
 var imageTooBig = 'image-too-big.png';
 
 //TODO: read from environment variable
-var imagesPath = __dirname + '/../dist/public/images/';
+var imagesPath = __dirname + '/../dist/images/';
 
 var gm = require('gm');
 var fs = require('fs');
@@ -168,7 +168,6 @@ var download = function(url, callback) {
         }).pipe(file);
         res.on('end', function() {
             if(type && size < maxSize) {
-                console.log('found type');
                 callback(null, {filename: filename, shouldProcess: true, type: type});
             }
         })
