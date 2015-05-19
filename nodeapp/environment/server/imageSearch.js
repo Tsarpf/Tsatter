@@ -16,14 +16,8 @@ module.exports = (function() {
     }
     console.log('key is: "' + key + '"');
     var bingUrl = 'https://:' + key + '@api.datamarket.azure.com/Bing/Search/v1/Image?$format=json&Query=';
-    //var cache = {};
 
     var search = function(parameter, callback) {
-        /*
-        if(cache[parameter]) {
-            return callback(null, cache[parameter]);
-        }
-        */
         var url = bingUrl + '\'' + parameter + '\'';
 
         request({url: url},
@@ -33,8 +27,6 @@ module.exports = (function() {
                 console.log(error);
             }
             else {
-                //cache[parameter] = body;
-
                 var obj = JSON.parse(body);
                 var resObj = [];
                 for(var i = 0; i < obj.d.results.length; i++) {

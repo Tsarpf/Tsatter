@@ -23,7 +23,6 @@ module.exports = (function() {
     function remove(channel, socket) {
         console.log('removed ' + socket.id);
         console.log(channel);
-        console.log(channels);
 
         if(channels[channel][socket.id]) {
             delete channels[channel][socket.id];
