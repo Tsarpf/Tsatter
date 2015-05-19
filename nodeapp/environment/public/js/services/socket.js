@@ -29,6 +29,9 @@ angular.module('tsatter').factory('socket', ['$rootScope', '$timeout', function(
             if(channels.indexOf(channel) < 0) {
                 channels.push(channel);
             }
+            else {
+                socket.removeAllListeners(channel);
+            }
             socket.on(channel, function(data) {
                 $rootScope.$apply(function() {
                     $rootScope.$broadcast(channel, data);

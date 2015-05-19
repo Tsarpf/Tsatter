@@ -368,7 +368,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     };
 
     $scope.stopEditingNick = function() {
-        $scope.editingNick = false;Linking
+        $scope.editingNick = false;
     };
 
     $scope.ownNickAreaSubmit = function() {
