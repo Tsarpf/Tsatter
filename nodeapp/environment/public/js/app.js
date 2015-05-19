@@ -9,7 +9,8 @@ var app = angular.module('tsatter', [
     'angular-images-loaded',
     'lrInfiniteScroll',
     'infinite-scroll',
-    'monospaced.mousewheel'
+    'monospaced.mousewheel',
+    'angular-images-loaded'
 ]);
 
 app.directive('tsChat', ['$timeout', function($timeout) {
@@ -109,3 +110,4 @@ app.directive('tsMediaBar', function() {
         templateUrl: '/partials/mediabar.html'
     };
 });
+

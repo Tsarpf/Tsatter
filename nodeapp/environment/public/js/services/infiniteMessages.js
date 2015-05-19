@@ -12,6 +12,9 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
         var index0 = null;
         var EOF = null;
         var cache = [];
+        var bufferSize = null;
+
+        var currentlyHighlighted = null;
 
         function getData(index, count, callback) {
             var timedOutGetData = function(index, count, success) {
@@ -27,6 +30,7 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
 
             //Ugly hack for checking if initial loads done
             if(!initialized) {
+                bufferSize = count;
                 if(index < 0) {
                     initialized = true;
                 }
@@ -137,7 +141,10 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                 for(var i = 0; i < data.length; i++) {
                     if(data[i].idx === obj.linkOffset) {
                         data[i].class = 'single-message-highlighted';
-                        obj.currentlyHighlighted = data[i];
+                        if(currentlyHighlighted !== null) {
+                            currentlyHighlighted.class = '';
+                        }
+                        currentlyHighlighted = data[i];
                         index0 = index;
                         deferred.resolve(data);
                         return;
@@ -216,11 +223,20 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
             rev++;
         }
 
+        function jumpTo(index) {
+            //Ugly. We should pass what to get around as parameter!!!
+            obj.linkOffset = index;
+            getAroundLink(bufferSize).then(function() {
+                incrementRevision();
+            });
+        }
+
         return {
             get: getData,
             incrementRevision: incrementRevision,
             revision: revision,
-            addMessage: addMessage
+            addMessage: addMessage,
+            jumpTo: jumpTo
         }
     };
 

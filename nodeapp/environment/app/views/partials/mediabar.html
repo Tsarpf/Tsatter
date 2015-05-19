@@ -1,8 +1,12 @@
 
 <div ui-scroll="media in imageDatasource" buffer-size="5" adapter="imageAdapter">
     <a ng-href="{{media.originalUrl}}" target="_blank">
-        <img ng-src="{{media.thumbnail}}" class="media-element">
+        <img ng-src="{{media.thumbnail}}" class="media-element images-loaded">
     </a>
-    <p> [{{media.messageIdx}}] </p>
+    <p>
+        [
+        <a class="clickable-element" ng-click="jumpMessagesTo(media.messageIdx)"> {{media.messageIdx}} </a>
+        ]
+    </p>
 </div>
 

@@ -224,6 +224,11 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
             };
         }
     };
+
+    $scope.jumpMessagesTo = function(index) {
+        $scope.messageDatasource.jumpTo(index);
+    };
+
     $scope.join = function(data) {
         $scope.users[data.nick] = {
             nick: data.nick,
@@ -363,7 +368,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     };
 
     $scope.stopEditingNick = function() {
-        $scope.editingNick = false;
+        $scope.editingNick = false;Linking
     };
 
     $scope.ownNickAreaSubmit = function() {
@@ -372,6 +377,25 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         }
         $scope.editingNick = false;
         $scope.nick = $rootScope.vars.nickname;
+    };
+
+    function rootApply() {
+        if(!$scope.$$phase) {
+            console.log('root scope applied');
+            $rootScope.$apply();
+        }
+        else {
+            $timeout(function() {
+                rootApply();
+            }, 1000);
+        }
+    }
+
+    $scope.imgLoadedEvents = {
+        always: function(instance) {
+            console.log('all images loaded!');
+            $timeout(rootApply);
+        }
     };
 
     this.privmsg = function() {
@@ -405,16 +429,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
                 }
             });
             //$scope.addMessage(message, $rootScope.vars.nickname);
-        }
-    };
-
-    $scope.imgLoadedEvents = {
-        always: function(instance) {
-            //reset glue in hopes of autoscrolling to the end
-            $scope.mediaGlued = !$scope.mediaGlued;
-            $scope.mediaGlued = !$scope.mediaGlued;
-        },
-        fail: function(instance) {
         }
     };
 }]);
