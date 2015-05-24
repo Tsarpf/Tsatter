@@ -13,7 +13,6 @@ angular.module('tsatter').controller('ChatController', [
     'imageSearch',
     'infiniteMessages',
 function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll, $q, imageSearch, infiniteMessages) {
-    $scope.messages = [];
     $scope.users = {};
     $scope.mediaList = [];
     $scope.messagesGlued = true;
@@ -50,7 +49,11 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $timeout(function(){
         messageProviderObj.channel = $scope.channelName;
         messageProviderObj.adapter = $scope.messageAdapter;
-        messageProviderObj.linkOffset = $scope.getLinkIdx();
+        var linkIdx = $scope.getLinkIdx();
+        messageProviderObj.linkOffset = linkIdx;
+        if(linkIdx !== null) {
+            $scope.messagesGlued = false;
+        }
 
         imageProviderObj.channel = $scope.channelName;
         imageProviderObj.adapter = $scope.imageAdapter;
@@ -63,10 +66,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         if(event.deltaY < 0) {
            $scope.messagesGlued = false;
         }
-    };
-
-    $scope.messageScrollBottom = function() {
-        $scope.messagesGlued = true;
     };
 
     $scope.mediaMouseScroll = function(event) {
@@ -382,10 +381,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
     function rootApply() {
         if(!$scope.$$phase) {
-            if($scope.mediaGlued) {
-                $scope.mediaGlued = !$scope.mediaGlued;
-                $scope.mediaGlued = !$scope.mediaGlued;
-            }
             $rootScope.$apply();
         }
         else {

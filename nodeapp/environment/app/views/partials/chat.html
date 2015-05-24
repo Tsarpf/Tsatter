@@ -6,7 +6,7 @@
 
         <div class="messages col-xs-7"
              ng-show="!searching"
-             scroll-glue="messagesGlued"
+             scroll-glue="!!messagesGlued"
              msd-wheel="messageMouseScroll($event)"
              scrolly="messageScrollBottom()"
              ui-scroll-viewport>
@@ -32,10 +32,10 @@
          </div>
 
         <div class="tsmedia col-xs-4"
-                scroll-glue="mediaGlued"
-                ui-scroll-viewport
-                msd-wheel="mediaMouseScroll($event)"
-                scrolly="mediaScrollBottom()">
+             scroll-glue="mediaGlued"
+             ui-scroll-viewport
+             scrolly="mediaScrollBottom()"
+             msd-wheel="mediaMouseScroll($event)">
 
             <ts-media-bar images-loaded="imgLoadedEvents"></ts-media-bar>
         </div>

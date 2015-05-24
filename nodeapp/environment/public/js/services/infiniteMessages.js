@@ -133,10 +133,13 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
         function getAroundLink(count) {
             var deferred = $q.defer();
 
+            /*
             var index = obj.linkOffset - count / 2;
             if(index < 0) {
                 index = 0;
             }
+            */
+            var index = obj.linkOffset;
             requestMessages(index, count).then(function(data) {
                 if(data.length === 0) {
                     deferred.reject('did not find such message, showing last messages from channel');
@@ -229,11 +232,9 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
         }
 
         function jumpTo(index) {
-            //Ugly. We should pass what to get around as parameter!!!
             obj.linkOffset = index;
-            getAroundLink(bufferSize).then(function() {
-                incrementRevision();
-            });
+            first = true;
+            incrementRevision();
         }
 
         return {
