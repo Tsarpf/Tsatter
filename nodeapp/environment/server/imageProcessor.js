@@ -21,7 +21,6 @@ module.exports = (function() {
             if(err) {
                 return console.log(err);
             }
-            //get jiggy widdit
             msg.thumbnail = thumbnailUrl;
             msg.originalUrl = msg.src;
             delete msg.src;

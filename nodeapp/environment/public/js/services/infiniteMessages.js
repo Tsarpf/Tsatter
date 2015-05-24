@@ -45,6 +45,8 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                     //Then just request the last x messages
                     requestLastMessages(count).then(function(data) {
                         return callback(data);
+                    }, function(err) {
+                        return callback([]);
                     });
                 }
                 else if(obj.linkOffset >= 0) {
@@ -55,8 +57,11 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                         //Linked message not found, show last x messages
                         console.log(err);
                         requestLastMessages(count).then(function(data) {
-                            return callback(data);
-                        })
+                                return callback(data);
+                            }, function(err) {
+                                return callback([]);
+                            }
+                        )
                     })
                 }
                 else {

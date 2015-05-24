@@ -11,7 +11,7 @@ cd src
 
 grunt deps
 
-npm test
+#npm test
 
 grunt build
 

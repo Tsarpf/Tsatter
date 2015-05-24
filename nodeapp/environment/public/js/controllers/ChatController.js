@@ -381,13 +381,16 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
     function rootApply() {
         if(!$scope.$$phase) {
-            console.log('root scope applied');
+            if($scope.mediaGlued) {
+                $scope.mediaGlued = !$scope.mediaGlued;
+                $scope.mediaGlued = !$scope.mediaGlued;
+            }
             $rootScope.$apply();
         }
         else {
             $timeout(function() {
                 rootApply();
-            }, 1000);
+            });
         }
     }
 
