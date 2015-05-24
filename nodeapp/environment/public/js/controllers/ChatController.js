@@ -226,6 +226,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     };
 
     $scope.jumpMessagesTo = function(index) {
+        $scope.messagesGlued = false;
         $scope.messageDatasource.jumpTo(index);
     };
 
