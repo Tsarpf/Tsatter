@@ -5,20 +5,20 @@
         </div>
 
         <div class="messages col-xs-7"
-            ng-show="!searching"
-            ui-scroll-viewport>
+             ng-show="!searching"
+             scroll-glue="messagesGlued"
+             msd-wheel="messageMouseScroll($event)"
+             scrolly="messageScrollBottom()"
+             ui-scroll-viewport>
 
-            <div ui-scroll="message in messageDatasource" buffer-size="25" >
+            <div ui-scroll="message in messageDatasource"
+                 buffer-size="20"
+                 adapter="messageAdapter">
+
                 <ts-chat-message></ts-chat-message>
             </div>
-
-            <!--
-            <div ui-scroll="message in messageDatasource">
-                {{message.message}}
-            </div>
-            -->
-
         </div>
+
         <div class="messages col-xs-7"
              ng-show="searching">
             <p> Click an image to link it to your message </p>
@@ -31,8 +31,13 @@
 
          </div>
 
-        <div class="tsmedia col-xs-4" scroll-glue="mediaGlued">
-            <ts-media-bar></ts-media-bar>
+        <div class="tsmedia col-xs-4"
+                scroll-glue="mediaGlued"
+                ui-scroll-viewport
+                msd-wheel="mediaMouseScroll($event)"
+                scrolly="mediaScrollBottom()">
+
+            <ts-media-bar images-loaded="imgLoadedEvents"></ts-media-bar>
         </div>
 
         <input

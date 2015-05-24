@@ -9,7 +9,10 @@
                 <strong>{{card.name}}</strong>
             </p>
 
-            <img ng-src="{{card.imageUrls[0]}}" class="chat-summary-picture">
+            <a ng-href="{{card.imageUrls[0].originalUrl}}" target="_blank">
+                <img ng-src="{{card.imageUrls[0].thumbnail}}" class="chat-summary-picture">
+            </a>
+
             <ts-card-messages messages="{{card.messages}}"></ts-card-messages>
             <input class="btn btn-primary btn-large btn-block" type="button" ng-click="mother.joinChannel(card.name)" value="Join">
         </div>

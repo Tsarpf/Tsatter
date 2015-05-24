@@ -1,15 +1,27 @@
-var irc = require('irc');
-var ircServerAddress = 'ircserver'; //similar to localhost, set by docker in the system's hosts file
+module.exports = (function() {
+    var irc = require('irc');
+    var ircServerAddress = 'ircserver'; //similar to localhost, set by docker in the system's hosts file
 
-var count = 0;
-function nextAnon() {
-    return 'anon' + (count++);
-}
+    var count = 0;
+    function nextAnon() {
+        return 'anon' + (count++);
+    }
 
-var connected = 0;
+    var broadcaster,
+        persistenceHandler,
+        imageProcessor,
+        server,
+        io;
 
-var addListeners = function(io, irc, persistenceHandler) {
-    return function (socket) {
+    var connected = 0;
+
+    var urlRegex = /((((https?|ftp):\/\/)|www\.)(([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)|(([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(aero|asia|biz|cat|com|coop|info|int|jobs|mobi|museum|name|net|org|post|pro|tel|travel|xxx|edu|gov|mil|[a-zA-Z][a-zA-Z]))|([a-z]+[0-9]*))(:[0-9]+)?((\/|\?)[^ "]*[^ ,;\.:">)])?)|(spotify:[^ ]+:[^ ]+)/g;
+
+    var getUrls = function(message) {
+        return message.match(urlRegex);
+    };
+
+    var addListeners = function(socket) {
         connected++;
         console.log('new connection, currently connected: ' + connected);
 
@@ -31,7 +43,8 @@ var addListeners = function(io, irc, persistenceHandler) {
 
         client.addListener('raw', function (message) {
             if(message.commandType === 'error') {
-                console.log(message);
+                //console.log('error');
+                //console.log(message);
                 socket.send(message);
             }
         });
@@ -132,15 +145,33 @@ var addListeners = function(io, irc, persistenceHandler) {
         socket.on('join', function (msg) {
             console.log('got join');
             console.log(msg);
+
+            broadcaster.add(msg.channel, socket);
             client.join(msg.channel);
+
         });
 
-        socket.on('privmsg', function (msg) {
+        socket.on('privmsg', function (msg, fn) {
             client.say(msg.channel, msg.message);
             if(msg.message.length > 512) {
                 msg.message = msg.message.substring(0, 512);
             }
-            persistenceHandler.saveMessage(msg.channel, username, msg.message);
+            persistenceHandler.saveMessage(msg.channel, username, msg.message, function(err, idx) {
+                if(err) {
+                    console.log(err);
+                    return fn(false);
+                }
+
+                //TODO: check if src url already has a downloaded image
+                var urls = getUrls(msg.message);
+                if(urls) {
+                    imageProcessor.processUrls(urls, msg.channel, idx);
+                }
+
+                if(fn) {
+                    fn(true);
+                }
+            });
         });
 
         socket.on('error', function (err) {
@@ -150,14 +181,21 @@ var addListeners = function(io, irc, persistenceHandler) {
         });
 
         socket.on('message', function (messageObj) {
-            console.log('got raw message from socket');
-            console.log(messageObj.command);
-            try {
+            //console.log('got raw message from socket');
+            //console.log(messageObj.command);
+            if(messageObj.command.length >= 2) {
+                switch(messageObj.command[0].toLowerCase()) {
+                    case 'part':
+                        broadcaster.remove(messageObj.command[1], socket);
+                        break;
+                    case 'join':
+                        broadcaster.add(
+                            messageObj.command[1], socket);
+                        break;
+                    default:
+                        break;
+                }
                 client.send.apply(client, messageObj.command);
-            }
-            catch (err) {
-                console.log('send fail');
-                console.log(err);
             }
         });
 
@@ -169,7 +207,8 @@ var addListeners = function(io, irc, persistenceHandler) {
         socket.on('disconnect', function (test) {
             connected--;
             console.log('disconnect ' + test);
-            console.log('currenctly connected: ' + connected);
+            console.log('currently connected: ' + connected);
+            broadcaster.quit(socket);
             client.disconnect('socket disconnected');
         });
 
@@ -178,12 +217,20 @@ var addListeners = function(io, irc, persistenceHandler) {
             client.disconnect('socket closed');
         });
     };
-};
 
-var initializeConnections = function(io, persistenceHandler) {
-    io.on('connection', addListeners(io, irc, persistenceHandler));
-};
+    return function(broadcasterInject, persistenceInject, imageProcessorInject, serverInject) {
+        if (broadcasterInject && persistenceInject && imageProcessorInject && serverInject) {
+            broadcaster = broadcasterInject;
+            persistenceHandler = persistenceInject;
+            imageProcessor = imageProcessorInject;
+            server = serverInject;
+        }
+        else {
+            throw new Error('dependencies missing!');
+        }
 
-module.exports = {
-    initCons: initializeConnections 
-};
+        io = require('socket.io')(server.getServer());
+
+        io.on('connection', addListeners);
+    };
+}());

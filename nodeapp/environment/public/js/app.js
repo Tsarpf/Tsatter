@@ -1,5 +1,4 @@
 var app = angular.module('tsatter', [
-    'ngAnimate',
     'ui.bootstrap',
     'akoenig.deckgrid',
     'ngSanitize',
@@ -9,7 +8,9 @@ var app = angular.module('tsatter', [
     'flash',
     'angular-images-loaded',
     'lrInfiniteScroll',
-    'infinite-scroll'
+    'infinite-scroll',
+    'monospaced.mousewheel',
+    'angular-images-loaded'
 ]);
 
 app.directive('tsChat', ['$timeout', function($timeout) {
@@ -48,6 +49,20 @@ app.directive('tsCardMessages', function() {
             }
         }
     };
+});
+
+app.directive('scrolly', function() {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var raw = element[0];
+            element.bind('scroll', function() {
+                if(raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+                    scope.$apply(attrs.scrolly);
+                }
+            });
+        }
+    }
 });
 
 app.directive('tsHelp', function() {
@@ -95,3 +110,4 @@ app.directive('tsMediaBar', function() {
         templateUrl: '/partials/mediabar.html'
     };
 });
+

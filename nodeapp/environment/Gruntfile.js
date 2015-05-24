@@ -80,16 +80,25 @@ module.exports = function(grunt) {
             }
         },
         clean: {
-            dist: ['dist/*']
+            dist: ['dist/app/*', 'dist/public/*', 'dist/server/*']
         },
         watch: {
             everything: {
                 files: ['public/**', 'app/views/**'],
                 tasks: ['build']
             }
+        },
+        shell: {
+            watch: {
+                command: 'grunt watchStatic',
+                options: {
+                    async: true
+                }
+            }
         }
-
     });
+
+    grunt.registerTask('background-watch', ['shell']);
 
     grunt.registerTask('deps',['bower','wiredep']);
 

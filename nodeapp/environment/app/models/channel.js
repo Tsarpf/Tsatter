@@ -7,7 +7,11 @@ var Channel = new Schema({
         type: String,
         required: true
     },
-    imageUrls: [String],
+    imageUrls: [{
+        originalUrl: String,
+        thumbnail: String,
+        messageIdx: Number
+    }],
     messages: [{
         message: {
             type: String,
