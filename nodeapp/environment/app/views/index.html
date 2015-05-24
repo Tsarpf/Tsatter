@@ -45,7 +45,7 @@
 
         <tabset type="'tabs'">
 
-            <tab active="discoState.active">
+            <tab ng-cloak active="discoState.active">
 
                 <tab-heading>
                     Discovery
@@ -54,7 +54,7 @@
 
             </tab>
 
-            <tab ng-repeat="channel in userChannels" active="channel.active" ng-click="clickTab(channel.name)">
+            <tab ng-cloak ng-repeat="channel in userChannels" active="channel.active" ng-click="clickTab(channel.name)">
                 <tab-heading>
                     {{channel.name}}
                     <span ng-click="leaveChannel(channel.name)" class="glyphicon glyphicon-remove quit-x-button">
@@ -71,7 +71,7 @@
 
             </tab>
 
-            <tab>
+            <tab ng-cloak>
                 <tab-heading>
                     <span class="glyphicon glyphicon-plus"> </span>
                 </tab-heading>
