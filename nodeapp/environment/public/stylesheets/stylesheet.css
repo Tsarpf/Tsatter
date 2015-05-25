@@ -40,6 +40,12 @@
 
 .discovery-message {
     word-wrap: break-word;
+    word-break: break-all;
+    text-align: left;
+}
+
+.tile p {
+    margin-bottom: 15px;
 }
 
 .media-element {
