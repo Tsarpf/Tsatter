@@ -2,7 +2,7 @@
         <a ng-click="messageClicked($index)" href="{{origin}}/#/#{{channelName.substring(1)}}__{{message.idx}}">
         <small title="{{message.timestamp | date:'dd/MM/yy HH:mm:ss'}}">{{message.timestamp | date:'HH:mm:ss'}}</small>
         </a>
-        <strong>[{{message.nick}}]</strong> :
+        <strong style="margin-right: 5px;">[{{message.nick}}]</strong>
         <span class="{{message.greenText}}" ng-bind-html="message.message | linky:'_blank'"> </span>
 </div>
 
