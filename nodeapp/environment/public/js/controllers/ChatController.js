@@ -26,6 +26,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.cursorPos = 0;
     $scope.messageAdapter = null;
     $scope.imageAdapter = null;
+    $scope.channelState = null;
 
     var messageProviderObj = {
         channel: null,
@@ -60,7 +61,40 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         joinChannel($scope.channelName);
         $scope.nick = $rootScope.vars.nickname;
         focus('chatInput');
+
+        //get active state
+        console.log('ses');
+        console.log($scope.$parent.userChannels);
+        for(var i = 0; i < $scope.$parent.userChannels.length; i++) {
+            console.log($scope.$parent.userChannels[i].name);
+            console.log($scope.channelName);
+            if($scope.$parent.userChannels[i].name === $scope.channelName) {
+                console.log('channel state set');
+                $scope.channelState = $scope.$parent.userChannels[i];
+            }
+        }
+
+        $scope.$watch('channelState.active', $scope.channelStateChange);
     });
+
+    $scope.oldMessageGlue = true;
+    $scope.oldMediaGlue = true;
+    $scope.channelStateChange = function() {
+        console.log('channel state change');
+        console.log($scope.channelState.active);
+        if($scope.channelState.active === false) {
+            $scope.oldMessageGlue = $scope.messagesGlued;
+            $scope.oldMediaGlue = $scope.mediaGlued;
+            $scope.messagesGlued = false;
+            $scope.mediaGlued = false;
+        }
+        else {
+           $scope.messagesGlued = $scope.oldMessageGlue;
+           $scope.mediaGlued = $scope.oldMediaGlue;
+        }
+        console.log($scope.messagesGlued);
+        console.log($scope.mediaGlued);
+    };
 
     $scope.messageMouseScroll = function(event) {
         if(event.deltaY < 0) {
@@ -72,6 +106,11 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         if(event.deltaY < 0) {
             $scope.mediaGlued = false;
         }
+    };
+
+    $scope.messageScrollBottom = function() {
+        console.log('scroll bottom');
+        $scope.messagesGlued = true;
     };
 
     $scope.mediaScrollBottom = function() {
@@ -180,8 +219,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.messageClicked = function(index) {
         //TODO: show a field for copying the link
     };
-    //Not sure yet if this is really a robust solution. It seems a bit dangerous
-    $scope.mediaCount = 0;
 
     var joinChannel=function(channelName) {
         $scope.$on(channelName, function(event, data) {
@@ -238,7 +275,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         //$scope.addServerMessage(data.nick + ' joined the channel');
     };
     $scope.privmsg = function(data) {
-        //FIXME: the idx is not implemented correctly
         var obj = {message: data.args[1], nick: data.nick, timestamp: getTimestamp(), idx: null, class: ''};
         $scope.messageDatasource.addMessage(obj);
     };
@@ -427,7 +463,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
                     $scope.messageDatasource.addMessage(obj);
                 }
             });
-            //$scope.addMessage(message, $rootScope.vars.nickname);
         }
     };
 }]);

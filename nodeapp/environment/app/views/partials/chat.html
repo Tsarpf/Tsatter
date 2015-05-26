@@ -6,7 +6,7 @@
 
         <div class="messages col-xs-7"
              ng-show="!searching"
-             scroll-glue="!!messagesGlued"
+             scroll-glue="messagesGlued"
              msd-wheel="messageMouseScroll($event)"
              scrolly="messageScrollBottom()"
              ui-scroll-viewport>
@@ -50,7 +50,7 @@
         <input
                ng-show="editingNick"
                focus-on="editNick"
-               ng-blur="stopEditingNick()"
+               ng-blur="ownNickAreaSubmit()"
                type="text"
                class="col-xs-1 own-nick-area"
                ng-model="nick"

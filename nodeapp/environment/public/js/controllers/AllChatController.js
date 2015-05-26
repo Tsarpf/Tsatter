@@ -4,6 +4,7 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
     };
     $scope.userChannels = [];
     $scope.discoState = {active: true};
+
     $scope.adBlock = false;
 
     $scope.joinChannel = function() {
@@ -125,6 +126,7 @@ angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootSco
             }
         }
     });
+
 
     $rootScope.vars = {
         loggedIn: false,
