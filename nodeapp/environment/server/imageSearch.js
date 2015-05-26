@@ -24,18 +24,30 @@ module.exports = (function() {
         function(error, response, body) {
             console.log('got response');
             if(error) {
+                console.log('error in search response:');
                 console.log(error);
             }
             else {
-                var obj = JSON.parse(body);
+                var obj = {};
+                try {
+                    obj = JSON.parse(body);
+                }
+                catch(err) {
+                    console.log('crashed in response');
+                    console.log(err);
+                }
                 var resObj = [];
-                for(var i = 0; i < obj.d.results.length; i++) {
+
+                if(!obj.d) {
+                    return callback(body, resObj);
+                }
+
+                for (var i = 0; i < obj.d.results.length; i++) {
                     resObj.push({
                         src: obj.d.results[i].MediaUrl,
                         thumbnail: obj.d.results[i].Thumbnail.MediaUrl
                     });
                 }
-
                 callback(null, resObj);
             }
         });

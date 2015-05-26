@@ -108,15 +108,24 @@ module.exports = (function() {
         });
 
         app.get('/search/', function(req, res, next) {
-            var searchTerm = req.query.searchTerm;
-            console.log('searched: ' + searchTerm);
-            imageSearch.search(searchTerm, function(err, results) {
-                if(err) {
-                    console.log(err);
-                    return res.json(err);
+            try {
+                var searchTerm = req.query.searchTerm;
+                if(typeof searchTerm === 'undefined') {
+                    return res.json('undefined search term');
                 }
-                res.json(results);
-            });
+                console.log('searched: ' + searchTerm);
+                imageSearch.search(searchTerm, function(err, results) {
+                    if(err) {
+                        console.log(err);
+                        return res.json(err);
+                    }
+                    res.json(results);
+                });
+            }
+            catch(err) {
+                console.log('searching crashed');
+                console.log(err);
+            }
         });
 
         app.get('/partials/:name', function(req, res){
