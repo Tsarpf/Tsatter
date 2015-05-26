@@ -97,13 +97,13 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     };
 
     $scope.messageMouseScroll = function(event) {
-        if(event.deltaY < 0) {
+        if(event.originalEvent.deltaY < 0) {
            $scope.messagesGlued = false;
         }
     };
 
     $scope.mediaMouseScroll = function(event) {
-        if(event.deltaY < 0) {
+        if(event.originalEvent.deltaY < 0) {
             $scope.mediaGlued = false;
         }
     };
