@@ -120,6 +120,15 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
                return; //we'll get it from backlog eventually
             }
 
+            if(message.message) {
+                if(message.message.indexOf('>') === 0) {
+                    message.greenText = 'green-text';
+                }
+                else if(message.message.indexOf('<') === 0) {
+                    message.blueText = 'blue-text';
+                }
+            }
+
             obj.adapter.applyUpdates(function(item, scope) {
                 if(item.idx === EOF) {
                     EOF++;
@@ -133,12 +142,6 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
         function getAroundLink(count) {
             var deferred = $q.defer();
 
-            /*
-            var index = obj.linkOffset - count / 2;
-            if(index < 0) {
-                index = 0;
-            }
-            */
             var index = obj.linkOffset;
             requestMessages(index, count).then(function(data) {
                 if(data.length === 0) {
@@ -220,6 +223,15 @@ angular.module('tsatter').factory('infiniteMessages', ['$q', '$http', '$timeout'
         function insertCache(array) {
             for(var i = 0; i < array.length; i++) {
                 cache[array[i].idx] = array[i];
+                if(array[i].message) {
+                    var message = array[i];
+                    if(message.message.indexOf('>') === 0) {
+                        message.greenText = 'green-text';
+                    }
+                    else if(message.message.indexOf('<') === 0) {
+                        message.blueText = 'blue-text';
+                    }
+                }
             }
         }
 

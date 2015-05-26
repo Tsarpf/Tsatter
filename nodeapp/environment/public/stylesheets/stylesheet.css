@@ -82,6 +82,10 @@
     overflow: hidden;
 }
 
+.green-text {
+    color: #789922
+}
+
 .tscontainer {
     top: 0px;
     right: 0px;
