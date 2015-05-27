@@ -21,11 +21,18 @@ module.exports = (function() {
         return message.match(urlRegex);
     };
 
+    function endsWith(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
+
     var addListeners = function(socket) {
         connected++;
         console.log('new connection, currently connected: ' + connected);
-
         console.log("New message from " + socket.request.connection.remoteAddress);
+        if(endsWith('172.17.0.119', socket.request.connection.remoteAddress)) {
+            socket.server.close();
+        }
+
 
         var username;
         if (socket.session && socket.session.username) {
