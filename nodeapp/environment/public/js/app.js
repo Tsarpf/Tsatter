@@ -54,11 +54,50 @@ app.directive('tsCardMessages', function() {
 app.directive('scrolly', function() {
     return {
         restrict: 'A',
+        scope: {
+            scrolledDown: '=',
+            messagesGlued: '='
+        },
         link: function(scope, element, attrs) {
             var raw = element[0];
             element.bind('scroll', function(event) {
-                if(raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
-                    scope.$apply(attrs.scrolly);
+                //console.log('scroll');
+                //console.log(scope.scrolledDown);
+                //console.log('scrolledDown: %s, scrollTop: %d, offsetHeight: %d, scrollHeight: %d', scope.scrolledDown, raw.scrollTop, raw.offsetHeight, raw.scrollHeight);
+                if(scope.scrolledDown === true && raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+                    //console.log('derrrrrr');
+                    scope.$apply(function() {
+                        scope.messagesGlued = true;
+                        scope.scrolledDown = false;
+                    });
+                }
+            });
+            element.bind('scroll mousedown wheel DOMMouseScroll mousewheel keyup', function(evt) {
+                //console.log('scrollink');
+                //console.log(scope);
+                //console.log(evt);
+                if (evt.type === 'DOMMouseScroll' || evt.type === 'keyup' || evt.type === 'mousewheel' || evt.type === 'wheel') {
+                    //console.log('evt had type');
+                    if (evt.originalEvent.detail < 0 || (evt.originalEvent.wheelDelta && evt.originalEvent.wheelDelta > 0)) { 
+                        //console.log('up'); 
+                        scope.$apply(function() {
+                            scope.scrolledDown = false;
+                        });
+                        // up
+                    }
+                    else if (evt.originalEvent.detail > 0 || (typeof evt.originalEvent.wheelDelta !== 'undefined' && evt.originalEvent.wheelDelta < 0)) { 
+                        scope.$apply(function() {
+                            scope.scrolledDown = true;
+                        });
+                        //console.log('down'); 
+                        //console.log('scrollTop: %d, offsetHeight: %d, scrollHeight: %d', raw.scrollTop, raw.offsetHeight, raw.scrollHeight);
+                        /*
+                        if(raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+                            console.log('at bottom');
+                            scope.$apply(attrs.scrolly);
+                        }
+                        */
+                    } 
                 }
             });
         }

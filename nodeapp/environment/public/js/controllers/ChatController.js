@@ -15,7 +15,6 @@ angular.module('tsatter').controller('ChatController', [
 function($timeout, $document, $location, $scope, socket, $rootScope, command, focus, $http, $anchorScroll, $q, imageSearch, infiniteMessages) {
     $scope.users = {};
     $scope.mediaList = [];
-    $scope.messagesGlued = true;
     $scope.mediaGlued = true;
     $scope.nick = '';
     $scope.editingNick = false;
@@ -27,6 +26,11 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.messageAdapter = null;
     $scope.imageAdapter = null;
     $scope.channelState = null;
+    $scope.scrolledDown = false;
+    $scope.scrolls = {
+        scrolledDown: false,
+        messagesGlued: true
+    }
 
     var messageProviderObj = {
         channel: null,
@@ -53,7 +57,13 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         var linkIdx = $scope.getLinkIdx();
         messageProviderObj.linkOffset = linkIdx;
         if(linkIdx !== null) {
-            $scope.messagesGlued = false;
+            $scope.scrolls.messagesGlued = false;
+            $scope.oldMessageGlue = false;
+            $scope.oldMediaGlue = true;
+        }
+        else {
+            $scope.oldMessageGlue = true;
+            $scope.oldMediaGlue = true;
         }
 
         imageProviderObj.channel = $scope.channelName;
@@ -77,28 +87,30 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         $scope.$watch('channelState.active', $scope.channelStateChange);
     });
 
-    $scope.oldMessageGlue = true;
-    $scope.oldMediaGlue = true;
+    $scope.$watch('scrolls.messagesGlued', function() {
+        console.log('messages glued now: ' + $scope.scrolls.messagesGlued);
+    });
+
     $scope.channelStateChange = function() {
         console.log('channel state change');
         console.log($scope.channelState.active);
         if($scope.channelState.active === false) {
-            $scope.oldMessageGlue = $scope.messagesGlued;
+            $scope.oldMessageGlue = $scope.scrolls.messagesGlued;
             $scope.oldMediaGlue = $scope.mediaGlued;
-            $scope.messagesGlued = false;
+            $scope.scrolls.messagesGlued = false;
             $scope.mediaGlued = false;
         }
         else {
-           $scope.messagesGlued = $scope.oldMessageGlue;
+           $scope.scrolls.messagesGlued = $scope.oldMessageGlue;
            $scope.mediaGlued = $scope.oldMediaGlue;
         }
-        console.log($scope.messagesGlued);
+        console.log($scope.scrolls.messagesGlued);
         console.log($scope.mediaGlued);
     };
 
     $scope.messageMouseScroll = function(event) {
         if(event.originalEvent.deltaY < 0) {
-           $scope.messagesGlued = false;
+           $scope.scrolls.messagesGlued = false;
         }
     };
 
@@ -110,7 +122,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
 
     $scope.messageScrollBottom = function() {
         console.log('scroll bottom');
-        $scope.messagesGlued = true;
+        //$scope.scrolls.messagesGlued = true;
     };
 
     $scope.mediaScrollBottom = function() {
@@ -262,7 +274,8 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     };
 
     $scope.jumpMessagesTo = function(index) {
-        $scope.messagesGlued = false;
+        $scope.scrolledDown = false;
+        $scope.scrolls.messagesGlued = false;
         $scope.messageDatasource.jumpTo(index);
     };
 

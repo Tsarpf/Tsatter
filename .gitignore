@@ -16,3 +16,4 @@ mongodb/data
 environment/dist
 environment/.tmp/
 nodeapp/environment/*.log
+nodeapp/environment/workdir/
