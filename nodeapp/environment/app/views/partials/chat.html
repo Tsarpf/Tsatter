@@ -6,9 +6,11 @@
 
         <div class="messages col-xs-7"
              ng-show="!searching"
-             scroll-glue="messagesGlued"
+             scroll-glue="!!scrolls.messagesGlued"
              msd-wheel="messageMouseScroll($event)"
-             scrolly="messageScrollBottom()"
+             scrolly
+             scrolled-down="scrolls.scrolledDown"
+             messages-glued="scrolls.messagesGlued"
              ui-scroll-viewport>
 
             <div ui-scroll="message in messageDatasource"

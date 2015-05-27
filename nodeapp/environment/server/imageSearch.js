@@ -15,7 +15,7 @@ module.exports = (function() {
         }
     }
     console.log('key is: "' + key + '"');
-    var bingUrl = 'https://:' + key + '@api.datamarket.azure.com/Bing/Search/v1/Image?$format=json&Query=';
+    var bingUrl = 'https://:' + key + '@api.datamarket.azure.com/Bing/Search/v1/Image?$format=json&Adult=\'Off\'&Query=';
 
     var search = function(parameter, callback) {
         var url = bingUrl + '\'' + parameter + '\'';
