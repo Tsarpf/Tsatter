@@ -35,51 +35,65 @@ module.exports = function(grunt) {
 
 
         useminPrepare: {
-            html: ['dist/app/views/index.html'],
+            html: ['workdir/app/views/index.html'],
             options: {
-                dest: 'dist'
+                dest: 'workdir'
             }
         },
         usemin: {
-            html: ['dist/app/views/index.html']
+            html: ['workdir/app/views/index.html']
         },
         filerev: {
             stylesheets: {
-                src: 'dist/assets/css/styles.min.css'
+                src: 'workdir/assets/css/styles.min.css'
             },
             js: {
-                src: 'dist/js/*.js'
+                src: 'workdir/js/*.js'
             }
         },
         copy: {
             bootstrapFonts: {
+                nonull: true,
                 expand: true,
                 cwd: 'public/libs/bootstrap/fonts/',
                 src: ['**'],
-                dest: 'dist/public/fonts/'
+                dest: 'workdir/public/fonts/'
             },
             flatFonts: {
+                nonull: true,
                 expand: true,
                 cwd: 'public/libs/flat-ui/fonts/',
                 src: ['**'],
-                dest: 'dist/public/fonts/'
+                dest: 'workdir/public/fonts/'
             },
             app: {
+                nonull: true,
                 expand: true,
                 src: ['app/**/*.js', 'app/**/*.html'],
-                dest: 'dist/'
+                dest: 'workdir/'
             },
             server: {
+                nonull: true,
                 expand: true,
                 src: ['server/**/*.js'],
-                dest: 'dist/'
+                dest: 'workdir/'
             },
             runjs: {
-                src: ['run.js'],
+                nonull: true,
+                expand: true,
+                src: ['server/run.js'],
+                dest: 'workdir/'
+            },
+            toDist: {
+                nonull: true,
+                expand: true,
+                cwd: 'workdir/',
+                src: ['**'],
                 dest: 'dist/'
             }
         },
         clean: {
+            workdir: ['workdir/**'],
             dist: ['dist/app/*', 'dist/public/*', 'dist/server/*']
         },
         watch: {
@@ -104,15 +118,23 @@ module.exports = function(grunt) {
 
     grunt.registerTask('watchStatic', ['watch']);
 
+    grunt.registerTask('copytest', ['copy:toWork']);
+
     grunt.registerTask('build', [
-        'clean:dist',
-        'copy',
+        'clean:workdir',
+        'copy:bootstrapFonts',
+        'copy:flatFonts',
+        'copy:app',
+        'copy:server',
+        'copy:runjs',
         'useminPrepare',
         'concat:generated',
         'cssmin:generated',
         'uglify:generated',
         'filerev',
-        'usemin'
+        'usemin',
+        'clean:dist',
+        'copy:toDist'
     ]);
 
 };
