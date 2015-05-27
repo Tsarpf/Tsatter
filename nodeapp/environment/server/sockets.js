@@ -25,7 +25,7 @@ module.exports = (function() {
         connected++;
         console.log('new connection, currently connected: ' + connected);
 
-        var address = socket.handshake.address;
+        console.log("New message from " + socket.request.connection.remoteAddress);
 
         var username;
         if (socket.session && socket.session.username) {
@@ -155,7 +155,7 @@ module.exports = (function() {
         var spamPrev = [];
         var spamPrevSize = 5;
         socket.on('privmsg', function (msg, fn) {
-            console.log("New message from " + address.address + ":" + address.port);
+            console.log("New message from " + socket.request.connection.remoteAddress);
             client.say(msg.channel, msg.message);
             if(msg.message.length > 512) {
                 msg.message = msg.message.substring(0, 512);
