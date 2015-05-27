@@ -28,10 +28,14 @@ module.exports = (function() {
     var addListeners = function(socket) {
         connected++;
         console.log('new connection, currently connected: ' + connected);
-        console.log("New message from " + socket.request.connection.remoteAddress);
-        if(endsWith('172.17.0.119', socket.request.connection.remoteAddress)) {
-            socket.server.close();
+        var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
+        console.log('new ipipipip: ' + ip);
+        if(ip === '83.203.75.235') {
+            console.log('closed');
+            socket.disconnect();
+            return;
         }
+        console.log('not closed: ' + ip);
 
 
         var username;
@@ -160,7 +164,8 @@ module.exports = (function() {
         });
 
         socket.on('privmsg', function (msg, fn) {
-            console.log("New message from " + socket.request.connection.remoteAddress);
+            console.log('new privmsg from ipipipip: ' + ip);
+            console.log(msg);
             client.say(msg.channel, msg.message);
             if(msg.message.length > 512) {
                 msg.message = msg.message.substring(0, 512);
@@ -192,6 +197,8 @@ module.exports = (function() {
         socket.on('message', function (messageObj) {
             //console.log('got raw message from socket');
             //console.log(messageObj.command);
+            console.log('new message from ipipipip: ' + ip);
+            console.log(messageObj);
             if(messageObj.command.length >= 2) {
                 switch(messageObj.command[0].toLowerCase()) {
                     case 'part':
