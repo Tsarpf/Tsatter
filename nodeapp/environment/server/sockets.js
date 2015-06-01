@@ -11,7 +11,8 @@ module.exports = (function() {
         persistenceHandler,
         imageProcessor,
         server,
-        io;
+        io,
+        spamProtect;
 
     var connected = 0;
 
@@ -21,22 +22,26 @@ module.exports = (function() {
         return message.match(urlRegex);
     };
 
-    function endsWith(str, suffix) {
-        return str.indexOf(suffix, str.length - suffix.length) !== -1;
-    }
-
     var addListeners = function(socket) {
         connected++;
         console.log('new connection, currently connected: ' + connected);
         var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
-        console.log('new ipipipip: ' + ip);
+        console.log('connected ip: ' + ip);
+        //Todo: real ip blocking system
         if(ip === '83.203.75.235') {
-            console.log('closed');
+            console.log('closed ip ' + ip);
             socket.disconnect();
             return;
         }
         console.log('not closed: ' + ip);
 
+        function denied(message, msgObj) {
+            console.log('denied message');
+            console.log(msgObj);
+            console.log('cooldown etc:');
+            console.log((message.cooldown - Date.now()) / 1000);
+            socket.send({command: 'cooldown', cooldown: message.cooldown});
+        }
 
         var username;
         if (socket.session && socket.session.username) {
@@ -154,18 +159,24 @@ module.exports = (function() {
             //console.log('connected');
         });
 
+
+
         socket.on('join', function (msg) {
-            console.log('got join');
-            console.log(msg);
+            var spamState = spamProtect.isSpamming(socket);
+            if(spamState) {
+                return denied(spamState, msg);
+            }
 
             broadcaster.add(msg.channel, socket);
             client.join(msg.channel);
-
         });
 
         socket.on('privmsg', function (msg, fn) {
-            console.log('new privmsg from ipipipip: ' + ip);
-            console.log(msg);
+            var spamState = spamProtect.isSpamming(socket);
+            if(spamState !== null) {
+                fn(false);
+                return denied(spamState, msg);
+            }
             client.say(msg.channel, msg.message);
             if(msg.message.length > 512) {
                 msg.message = msg.message.substring(0, 512);
@@ -195,10 +206,10 @@ module.exports = (function() {
         });
 
         socket.on('message', function (messageObj) {
-            //console.log('got raw message from socket');
-            //console.log(messageObj.command);
-            console.log('new message from ipipipip: ' + ip);
-            console.log(messageObj);
+            var spamState = spamProtect.isSpamming(socket);
+            if(spamState) {
+                return denied(spamState, messageObj);
+            }
             if(messageObj.command.length >= 2) {
                 switch(messageObj.command[0].toLowerCase()) {
                     case 'part':
@@ -234,12 +245,13 @@ module.exports = (function() {
         });
     };
 
-    return function(broadcasterInject, persistenceInject, imageProcessorInject, serverInject) {
-        if (broadcasterInject && persistenceInject && imageProcessorInject && serverInject) {
+    return function(broadcasterInject, persistenceInject, imageProcessorInject, serverInject, spamProtectInject) {
+        if (broadcasterInject && persistenceInject && imageProcessorInject && serverInject && spamProtectInject) {
             broadcaster = broadcasterInject;
             persistenceHandler = persistenceInject;
             imageProcessor = imageProcessorInject;
             server = serverInject;
+            spamProtect = spamProtectInject;
         }
         else {
             throw new Error('dependencies missing!');

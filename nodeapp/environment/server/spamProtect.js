@@ -8,7 +8,7 @@ var timerLib = require('./timer');
 module.exports = (function() {
 
     var users = {};
-    var initialCooldown = 15 * 1000;
+    var initialCooldown = 7.5 * 1000;
     var initialCooldownMultiplier = 2;
 
     var slowLimit = {
@@ -18,7 +18,7 @@ module.exports = (function() {
 
     var fastLimit = {
         window: 0.5 * 1000,
-        limit: 3
+        limit: 4
     };
 
     //60 seconds * 60 minutes === hour
@@ -82,6 +82,9 @@ module.exports = (function() {
             }
             return {cooldown: user.cooldownEndDate};
         }
+        else if(user.cooldownEndDate !== null) {
+            return {cooldown: user.cooldownEndDate};
+        }
         else {
             return null;
         }
@@ -93,6 +96,6 @@ module.exports = (function() {
     }
 
     return {
-        isAllowed: newMessage
+        isSpamming: newMessage
     };
 }());

@@ -30,7 +30,7 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.scrolls = {
         scrolledDown: false,
         messagesGlued: true
-    }
+    };
 
     var messageProviderObj = {
         channel: null,
@@ -72,14 +72,8 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         $scope.nick = $rootScope.vars.nickname;
         focus('chatInput');
 
-        //get active state
-        console.log('ses');
-        console.log($scope.$parent.userChannels);
         for(var i = 0; i < $scope.$parent.userChannels.length; i++) {
-            console.log($scope.$parent.userChannels[i].name);
-            console.log($scope.channelName);
             if($scope.$parent.userChannels[i].name === $scope.channelName) {
-                console.log('channel state set');
                 $scope.channelState = $scope.$parent.userChannels[i];
             }
         }
@@ -87,13 +81,53 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
         $scope.$watch('channelState.active', $scope.channelStateChange);
     });
 
+    /*
     $scope.$watch('scrolls.messagesGlued', function() {
         console.log('messages glued now: ' + $scope.scrolls.messagesGlued);
     });
+    */
+
+    $scope.cooldownTimer = null;
+    $scope.$on('cooldown', function(event, data) {
+        console.log('got cooldown at chat');
+        console.log(data);
+        if($scope.cooldownTimer !== null) {
+            clearTimeout($scope.cooldownTimer);
+        }
+        $scope.cooldown(data.cooldown);
+    });
+
+    $scope.cooldown = function(endDate) {
+        var now = Date.now();
+        var timeLeft = (endDate - now) / 1000;
+        timeLeft = Math.round(timeLeft);
+        console.log(timeLeft);
+        if(timeLeft <= 0) {
+            $scope.safeApply(function() {
+                $scope.message = '';
+            });
+            $scope.cooldownTimer = null;
+            return;
+        }
+
+        $scope.safeApply(function() {
+            $scope.message = 'Stop spamming. Cooldown: ' + timeLeft + ' seconds.';
+        });
+        $scope.cooldownTimer = setTimeout($scope.cooldown, 1000, endDate);
+    };
+
+    $scope.safeApply = function(fn) {
+        var phase = this.$root.$$phase;
+        if(phase == '$apply' || phase == '$digest') {
+            if(fn && (typeof(fn) === 'function')) {
+                fn();
+            }
+        } else {
+            this.$apply(fn);
+        }
+    };
 
     $scope.channelStateChange = function() {
-        console.log('channel state change');
-        console.log($scope.channelState.active);
         if($scope.channelState.active === false) {
             $scope.oldMessageGlue = $scope.scrolls.messagesGlued;
             $scope.oldMediaGlue = $scope.mediaGlued;
@@ -104,8 +138,6 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
            $scope.scrolls.messagesGlued = $scope.oldMessageGlue;
            $scope.mediaGlued = $scope.oldMediaGlue;
         }
-        console.log($scope.scrolls.messagesGlued);
-        console.log($scope.mediaGlued);
     };
 
     $scope.messageMouseScroll = function(event) {

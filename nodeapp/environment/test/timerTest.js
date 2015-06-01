@@ -45,5 +45,15 @@ describe('timer', function() {
             timer.hit().should.equal(false);
             done();
         });
-    })
+    });
+
+    it('should be able to send 3 messages', function(done) {
+        var window = 500;
+        var limit = 4;
+        var timer = timerLib(window, limit);
+        for(var i = 0; i < limit - 1; i++) {
+            timer.hit().should.equal(true);
+        }
+        done();
+    });
 });
