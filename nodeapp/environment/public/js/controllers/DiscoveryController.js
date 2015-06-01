@@ -49,15 +49,16 @@ angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 
         var from = 0;
         var to = $scope.infiniteSize;
         $scope.getContent(from, to, function(data, status, headers, config) {
-            var results;
             var used = {};
-            for(var i = 0; i < data.length; i++) {
-                for(var j = 0; j < data.imageUrls.length; j++) {
-                    var url = data.imageUrls[j].originalUrl;
-                    if(!used[url]) {
-                        used[url] = 1;
-                        data.imageUrls[0] = data.imageUrls[j];
-                        break;
+            if(data.length > 0) {
+                for(var i = 0; i < data.length; i++) {
+                    for(var j = 0; j < data[i].imageUrls.length; j++) {
+                        var url = data[i].imageUrls[j].originalUrl;
+                        if(!used[url]) {
+                            used[url] = 1;
+                            data[i].imageUrls[0] = data[i].imageUrls[j];
+                            break;
+                        }
                     }
                 }
             }
