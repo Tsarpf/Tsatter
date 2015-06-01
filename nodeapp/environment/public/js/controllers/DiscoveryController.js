@@ -52,7 +52,7 @@ angular.module('tsatter').controller("DiscoveryController", ['$scope', '$http', 
             var used = {};
             if(data.length > 0) {
                 for(var i = 0; i < data.length; i++) {
-                    for(var j = 0; j < data[i].imageUrls.length; j++) {
+                    for(var j = data[i].imageUrls.length - 1; j >= 0; j--) {
                         var url = data[i].imageUrls[j].originalUrl;
                         if(!used[url]) {
                             used[url] = 1;
