@@ -159,8 +159,6 @@ module.exports = (function() {
 
         });
 
-        var spamPrev = [];
-        var spamPrevSize = 5;
         socket.on('privmsg', function (msg, fn) {
             console.log("New message from " + socket.request.connection.remoteAddress);
             client.say(msg.channel, msg.message);
@@ -175,20 +173,8 @@ module.exports = (function() {
 
                 var urls = getUrls(msg.message);
                 if(urls) {
-                    for(var i = 0; i < urls.length; i++) {
-                        if(spamPrev.indexOf(urls[i]) >= 0) {
-                            urls.splice(i, 1);
-                        }
-                        else {
-                            spamPrev.push(urls[i]);
-                        }
-                    }
                     urls = urls.slice(0,3);
                     imageProcessor.processUrls(urls, msg.channel, idx);
-
-                    while(spamPrev.length > spamPrevSize) {
-                        spamPrev.shift();
-                    }
                 }
 
                 if(fn) {
