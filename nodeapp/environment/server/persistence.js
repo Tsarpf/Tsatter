@@ -7,7 +7,7 @@ module.exports = (function() {
     var Channel = require('../app/models/channel');
 
     var channelPreviewMessageCount = 3;
-    var channelPreviewImageUrlCount = 1;
+    var channelPreviewImageUrlCount = 3;
 
     var placeholderImageUrl = "http://i.imgur.com/a7i3u6V.png";
 
