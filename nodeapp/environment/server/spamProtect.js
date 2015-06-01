@@ -29,6 +29,33 @@ module.exports = (function() {
         return socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
     }
 
+    var botThreshold = 100;
+    var botMessageLimit = 6;
+    function checkBot(user, now) {
+        var botList = user.botList;
+        botList.push(now);
+        if(botList.length < botMessageLimit) {
+            return false;
+        }
+
+        var firstChange = botList[1] - botList[0];
+        for(var i = 2; i < botList.length; i++) {
+            var change =  botList[i] - botList[i - 1];
+            var changeComparedToFirst = Math.abs(firstChange - change);
+
+            if(changeComparedToFirst > botThreshold) {
+                if(botList.length >= botMessageLimit) {
+                    botList.shift();
+                }
+                return false;
+            }
+        }
+        if(botList.length >= botMessageLimit) {
+            botList.shift();
+        }
+        return true;
+    }
+
     function checkTimers(ip) {
         var now = Date.now();
         if(!users[ip]) {
@@ -37,10 +64,17 @@ module.exports = (function() {
                 slowTimer: timerLib(slowLimit.window, slowLimit.limit),
                 fastTimer: timerLib(fastLimit.window, fastLimit.limit),
                 multiplier: initialCooldownMultiplier,
-                resetDate: null
+                resetDate: null,
+                botList: []
             }
         }
         var user = users[ip];
+
+        if(checkBot(user, now)) {
+            user.cooldownEndDate = now + cooldownResetTimeout;
+            user.resetDate = now + cooldownResetTimeout;
+            return {cooldown: user.cooldownEndDate};
+        }
 
         if(user.resetDate !== null) {
             if(now > user.resetDate) {
