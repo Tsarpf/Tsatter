@@ -20,7 +20,8 @@
     "angular-ui-utils": "bower-scroll",
     "angular-mousewheel": "~1.0.4",
     "hamsterjs": "~1.0.5",
-    "imagesloaded": "~3.1.8"
+    "imagesloaded": "~3.1.8",
+    "angular-ui-layout": "bower"
   },
   "overrides": {
     "socket.io-client": {
