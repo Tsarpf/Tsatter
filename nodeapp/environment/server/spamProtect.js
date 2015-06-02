@@ -125,8 +125,17 @@ module.exports = (function() {
     }
 
     function newMessage(socket) {
-        var ip = getIp(socket);
-        return checkTimers(ip);
+        var res, ip;
+        try {
+            ip = getIp(socket);
+            res = checkTimers(ip);
+        }
+        catch(e) {
+            console.log('spam protect crashed!!!');
+            console.log(e);
+            return null;
+        }
+        return res;
     }
 
     return {
