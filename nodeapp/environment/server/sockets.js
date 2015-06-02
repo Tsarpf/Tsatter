@@ -206,21 +206,24 @@ module.exports = (function() {
         });
 
         socket.on('message', function (messageObj) {
-            var spamState = spamProtect.isSpamming(socket);
-            if(spamState) {
-                return denied(spamState, messageObj);
-            }
-            if(messageObj.command.length >= 2) {
+            var checkSpam = true;
+            if(messageObj.command && messageObj.command.length >= 2) {
                 switch(messageObj.command[0].toLowerCase()) {
                     case 'part':
                         broadcaster.remove(messageObj.command[1], socket);
+                        checkSpam = false;
                         break;
                     case 'join':
-                        broadcaster.add(
-                            messageObj.command[1], socket);
+                        broadcaster.add(messageObj.command[1], socket);
                         break;
                     default:
                         break;
+                }
+                if(checkSpam) {
+                    var spamState = spamProtect.isSpamming(socket);
+                    if(spamState) {
+                        return denied(spamState, messageObj);
+                    }
                 }
                 client.send.apply(client, messageObj.command);
             }
