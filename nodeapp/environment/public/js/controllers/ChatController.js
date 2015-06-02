@@ -27,6 +27,10 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.imageAdapter = null;
     $scope.channelState = null;
     $scope.scrolledDown = false;
+    $scope.messageBoxSize = {
+        width: 500,
+        height: 500
+    };
     $scope.scrolls = {
         scrolledDown: false,
         messagesGlued: true

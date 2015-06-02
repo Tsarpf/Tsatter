@@ -10,7 +10,8 @@ var app = angular.module('tsatter', [
     'lrInfiniteScroll',
     'infinite-scroll',
     'monospaced.mousewheel',
-    'angular-images-loaded'
+    'angular-images-loaded',
+    'angularResizable'
 ]);
 
 app.directive('tsChat', ['$timeout', function($timeout) {

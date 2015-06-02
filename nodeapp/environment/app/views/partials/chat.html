@@ -1,53 +1,63 @@
 <span ng-controller="ChatController as chatCtrl" class="chat vspace col-xs-12">
-    <div class="row tscontainer">
-        <div class="users col-xs-1">
+    <span class="row tscontainer">
+        <div class="users col-xs-1"
+             resizable
+             r-directions="['bottom', 'left', 'right', 'top']">
             <ts-user-bar></ts-user-bar>
         </div>
 
-        <div class="messages col-xs-7"
-             ng-show="!searching"
-             scroll-glue="!!scrolls.messagesGlued"
-             msd-wheel="messageMouseScroll($event)"
-             scrolly
-             scrolled-down="scrolls.scrolledDown"
-             messages-glued="scrolls.messagesGlued"
-             ui-scroll-viewport>
+        <span resizable
+              r-directions="['bottom', 'left', 'right', 'top']"
+              r-height="messageBoxSize.height"
+              class="messages">
+            <div class="messages col-xs-7"
+                 ng-show="!searching"
+                 scroll-glue="!!scrolls.messagesGlued"
+                 msd-wheel="messageMouseScroll($event)"
+                 scrolly
+                 scrolled-down="scrolls.scrolledDown"
+                 messages-glued="scrolls.messagesGlued"
+                 ui-scroll-viewport>
 
-            <div ui-scroll="message in messageDatasource"
-                 buffer-size="20"
-                 adapter="messageAdapter">
+                <div ui-scroll="message in messageDatasource"
+                     buffer-size="20"
+                     adapter="messageAdapter">
 
-                <ts-chat-message></ts-chat-message>
-            </div>
-        </div>
-
-        <div class="messages col-xs-7"
-             ng-show="searching">
-            <p> Click an image to link it to your message </p>
-            <img class="loading-gif" src="https://i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" ng-show="waitingForSearchResults">
-            <div deckgrid class="deckgrid row" source="searchResults">
-                <div class="chat-summary tile clickable-element" ng-click="mother.searchResultClicked(card.$index)">
-                    <img ng-src="{{card.thumbnail}}" class="chat-summary-picture">
+                    <ts-chat-message></ts-chat-message>
                 </div>
             </div>
+        </span>
 
-         </div>
+            <div class="messages col-xs-7"
+                 ng-show="searching">
+                <p> Click an image to link it to your message </p>
+                <img class="loading-gif" src="https://i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" ng-show="waitingForSearchResults">
+                <div deckgrid class="deckgrid row" source="searchResults">
+                    <div class="chat-summary tile clickable-element" ng-click="mother.searchResultClicked(card.$index)">
+                        <img ng-src="{{card.thumbnail}}" class="chat-summary-picture">
+                    </div>
+                </div>
+
+             </div>
 
         <div class="tsmedia col-xs-4"
              scroll-glue="mediaGlued"
              ui-scroll-viewport
-             scrolly="mediaScrollBottom()"
-             msd-wheel="mediaMouseScroll($event)">
+             msd-wheel="mediaMouseScroll($event)"
+             resizable
+             r-directions="['bottom', 'left', 'right', 'top']">
 
             <ts-media-bar images-loaded="imgLoadedEvents"></ts-media-bar>
         </div>
 
         <input
-               ng-show="!editingNick"
-               type="button"
-               value="{{nick}}"
-               class="col-xs-1 own-nick-area btn default"
-               ng-click="editNick()">
+                resizable
+                r-directions="['bottom', 'left', 'right', 'top']"
+                ng-show="!editingNick"
+                type="button"
+                value="{{nick}}"
+                class="col-xs-1 own-nick-area btn default"
+                ng-click="editNick()">
 
         <input
                ng-show="editingNick"
@@ -67,6 +77,8 @@
                 placeholder="Enter message and push enter to chat. Type '@' to search and link pictures"
                 type="text"
                 class="new-message col-xs-7"
+                resizable
+                r-directions="['bottom', 'left', 'right', 'top']"
                 focus-on="chatInput">
 
         <div class="input-group col-xs-7" ng-show="searching">
