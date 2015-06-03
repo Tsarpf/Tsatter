@@ -1,12 +1,12 @@
-<span ng-controller="ChatController as chatCtrl" class="chat vspace col-xs-12">
+<span ng-controller="ChatController as chatCtrl" class="chat col-xs-12">
     <div class="row tscontainer">
 
-        <table style="width: 100%; height: 500px; border-spacing: 0; border-collapse:collapse;" col-resizeable>
+        <table style="width: 100%; height: 100%; border-spacing: 0; border-collapse:collapse;" col-resizeable>
             <tr>
-                <td style="width:10%; height:90%; border: 1px solid lightgray; padding: 0; vertical-align: top;">
+                <td style="width:10%; height:90%; border: 1px solid #ebebeb; padding: 0; vertical-align: top;">
                     <ts-user-bar></ts-user-bar>
                 </td>
-                <td style="width:60%; height:90%; border: 1px solid lightgray; padding: 0; vertical-align: top;">
+                <td style="width:60%; height:90%; border: 1px solid #ebebeb; padding: 0; vertical-align: top;">
                     <div class="messages"
                          ng-show="!searching"
                          scroll-glue="!!scrolls.messagesGlued"
@@ -35,7 +35,7 @@
 
                     </div>
                 </td>
-                <td style="width: 30%; height:90%; border: 1px solid lightgray; padding: 0;">
+                <td style="width: 30%; height:90%; border: 1px #ebebeb; padding: 0;">
                     <div class="tsmedia"
                          scroll-glue="mediaGlued"
                          ui-scroll-viewport
@@ -66,7 +66,7 @@
                             ng-keyup="$event.keyCode == 13 && ownNickAreaSubmit()">
                 </td>
 
-                <td style="height: 10%; border: 1px solid lightgray; padding: 0;">
+                <td style="height: 10%; border: 1px solid #ebebeb; padding: 0;">
                     <input
                             ng-show="!searching"
                             ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg()"
