@@ -1,16 +1,34 @@
-<span ng-controller="ChatController as chatCtrl" class="chat vspace col-xs-12">
-    <span class="row tscontainer">
-        <div class="users col-xs-1"
+<div ng-controller="ChatController as chatCtrl">
+    <div class="ts-chat-container col-xs-12">
+        <div class="users"
              resizable
-             r-directions="['bottom', 'left', 'right', 'top']">
+             r-width="100"
+             r-directions="['right']">
             <ts-user-bar></ts-user-bar>
         </div>
 
+        <span class="messages">
+            Ses
+        </span>
+        <span class="tsmedia"
+              scroll-glue="mediaGlued"
+              ui-scroll-viewport
+              msd-wheel="mediaMouseScroll($event)"
+              resizable
+              r-directions="['left']">
+            Sys
+                <img ng-src="/images/eZGSRIypat.jpg" class="media-element" src="/images/eZGSRIypat.jpg">
+                <img ng-src="/images/eZGSRIypat.jpg" class="media-element" src="/images/eZGSRIypat.jpg">
+                <img ng-src="/images/eZGSRIypat.jpg" class="media-element" src="/images/eZGSRIypat.jpg">
+                <img ng-src="/images/eZGSRIypat.jpg" class="media-element" src="/images/eZGSRIypat.jpg">
+                <img ng-src="/images/eZGSRIypat.jpg" class="media-element" src="/images/eZGSRIypat.jpg">
+        </span>
+        <!--
         <span resizable
-              r-directions="['bottom', 'left', 'right', 'top']"
-              r-height="messageBoxSize.height"
-              class="messages">
-            <div class="messages col-xs-7"
+              r-directions="['left', 'right']"
+              r-width="messageBoxSize.width"
+              class="tsmedia">
+            <div
                  ng-show="!searching"
                  scroll-glue="!!scrolls.messagesGlued"
                  msd-wheel="messageMouseScroll($event)"
@@ -22,12 +40,15 @@
                 <div ui-scroll="message in messageDatasource"
                      buffer-size="20"
                      adapter="messageAdapter">
-
+                     sessesesee
+                    sese
                     <ts-chat-message></ts-chat-message>
                 </div>
             </div>
         </span>
+        -->
 
+        <!--
             <div class="messages col-xs-7"
                  ng-show="searching">
                 <p> Click an image to link it to your message </p>
@@ -39,16 +60,19 @@
                 </div>
 
              </div>
+             -->
 
-        <div class="tsmedia col-xs-4"
+        <!--
+        <span class="tsmedia"
              scroll-glue="mediaGlued"
              ui-scroll-viewport
              msd-wheel="mediaMouseScroll($event)"
              resizable
-             r-directions="['bottom', 'left', 'right', 'top']">
+             r-directions="['left']">
 
             <ts-media-bar images-loaded="imgLoadedEvents"></ts-media-bar>
-        </div>
+        </span>
+        -->
 
         <input
                 resizable
@@ -96,4 +120,4 @@
                     focus-on="searchInput">
         </div>
     </div>
- </span>
+ </div>

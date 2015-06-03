@@ -28,8 +28,8 @@ function($timeout, $document, $location, $scope, socket, $rootScope, command, fo
     $scope.channelState = null;
     $scope.scrolledDown = false;
     $scope.messageBoxSize = {
-        width: 500,
-        height: 500
+        width: 100,
+        height: 100
     };
     $scope.scrolls = {
         scrolledDown: false,
