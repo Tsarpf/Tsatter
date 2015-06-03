@@ -34,7 +34,10 @@ Vagrant.configure("2") do |config|
       d.ports = ["3000:3000"]
       d.link("db:db_1")
       d.link("inspirk:ircserver")
+      d.has_ssh = true
     end
+    a.ssh.username = "nonroot"
+    a.ssh.private_key_path = "nodeapp_key"
   end
 
   config.vm.define "nginx" do |a|
