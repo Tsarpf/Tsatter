@@ -1,12 +1,12 @@
 <span ng-controller="ChatController as chatCtrl" class="chat vspace col-xs-12">
     <div class="row tscontainer">
 
-        <table style="width: 100%; height: 500px;" col-resizeable>
+        <table style="width: 100%; height: 500px; border-spacing: 0; border-collapse:collapse;" col-resizeable>
             <tr>
-                <td style="width:10%;">
+                <td style="width:10%; height:90%; border: 1px solid lightgray; padding: 0; vertical-align: top;">
                     <ts-user-bar></ts-user-bar>
                 </td>
-                <td style="width:60%">
+                <td style="width:60%; height:90%; border: 1px solid lightgray; padding: 0; vertical-align: top;">
                     <div class="messages"
                          ng-show="!searching"
                          scroll-glue="!!scrolls.messagesGlued"
@@ -35,7 +35,7 @@
 
                     </div>
                 </td>
-                <td style="width: 30%">
+                <td style="width: 30%; height:90%; border: 1px solid lightgray; padding: 0;">
                     <div class="tsmedia"
                          scroll-glue="mediaGlued"
                          ui-scroll-viewport
@@ -45,48 +45,56 @@
                     </div>
                 </td>
             </tr>
+            <tr>
+                <td style="height: 10%; padding: 0;">
+                    <p ng-show="!editingNick"
+                       class="own-nick-area btn default"
+                       style="width:100%; height:100%"
+                       ng-click="editNick()">
+                        {{nick}}
+                    </p>
+
+                    <input
+                            ng-show="editingNick"
+                            focus-on="editNick"
+                            ng-blur="ownNickAreaSubmit()"
+                            type="text"
+                            class="own-nick-area"
+                            style="width:100%; height:100%;"
+                            ng-model="nick"
+                            ng-click="ownNickAreaClicked()"
+                            ng-keyup="$event.keyCode == 13 && ownNickAreaSubmit()">
+                </td>
+
+                <td style="height: 10%; border: 1px solid lightgray; padding: 0;">
+                    <input
+                            ng-show="!searching"
+                            ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg()"
+                            ng-change="messageChanged()"
+                            ng-model="message"
+                            placeholder="Enter message and push enter to chat. Type '@' to search and link pictures"
+                            type="text"
+                            class="new-message"
+                            style="width:100%;"
+                            focus-on="chatInput">
+
+                    <div class="input-group col-xs-7" ng-show="searching">
+                        <span class="input-group-addon">
+                            <span class="fui-search">
+                            </span>
+                        </span>
+                        <input type="text"
+                               class="new-message form-control"
+                               placeholder="Esc to stop searching -- Enter to search"
+                               ng-model="searchTerm"
+                               ng-keydown="$event.keyCode == 27 && escPressedInSearch()"
+                               ng-keyup="$event.keyCode == 13 && search()"
+                               focus-on="searchInput">
+                    </div>
+                </td>
+            </tr>
         </table>
 
-        <input
-               ng-show="!editingNick"
-               type="button"
-               value="{{nick}}"
-               class="col-xs-1 own-nick-area btn default"
-               ng-click="editNick()">
 
-        <input
-               ng-show="editingNick"
-               focus-on="editNick"
-               ng-blur="ownNickAreaSubmit()"
-               type="text"
-               class="col-xs-1 own-nick-area"
-               ng-model="nick"
-               ng-click="ownNickAreaClicked()"
-               ng-keyup="$event.keyCode == 13 && ownNickAreaSubmit()">
-
-        <input
-                ng-show="!searching"
-                ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg()"
-                ng-change="messageChanged()"
-                ng-model="message"
-                placeholder="Enter message and push enter to chat. Type '@' to search and link pictures"
-                type="text"
-                class="new-message col-xs-7"
-                focus-on="chatInput">
-
-        <div class="input-group col-xs-7" ng-show="searching">
-            <span class="input-group-addon">
-                <span class="fui-search">
-                </span>
-            </span>
-            <input
-                    type="text"
-                    class="new-message form-control"
-                    placeholder="Esc to stop searching -- Enter to search"
-                    ng-model="searchTerm"
-                    ng-keydown="$event.keyCode == 27 && escPressedInSearch()"
-                    ng-keyup="$event.keyCode == 13 && search()"
-                    focus-on="searchInput">
-        </div>
     </div>
  </span>

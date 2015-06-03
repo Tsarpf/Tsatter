@@ -54,6 +54,9 @@
 .media-element {
     max-width: 100%;
     max-height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 
 .chat-summary {
@@ -103,7 +106,7 @@
 }
 
 .own-nick-area {
-    height: 10%;
+    /*height: 10%;*/
     -webkit-transition: none;
     transition: none;
 }
@@ -116,8 +119,8 @@
 }
 
 .messages {
-    height: 90%;
-    min-height: 90%;
+    height: 100%;
+    min-height: 100%;
     overflow-x: auto;
     overflow-y: scroll;
     /*outline: 1px solid orange;*/
@@ -128,8 +131,8 @@
 }
 
 .tsmedia {
-    height: 90%;
-    min-height: 90%;
+    height: 100%;
+    min-height: 100%;
     /*outline: 1px solid orange;*/
     overflow: auto;
 }
@@ -151,6 +154,11 @@
 
 .centered-text {
     text-align: center;
+}
+
+.centered-element {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /*message entry line */
