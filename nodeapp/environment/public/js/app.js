@@ -104,6 +104,25 @@ app.directive('scrolly', function() {
     }
 });
 
+app.directive('colResizeable', function() {
+    return {
+        restrict: 'A',
+        link: function(scope, elem) {
+            setTimeout(function() {
+                elem.colResizable({
+                    liveDrag: true,
+                    gripInnerHtml: "<div class='grip'></div>",
+                    draggingClass: "dragging",
+                    onDrag: function() {
+                        //trigger a resize event, so paren-witdh directive will be updated
+                        $(window).trigger('resize');
+                    }
+                });
+            });
+        }
+    };
+});
+
 app.directive('tsHelp', function() {
     return {
         restrict: 'E',
