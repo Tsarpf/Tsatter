@@ -25,10 +25,8 @@
 }
 
 .chat {
-    height:600px;
-    /*
-    width:500px;
-    */
+    height:700px;
+    min-height:100%;
 }
 
 .loading-gif {
@@ -54,6 +52,9 @@
 .media-element {
     max-width: 100%;
     max-height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 
 .chat-summary {
@@ -95,15 +96,14 @@
     right: 0px;
     left: 0px;
     bottom: 0px;
-    height: 100%;
-    min-height: 100%;
     width: 100%;
     min-width: 100%;
-    /*outline: 2px solid grey;*/
+    height: 100%;
+    min-height: 100%;
 }
 
 .own-nick-area {
-    height: 10%;
+    /*height: 10%;*/
     -webkit-transition: none;
     transition: none;
 }
@@ -116,8 +116,8 @@
 }
 
 .messages {
-    height: 90%;
-    min-height: 90%;
+    height: 100%;
+    min-height: 100%;
     overflow-x: auto;
     overflow-y: scroll;
     /*outline: 1px solid orange;*/
@@ -128,8 +128,8 @@
 }
 
 .tsmedia {
-    height: 90%;
-    min-height: 90%;
+    height: 100%;
+    min-height: 100%;
     /*outline: 1px solid orange;*/
     overflow: auto;
 }
@@ -151,6 +151,11 @@
 
 .centered-text {
     text-align: center;
+}
+
+.centered-element {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /*message entry line */
@@ -184,8 +189,9 @@
     width: 25em;
 }
 
-body {
-    /*background-color: #e6e6e6;*/
+html, body {
+    outline: 2px solid grey;
+    height: 100%;
 }
 
 .leaderboard-ad {
@@ -211,5 +217,10 @@ h6 {
     margin-top: 0;
     margin-bottom: 30px;
     color: orange;
+}
+
+.fill {
+    min-height: 100%;
+    height: 100%;
 }
 
