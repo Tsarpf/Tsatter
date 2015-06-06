@@ -9,6 +9,8 @@ echo "$(date) - connected successfully"
 
 cd src
 
+npm install
+
 grunt deps
 
 #npm test
@@ -24,8 +26,5 @@ grunt background-watch
 /bin/bash
 
 #echo "tail -f src/out.log to see what the server is doing"
-#echo "Executing: $@"
-#exec "$@"
-
-
-
+echo "Executing: $@"
+exec "$@"
