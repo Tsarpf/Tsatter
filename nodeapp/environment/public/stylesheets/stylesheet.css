@@ -25,7 +25,7 @@
 }
 
 .chat {
-    height:700px;
+    height: calc(100vh - 205px);
     min-height:100%;
 }
 

@@ -8,7 +8,7 @@ module.exports = (function() {
     var users = {};
 
     function add(channel, socket) {
-        console.log('added ' + socket.id);
+        console.log('added ' + socket.id + ' to ' + channel);
         if(!channels[channel]) {
             channels[channel] = {};
         }
@@ -21,8 +21,7 @@ module.exports = (function() {
     }
 
     function remove(channel, socket) {
-        console.log('removed ' + socket.id);
-        console.log(channel);
+        console.log('removed ' + socket.id + ' from ' + channel);
 
         if(channels[channel][socket.id]) {
             delete channels[channel][socket.id];
