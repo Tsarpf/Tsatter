@@ -1,153 +1,178 @@
-angular.module('tsatter').controller('AllChatController', ['$timeout', '$rootScope', '$scope', 'socket', 'command', '$location', 'flash', function($timeout, $rootScope, $scope, socket, command, $location, flash) {
-    $scope.form = {
-        channel: ''
-    };
-    $scope.userChannels = [];
-    $scope.discoState = {active: true};
+angular.module( 'tsatter' ).controller( 'AllChatController', [ '$timeout', '$rootScope', '$scope', 'socket', 'command', '$location', 'flash', function( $timeout, $rootScope, $scope, socket, command, $location, flash ) {
+	$scope.form = {
+		channel: ''
+	};
+	$scope.userChannels = [];
+	$scope.discoState = {
+		active: true
+	};
 
-    $scope.adBlock = false;
+	$scope.adBlock = false;
+	$scope.loading = {
+		visibility: 'hidden'
+	};
 
-    $scope.joinChannel = function() {
-        var channel = $scope.form.channel;
+	$scope.closeAdblock = function() {
+		$scope.adBlock = false;
+	}
 
-        if(channel === '#' || channel.length === 0) {
-            $scope.form.channel = 'Channel name should be at least 1 character long';
-            return;
-        }
+	$scope.joinChannel = function() {
+		var channel = $scope.form.channel;
 
-        if(channel.indexOf(' ') >= 0) {
-            $scope.form.channel = 'No spaces in channel names allowed';
-            return;
-        }
+		if ( channel === '#' || channel.length === 0 )  {
+			$scope.form.channel = 'Channel name should be at least 1 character long';
+			return;
+		}
 
-        if(channel.indexOf('#') !== 0) {
-            channel = '#' + channel;
-        }
+		if ( channel.indexOf( ' ' ) >= 0 ) {
+			$scope.form.channel = 'No spaces in channel names allowed';
+			return;
+		}
 
-        command.send('join ' + channel);
-        $scope.form.channel = '';
-    };
+		if ( channel.indexOf( '#' ) !== 0 ) {
+			channel = '#' + channel;
+		}
 
-    $scope.clickTab = function(name) {
-        $scope.$broadcast(name, {command: 'activate'});
-    };
+		command.send( 'join ' + channel );
+		$scope.form.channel = '';
+	};
 
-    $scope.openLink = function(hash) {
-        var channelName = hash.split('__')[0];
-        command.send('join #' + channelName);
-    };
+	$scope.clickTab = function( name ) {
+		$scope.$broadcast( name, {
+			command: 'activate'
+		} );
+	};
 
-    $scope.$on('rpl_welcome', function(event, data) {
-        //command.send('join #ses'); //Join default channel while developing
+	$scope.openLink = function( hash ) {
+		var channelName = hash.split( '__' )[ 0 ];
+		command.send( 'join #' + channelName );
+	};
 
-        var hash = $location.hash();
-        if(hash) {
-            $scope.openLink(hash);
-        }
+	$scope.$on( 'loaded', function() {
+		$scope.loading = {
+			visibility: 'visible'
+		};
 
-        $rootScope.vars.nickname = data.nick;
-    });
+		//Sorry Angular :(
+		console.log( 'loaded!!! lasökjlkj' );
+		document.getElementById( 'rootSpinner' ).style.display = 'none';
+	} );
 
-    $scope.$on('err_erroneusnickname', function(event, data) { //its erroneous not erroneus :(
-        $scope.sendToCurrentChannel(data);
-    });
+	$scope.$on( 'rpl_welcome', function( event, data ) {
+		//command.send('join #ses'); //Join default channel while developing
 
-    $scope.$on('err_nicknameinuse', function(event, data) {
-        $scope.sendToCurrentChannel(data);
-    });
+		var hash = $location.hash();
+		if ( hash ) {
+			$scope.openLink( hash );
+		}
 
-    $scope.sendToCurrentChannel = function(data) {
-        for(var i = 0; i < $scope.userChannels.length; i++) {
-            if($scope.userChannels[i].active === true) {
-                $scope.$broadcast($scope.userChannels[i].name, data);
-            }
-        }
-    };
+		$rootScope.vars.nickname = data.nick;
+	} );
 
-    $scope.$on('NICK', function(event, data) {
-        if(data.nick === $rootScope.vars.nickname) {
-            $rootScope.vars.nickname = data.args[0];
-        }
-        var channels = socket.getChannels();
-        for(var channel in channels) {
-            if(channels.hasOwnProperty(channel)) {
-                $scope.$broadcast(channels[channel], data);
-            }
-        }
-    });
+	$scope.$on( 'err_erroneusnickname', function( event, data ) { //its erroneous not erroneus :(
+		$scope.sendToCurrentChannel( data );
+	} );
 
-    $scope.$on('JOIN', function(event, data) {
-        var channel = data.args[0];
-        $scope.addChannel(channel);
-    });
-    $scope.addChannel = function(channel) {
-        for(var i = 0; i < $scope.userChannels.length; i++) {
-            if($scope.userChannels[i].name === channel) {
-                $scope.userChannels[i].active = true;
-                return;
-            }
-        }
-        socket.listenChannel(channel);
-        $scope.userChannels.push({name: channel, active: true});
-    };
+	$scope.$on( 'err_nicknameinuse', function( event, data ) {
+		$scope.sendToCurrentChannel( data );
+	} );
 
-    $scope.leaveChannel = function(channel) {
-        command.send(['part', channel]);
-    };
+	$scope.sendToCurrentChannel = function( data ) {
+		for ( var i = 0; i < $scope.userChannels.length; i++ ) {
+			if ( $scope.userChannels[ i ].active === true ) {
+				$scope.$broadcast( $scope.userChannels[ i ].name, data );
+			}
+		}
+	};
 
-    $scope.removeChannel = function(channel) {
-        console.log('remove channel');
-        console.log(channel);
-        for(var i = 0; i < $scope.userChannels.length; i++) {
-            if($scope.userChannels[i].name === channel) {
-                $scope.userChannels.splice(i,1);
-                break;
-            }
-        }
-        $timeout(function() {
-            $scope.discoState.active = true;
-        });
-    };
+	$scope.$on( 'NICK', function( event, data ) {
+		if ( data.nick === $rootScope.vars.nickname ) {
+			$rootScope.vars.nickname = data.args[ 0 ];
+		}
+		var channels = socket.getChannels();
+		for ( var channel in channels ) {
+			if ( channels.hasOwnProperty( channel ) ) {
+				$scope.$broadcast( channels[ channel ], data );
+			}
+		}
+	} );
 
-    $scope.$on('PART', function(event, data) {
-        $scope.removeChannel(data.args[0]);
-    });
-    $scope.$on('KICK', function(event, data) {
-        console.log(data);
-        $scope.removeChannel(data.args[0]);
-    });
+	$scope.$on( 'JOIN', function( event, data ) {
+		var channel = data.args[ 0 ];
+		$scope.addChannel( channel );
+	} );
+	$scope.addChannel = function( channel ) {
+		for ( var i = 0; i < $scope.userChannels.length; i++ ) {
+			if ( $scope.userChannels[ i ].name === channel ) {
+				$scope.userChannels[ i ].active = true;
+				return;
+			}
+		}
+		socket.listenChannel( channel );
+		$scope.userChannels.push( {
+			name: channel,
+			active: true
+		} );
+	};
 
-    $scope.$on('QUIT', function(event, data) {
-        console.log('got quit');
-        var channels = socket.getChannels();
-        for(var channel in channels) {
-            if(channels.hasOwnProperty(channel)) {
-                $scope.$broadcast(channels[channel], data);
-            }
-        }
-    });
+	$scope.leaveChannel = function( channel ) {
+		command.send( [ 'part', channel ] );
+	};
+
+	$scope.removeChannel = function( channel ) {
+		console.log( 'remove channel' );
+		console.log( channel );
+		for ( var i = 0; i < $scope.userChannels.length; i++ )  {
+			if ( $scope.userChannels[ i ].name === channel ) {
+				$scope.userChannels.splice( i, 1 );
+				break;
+			}
+		}
+		$timeout( function() {
+			$scope.discoState.active = true;
+		} );
+	};
+
+	$scope.$on( 'PART', function( event, data ) {
+		$scope.removeChannel( data.args[ 0 ] );
+	} );
+	$scope.$on( 'KICK', function( event, data ) {
+		console.log( data );
+		$scope.removeChannel( data.args[ 0 ] );
+	} );
+
+	$scope.$on( 'QUIT', function( event, data ) {
+		console.log( 'got quit' );
+		var channels = socket.getChannels();
+		for ( var channel in channels ) {
+			if ( channels.hasOwnProperty( channel ) ) {
+				$scope.$broadcast( channels[ channel ], data );
+			}
+		}
+	} );
 
 
-    $rootScope.vars = {
-        loggedIn: false,
-        nickname: 'anon'
-    };
+	$rootScope.vars = {
+		loggedIn: false,
+		nickname: 'anon'
+	};
 
-    function adBlockNotDetected() {
-        $scope.adBlock = false;
-    }
-    function adBlockDetected() {
-        $scope.adBlock = true;
-    }
-    if(typeof fuckAdBlock === 'undefined') {
-        adBlockDetected();
-    } else {
-        fuckAdBlock.onDetected(adBlockDetected);
-        fuckAdBlock.onNotDetected(adBlockNotDetected);
-        // and|or
-        fuckAdBlock.on(true, adBlockDetected);
-        fuckAdBlock.on(false, adBlockNotDetected);
-        // and|or
-        fuckAdBlock.on(true, adBlockDetected).onNotDetected(adBlockNotDetected);
-    }
-}]);
+	function adBlockNotDetected() {
+		$scope.adBlock = false;
+	}
+
+	function adBlockDetected() {
+		$scope.adBlock = true;
+	}
+	if ( typeof fuckAdBlock === 'undefined' ) {
+		adBlockDetected();
+	} else {
+		fuckAdBlock.onDetected( adBlockDetected );
+		fuckAdBlock.onNotDetected( adBlockNotDetected );
+		// and|or
+		fuckAdBlock.on( true, adBlockDetected );
+		fuckAdBlock.on( false, adBlockNotDetected );
+		// and|or
+		fuckAdBlock.on( true, adBlockDetected ).onNotDetected( adBlockNotDetected );
+	}
+} ] );
