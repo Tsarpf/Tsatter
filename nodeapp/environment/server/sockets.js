@@ -27,13 +27,6 @@ module.exports = (function() {
         console.log('new connection, currently connected: ' + connected);
         var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
         console.log('connected ip: ' + ip);
-        //Todo: real ip blocking system
-        if(ip === '83.203.75.235') {
-            console.log('closed ip ' + ip);
-            socket.disconnect();
-            return;
-        }
-        console.log('not closed: ' + ip);
 
         function denied(message, msgObj) {
             console.log('denied message');
@@ -50,6 +43,11 @@ module.exports = (function() {
         else {
             username = nextAnon();
         }
+
+        socket.send({
+            command: 'USERCOUNT',
+            count: connected
+        });
 
         var connObj = {
             port: 6667,

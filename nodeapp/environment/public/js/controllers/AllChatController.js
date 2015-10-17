@@ -2,6 +2,7 @@ angular.module( 'tsatter' ).controller( 'AllChatController', [ '$timeout', '$roo
 	$scope.form = {
 		channel: ''
 	};
+    $scope.userCount = 0;
 	$scope.userChannels = [];
 	$scope.discoState = {
 		active: true
@@ -133,6 +134,10 @@ angular.module( 'tsatter' ).controller( 'AllChatController', [ '$timeout', '$roo
 			$scope.discoState.active = true;
 		} );
 	};
+
+    $scope.$on( 'USERCOUNT', function(event, data) {
+        $scope.userCount = data.count;
+    });
 
 	$scope.$on( 'PART', function( event, data ) {
 		$scope.removeChannel( data.args[ 0 ] );

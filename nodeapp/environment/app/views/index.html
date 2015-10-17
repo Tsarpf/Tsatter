@@ -19,18 +19,6 @@
     <div class="container">
 
         <div>
-            <div class="leaderboard-ad">
-                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <!-- top-leaderboard -->
-                <ins class="adsbygoogle"
-                style="display:inline-block;width:728px;height:90px"
-                data-ad-client="ca-pub-0893328542673793"
-                data-ad-slot="6817194469"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-
             <div class="site-headers">
                 <h1> tsatter </h1>
                 <h6> browse chats - speak images </h6>
@@ -41,14 +29,10 @@
 
 
         <div ng-controller="AllChatController as allCtrl">
-            <div class="img-rounded ad-block-info text-center" ng-show="adBlock" ng-cloak>
-                 Please disable your ad blocker if you like this website!
-                 <span style="float:right;" class="glyphicon glyphicon-remove quit-x-button clickable-element" ng-click="closeAdblock()"> </span>
-             </div>
-
              <img id="rootSpinner" class="loading-gif" src="https://i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif">
 
              <tabset type="'tabs'" ng-cloak style="visibility: hidden;" id="tabRoot" >
+                <p> {{userCount}} users online </p>
                 <tab ng-cloak active="discoState.active">
 
                     <tab-heading>
