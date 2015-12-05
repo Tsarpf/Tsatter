@@ -134,7 +134,7 @@ module.exports = (function() {
         });
 
         app.get('/images/:remainder', function(req,res) {
-            res.redirect('http://localhost/images/' + req.params.remainder);
+            res.redirect('http://tsatter.com/images/' + req.params.remainder);
         });
 
         app.all('/', function (req, res) {

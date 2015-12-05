@@ -25,7 +25,7 @@ module.exports = (function() {
     var addListeners = function(socket) {
         connected++;
         console.log('new connection, currently connected: ' + connected);
-        var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
+        var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
         console.log('connected ip: ' + ip);
 
         function denied(message, msgObj) {
