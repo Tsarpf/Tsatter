@@ -2,6 +2,7 @@
 
 .vspace { margin-top: 15px; }
 
+
 .op-user {
     font-weight: bold;
 }
@@ -50,6 +51,16 @@
 }
 
 .media-element {
+    max-width: 100%;
+    max-height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.images-loaded {
+    min-width: 317px;
+    min-height: 200px;
     max-width: 100%;
     max-height: 100%;
     margin-left: auto;
