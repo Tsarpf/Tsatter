@@ -1,5 +1,6 @@
 var persistenceHandler,
     imageSearch,
+    cors = require('cors');
     User = require('../app/models/user');
 
 var app;
@@ -29,7 +30,8 @@ module.exports = (function() {
         });
 
 
-        app.get('/backlog/', function(req, res, next) {
+	app.options('/backlog/', cors());
+        app.get('/backlog/', cors(), function(req, res, next) {
             var channel = req.query.channel;
             var index = parseInt(req.query.index);
             var count = parseInt(req.query.count);
