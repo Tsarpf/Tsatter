@@ -10,15 +10,13 @@
                     <td style="width:60%; height:90%; border: 1px solid #ebebeb; padding: 0; vertical-align: top;">
                         <div class="messages"
                              ng-show="!searching"
-                             scroll-glue="!!scrolls.messagesGlued"
+                             scroll-glue="scrolls.messagesGlued"
                              msd-wheel="messageMouseScroll($event)"
-                             scrolly
-                             scrolled-down="scrolls.scrolledDown"
-                             messages-glued="scrolls.messagesGlued"
                              ui-scroll-viewport>
 
                             <div ui-scroll="message in messageDatasource"
-                                 buffer-size="20"
+                                 buffer-size="40"
+                                 padding="1"
                                  adapter="messageAdapter">
 
                                 <ts-chat-message></ts-chat-message>

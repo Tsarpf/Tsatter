@@ -151,8 +151,7 @@ angular.module( 'tsatter' ).controller( 'ChatController', [
 		};
 
 		$scope.messageScrollBottom = function() {
-			console.log( 'scroll bottom' );
-			//$scope.scrolls.messagesGlued = true;
+			$scope.scrolls.messagesGlued = true;
 		};
 
 		$scope.mediaScrollBottom = function() {
