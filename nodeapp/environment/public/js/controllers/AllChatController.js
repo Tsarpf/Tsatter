@@ -55,7 +55,6 @@ angular.module( 'tsatter' ).controller( 'AllChatController', [ '$timeout', '$roo
 		};
 
 		//Sorry Angular :(
-		console.log( 'loaded!!! lasökjlkj' );
 		document.getElementById( 'rootSpinner' ).style.display = 'none';
 		document.getElementById( 'tabRoot' ).removeAttribute( "style" );
 	} );
