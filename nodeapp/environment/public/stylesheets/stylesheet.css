@@ -83,6 +83,10 @@
     max-width: 100%;
     max-height: 500px;
     height: auto;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    margin-bottom: 15px;
 }
 
 @media screen and (max-width: 480px) {
