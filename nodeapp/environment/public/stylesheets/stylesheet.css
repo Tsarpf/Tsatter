@@ -2,7 +2,6 @@
 
 .vspace { margin-top: 15px; }
 
-
 .op-user {
     font-weight: bold;
 }
@@ -26,7 +25,7 @@
 }
 
 .chat {
-    height: calc(70vh);
+    height: calc(100vh - 260px); /* site header is *usually* 250px... */
     min-height:100%;
 }
 
