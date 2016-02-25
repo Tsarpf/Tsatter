@@ -4,6 +4,11 @@ Tsatter
 ####Probably running the newest version here: http://tsatter.com
 ####You can also join the same channels by connecting to tsatter.com using your favorite IRC-client
 
+###Features
+- Linking to messages by clicking timestamp (grab the link from the url bar). Going through the link automatically loads the relevant channel and jumps to the linked message
+- Infinite scrolling for channels, images, and messages
+- Too-large-image detection
+- Server downloads and minifies images on another process (efficient especially on multicore systems)
 
 #####Development/deployment works best on Linux. On Windows there's an outdated vagrant configuration that needs some work and on MacOSX it might need a bit of toying with super user privileges etc.
 
