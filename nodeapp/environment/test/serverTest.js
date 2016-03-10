@@ -3,10 +3,13 @@ var should = require('should'),
     persistence = require('../server/persistence')(),
     server = require('../server/tsatterServer')({port: port}, persistence),
     broadcaster = require('../server/broadcaster'),
+    spamProtect = {
+        isSpamming: function() {}
+    },
     imageProcessor = {
         processUrls: function() {}
     },
-    sockets = require('../server/sockets')(broadcaster, persistence, imageProcessor, server),
+    sockets = require('../server/sockets')(broadcaster, persistence, imageProcessor, server, spamProtect),
     client = require('socket.io-client'),
     Channel = require('../app/models/channel');
 
