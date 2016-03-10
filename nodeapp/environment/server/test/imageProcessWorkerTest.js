@@ -26,14 +26,14 @@ describe('image download and minify', function () {
 
     var cluster = require('cluster');
     cluster.setupMaster({
-        exec: __dirname + '/../server/imageProcessWorker.js'
+        exec: __dirname + '/../imageProcessWorker.js'
     });
 
-    var imagesPath = __dirname + '/../dist/images/';
+    var imagesPath = __dirname + '/../../dist/images/';
 
     var testChannel = 'testchannel123';
     it('should generate a jpg file', function (done) {
-        this.timeout(5000);
+        this.timeout(10000);
         var worker = cluster.fork();
         worker.on('message', function(msgObj) {
             var path = imagesPath + msgObj.thumbnail;
@@ -49,7 +49,7 @@ describe('image download and minify', function () {
     });
 
     it('should generate a png file', function (done) {
-        this.timeout(5000);
+        this.timeout(10000);
         var worker = cluster.fork();
         worker.on('message', function(msgObj) {
             fs.existsSync(imagesPath + msgObj.thumbnail).should.equal(true);

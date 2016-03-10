@@ -3,7 +3,7 @@
  * Created by root on 6/1/15.
  */
 var should = require('should');
-var timerLib = require('../server/timer');
+var timerLib = require('../timer');
 
 describe('timer', function() {
     it('should return false for spam', function() {

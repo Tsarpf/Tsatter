@@ -27,7 +27,7 @@
   },
   "scripts": {
     "start": "nodemon --watch 'server/*' server/run.js",
-    "test": "../node_modules/.bin/mocha",
+    "test": "../node_modules/.bin/mocha server/test",
     "travistest": "./node_modules/.bin/mocha"
   },
   "devDependencies": {

@@ -13,7 +13,7 @@ var tooBigUrl = 'http://i.imgur.com/L76A4TV.gif'; //47-49 mb or something
 urls.push(tooBigUrl);
 
 var testChannel = '#achannelthingy';
-var broadcaster = require('../server/broadcaster');
+var broadcaster = require('../broadcaster');
 
 describe('image saving to database', function () {
     this.timeout(5000);
@@ -46,7 +46,7 @@ describe('image saving to database', function () {
                 done();
             }
         };
-        var imageProcessor = require('../server/imageProcessor')(mockupPersistence, broadcaster);
+        var imageProcessor = require('../imageProcessor')(mockupPersistence, broadcaster);
         var messageIdx = 0;
         imageProcessor.processUrls(urls, testChannel, messageIdx);
     });

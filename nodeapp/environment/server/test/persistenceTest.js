@@ -5,7 +5,7 @@
 
 var should = require('should'),
     mongoose = require('mongoose'),
-    Channel = require('../app/models/channel');
+    Channel = require('../../app/models/channel');
 
 
 var testNick = 'tester';
@@ -18,7 +18,7 @@ var testMessageWithUrls = 'a merry ' + urls[1] + ' to you ' + urls[2];
 
 var testChannel = '#achannelthingy';
 
-var persistenceHandler = require('../server/persistence')();
+var persistenceHandler = require('../persistence')();
 
 var testChannels = [
     '#achannelthingy',

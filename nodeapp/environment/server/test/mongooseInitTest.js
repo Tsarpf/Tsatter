@@ -1,8 +1,8 @@
 var should = require('should'),
     mongoose = require('mongoose'),
-    test_model = require('../app/models/testModel'),
+    test_model = require('../../app/models/testModel'),
     TestModel = mongoose.model('Test'),
-    server = require('../server/tsatterServer'); //require server so mongoose etc server stuff is initialzied
+    server = require('../tsatterServer'); //require server so mongoose etc server stuff is initialzied
     
 
 var testAuthor = "tester";

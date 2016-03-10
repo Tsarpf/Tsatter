@@ -4,7 +4,7 @@
 
 
 var should = require('should');
-var broadcaster = require('../server/broadcaster');
+var broadcaster = require('../broadcaster');
 
 describe('broadcaster', function() {
 

@@ -1,17 +1,17 @@
 var port = 3000;
 var should = require('should'),
-    persistence = require('../server/persistence')(),
-    server = require('../server/tsatterServer')({port: port}, persistence),
-    broadcaster = require('../server/broadcaster'),
+    persistence = require('../persistence')(),
+    server = require('../tsatterServer')({port: port}, persistence),
+    broadcaster = require('../broadcaster'),
     spamProtect = {
         isSpamming: function() {}
     },
     imageProcessor = {
         processUrls: function() {}
     },
-    sockets = require('../server/sockets')(broadcaster, persistence, imageProcessor, server, spamProtect),
+    sockets = require('../sockets')(broadcaster, persistence, imageProcessor, server, spamProtect),
     client = require('socket.io-client'),
-    Channel = require('../app/models/channel');
+    Channel = require('../../app/models/channel');
 
 describe('Server full system', function () {
     var fstSock, sndSock;
@@ -52,7 +52,7 @@ describe('Server full system', function () {
 
     it('should register', function (done) {
         fstSock.on('message', function (data) {
-            if(data.command === 'err_nomotd') {
+            if(data.command === 'err_nomotd' || data.command === 'USERCOUNT') {
                 return;
             }
             data.command.should.equal('rpl_welcome');
@@ -66,7 +66,7 @@ describe('Server full system', function () {
                 fstSock.send({command: ['join', testChannel]});
                 return;
             }
-            else if(data.command === 'err_nomotd') {
+            else if(data.command === 'err_nomotd' || data.command === 'USERCOUNT') {
                 return;
             }
             data.command.should.equal('JOIN');
