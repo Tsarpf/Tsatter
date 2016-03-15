@@ -4,10 +4,10 @@
         <table style="width: 100%; height: 100%; border-spacing: 0; border-collapse:collapse;" col-resizeable>
             <tbody class="chat">
                 <tr>
-                    <td style="width:10%; height:90%; border: 1px solid #ebebeb; padding: 0; vertical-align: top;">
+                    <td style="width:10%; height:90%; padding: 0; vertical-align: top;">
                         <ts-user-bar></ts-user-bar>
                     </td>
-                    <td style="width:60%; height:90%; border: 1px solid #ebebeb; padding: 0; vertical-align: top;">
+                    <td style="width:60%; height:90%; padding: 0; vertical-align: top;">
                         <div class="messages"
                              ng-show="!searching"
                              scroll-glue="scrolls.messagesGlued"
@@ -34,7 +34,7 @@
 
                         </div>
                     </td>
-                    <td style="width: 30%; height:90%; border: 1px #ebebeb; padding: 0;">
+                    <td style="width: 30%; height:90%; padding: 0;">
                         <div class="tsmedia"
                              scroll-glue="mediaGlued"
                              ui-scroll-viewport
@@ -65,7 +65,7 @@
                                 ng-keyup="$event.keyCode == 13 && ownNickAreaSubmit()">
                     </td>
 
-                    <td style="height: 10%; border: 1px solid #ebebeb; padding: 0;">
+                    <td style="height: 10%; padding: 0;">
                         <input
                                 ng-show="!searching"
                                 ng-keyup="$event.keyCode == 13 && chatCtrl.privmsg()"

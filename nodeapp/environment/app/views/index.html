@@ -19,21 +19,14 @@
 <body background="/images/grey.png">
     <div class="container">
 
-        <div>
-            <div class="site-headers">
-                <h1> tsatter </h1>
-                <h6> browse chats - speak images </h6>
-            </div>
-
-            <div class="clearfix"></div>
-        </div>
+        <h1> 
+            tsatter 
+            <span class="tagline"> browse chats - speak images </span>
+        </h1>
 
 
         <div ng-controller="AllChatController as allCtrl">
-             <img id="rootSpinner" class="loading-gif" src="https://i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif">
-
              <tabset type="'tabs'" ng-cloak style="visibility: hidden;" id="tabRoot" >
-                <p> {{userCount}} users online </p>
                 <tab ng-cloak active="discoState.active">
 
                     <tab-heading>
@@ -64,6 +57,7 @@
                 </form>
                 </tab>
             </tabset>
+             <img id="rootSpinner" class="loading-gif" src="https://i1.wp.com/cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif">
         </div>
 
     </div>

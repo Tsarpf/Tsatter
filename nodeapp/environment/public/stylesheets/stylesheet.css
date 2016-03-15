@@ -271,9 +271,15 @@ html, body {
     */
 }
 
+.tagline {
+    font-size: 0.6em;
+    color: lightgrey;
+    margin-left: 15px;
+}
+
 h1 {
     color: orange;
-    margin-bottom: 5px;
+    margin-bottom: 30px;
 }
 h6 {
     margin-top: 0;
