@@ -25,7 +25,7 @@
 }
 
 .chat {
-    height: calc(100vh - 260px); /* site header is *usually* 250px... */
+    height: calc(100vh - 245px); /* site header + tabs are *usually* under 134px + 47px... */
     min-height:100%;
 }
 
